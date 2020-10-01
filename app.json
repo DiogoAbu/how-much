@@ -3,20 +3,34 @@
     "name": "HowMuch",
     "slug": "HowMuch",
     "version": "1.0.0",
-    "orientation": "portrait",
+    "scheme": "how-much",
     "icon": "./assets/icon.png",
+    "primaryColor": "#FFDB2C",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#FFCC33"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
+    "androidStatusBar": {
+      "translucent": true
+    },
+    "android": {
+      "package": "com.diogoabu.howmuch",
+      "versionCode": 1,
+      "icon": "./assets/icon.png",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/foreground.png",
+        "backgroundImage": "./assets/background.png"
+      }
+    },
     "ios": {
+      "bundleIdentifier": "com.diogoabu.howmuch",
+      "buildNumber": "1.0.0",
+      "icon": "./assets/icon.png",
       "supportsTablet": true
     },
     "web": {
