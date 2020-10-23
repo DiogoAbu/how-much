@@ -2,16 +2,15 @@ import React, { FC, memo } from 'react';
 
 import { List } from 'react-native-paper';
 import { useRoute } from '@react-navigation/native';
-import { t } from 'i18n-js';
 
 import FadeIcon from '!/components/FadeIcon';
 import { DEFAULT_ICON_SIZE } from '!/constants';
 import usePress from '!/hooks/use-press';
 import useTheme from '!/hooks/use-theme';
+import localize from '!/services/localize';
 import { CountryWageModel } from '!/stores/models/CountryWageModel';
 import { ListItemRightProps, MainRouteProp } from '!/types';
 import { CurrencyInfo } from '!/utils/currency-list';
-import { toMoneyMask } from '!/utils/money-mask';
 
 import styles from './styles';
 
@@ -49,7 +48,9 @@ const CurrencyItem: FC<Props> = ({ currencyInfo, wage, setSelectedId, isSelected
   return (
     <List.Item
       description={`${countryName} • ${
-        wage?.value || hourlyWage ? `${toMoneyMask(wage?.value || hourlyWage || 0)}/${t('hr')}` : t('unknown')
+        wage?.value || hourlyWage
+          ? `${localize.toCurrency(wage?.value || hourlyWage || 0)}/${localize.t('hr')}`
+          : localize.t('unknown')
       }`}
       disabled={params.action === 'productForm' ? false : isActive}
       onPress={handleOnPress}

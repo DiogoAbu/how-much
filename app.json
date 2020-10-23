@@ -5,6 +5,7 @@
     "version": "1.0.0",
     "scheme": "how-much",
     "icon": "./assets/icon.png",
+    "orientation": "portrait",
     "primaryColor": "#FFFFFF",
     "splash": {
       "image": "./assets/splash.png",

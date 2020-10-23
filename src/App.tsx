@@ -1,4 +1,4 @@
-import '!/services/i18n';
+import '!/services/localize';
 
 import React, { FC, useEffect } from 'react';
 import { Appearance } from 'react-native';

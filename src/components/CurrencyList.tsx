@@ -3,11 +3,11 @@ import { Animated, FlatList, FlatListProps, StyleSheet, Text } from 'react-nativ
 
 import { Divider, Searchbar } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { t } from 'i18n-js';
 import { observer } from 'mobx-react-lite';
 
 import { DEFAULT_APPBAR_HEIGHT, DEFAULT_PADDING, LIST_ITEM_HEIGHT } from '!/constants';
 import useTheme from '!/hooks/use-theme';
+import localize from '!/services/localize';
 import { useStores } from '!/stores';
 import currencyList, { CurrencyInfo } from '!/utils/currency-list';
 
@@ -69,7 +69,7 @@ const CurrencyList = observer<Props>(({ isAnimated, ListHeaderComponent, ...rest
         autoCorrect={false}
         maxLength={50}
         onChangeText={onChangeSearch}
-        placeholder={t('lookForAcurrency')}
+        placeholder={localize.t('lookForAcurrency')}
         style={styles.searchbar}
         value={query}
       />
@@ -95,7 +95,7 @@ const CurrencyList = observer<Props>(({ isAnimated, ListHeaderComponent, ...rest
       keyboardDismissMode='interactive'
       keyboardShouldPersistTaps='handled'
       keyExtractor={keyExtractor}
-      ListEmptyComponent={<Text style={styles.emptyText}>{t('noResults')}</Text>}
+      ListEmptyComponent={<Text style={styles.emptyText}>{localize.t('noResults')}</Text>}
       ListHeaderComponent={ListHeader}
       maxToRenderPerBatch={2}
       removeClippedSubviews
@@ -109,7 +109,7 @@ const CurrencyList = observer<Props>(({ isAnimated, ListHeaderComponent, ...rest
 
 const styles = StyleSheet.create({
   content: {
-    flexGrow: 1,
+    // flexGrow: 1,
   },
   emptyText: {
     textAlign: 'center',

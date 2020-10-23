@@ -3,7 +3,6 @@ import { ListRenderItem, Text, View } from 'react-native';
 
 import { Button, Caption, Dialog, Divider, Paragraph, Portal } from 'react-native-paper';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { t } from 'i18n-js';
 import { observer } from 'mobx-react-lite';
 
 import CurrencyList from '!/components/CurrencyList';
@@ -11,6 +10,7 @@ import HeaderButton from '!/components/HeaderButton';
 import { DEFAULT_PADDING } from '!/constants';
 import useFocusEffect from '!/hooks/use-focus-effect';
 import usePress from '!/hooks/use-press';
+import localize from '!/services/localize';
 import { useStores } from '!/stores';
 import { PriceModel } from '!/stores/models/PriceModel';
 import { MainNavigationProp, MainRouteProp } from '!/types';
@@ -60,10 +60,10 @@ const Currencies = observer(() => {
     generalStore.setFab({ fabVisible: false });
 
     navigation.setOptions({
-      title: t(params.action === 'productForm' ? 'pickACurrency' : 'preferredCurrency'),
+      title: localize.t(params.action === 'productForm' ? 'pickACurrency' : 'preferredCurrency'),
       headerRight: () => (
         <HeaderButton disabled={!selectedId} icon='check' mode='text' onPress={handleDone}>
-          {t('label.done')}
+          {localize.t('label.done')}
         </HeaderButton>
       ),
     });
@@ -85,7 +85,7 @@ const Currencies = observer(() => {
   const ListHeader = generalStore.activeCurrencyId ? (
     <View>
       <Caption style={{ paddingHorizontal: DEFAULT_PADDING, marginTop: DEFAULT_PADDING }}>
-        {t('activeCurrency')}
+        {localize.t('activeCurrency')}
       </Caption>
 
       <CurrencyItem
@@ -98,20 +98,20 @@ const Currencies = observer(() => {
       <Divider />
 
       <Caption style={{ paddingHorizontal: DEFAULT_PADDING, marginTop: DEFAULT_PADDING }}>
-        {t('availableCurrencies')}
+        {localize.t('availableCurrencies')}
       </Caption>
     </View>
   ) : (
     <View>
       <Caption style={{ paddingHorizontal: DEFAULT_PADDING, marginTop: DEFAULT_PADDING }}>
-        {t('noActiveCurrency')}
+        {localize.t('noActiveCurrency')}
       </Caption>
-      <Text style={{ paddingHorizontal: DEFAULT_PADDING }}>{t('pickPreferredCurrencyBelow')}</Text>
+      <Text style={{ paddingHorizontal: DEFAULT_PADDING }}>{localize.t('pickPreferredCurrencyBelow')}</Text>
 
       <Divider style={{ marginTop: DEFAULT_PADDING }} />
 
       <Caption style={{ paddingHorizontal: DEFAULT_PADDING, marginTop: DEFAULT_PADDING }}>
-        {t('availableCurrencies')}
+        {localize.t('availableCurrencies')}
       </Caption>
     </View>
   );
@@ -122,14 +122,14 @@ const Currencies = observer(() => {
 
       <Portal>
         <Dialog dismissable={false} visible={dialogVisible}>
-          <Dialog.Title>{t('title.welcome')}</Dialog.Title>
+          <Dialog.Title>{localize.t('title.welcome')}</Dialog.Title>
           <Dialog.Content>
-            <Paragraph>{t('toStartUsingThisAppYouNeedToPickYourPreferredCurrency')}</Paragraph>
-            <Paragraph>{t('dontWorryYouCanChangeItLater')}</Paragraph>
+            <Paragraph>{localize.t('toStartUsingThisAppYouNeedToPickYourPreferredCurrency')}</Paragraph>
+            <Paragraph>{localize.t('dontWorryYouCanChangeItLater')}</Paragraph>
           </Dialog.Content>
           <Dialog.Actions>
             <Button labelStyle={{ paddingHorizontal: DEFAULT_PADDING * 2 }} onPress={handleHideDialog}>
-              {t('label.ok')}
+              {localize.t('label.ok')}
             </Button>
           </Dialog.Actions>
         </Dialog>

@@ -3,17 +3,16 @@ import { ListRenderItemInfo, StyleSheet } from 'react-native';
 
 import { List, Text } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
-import { t } from 'i18n-js';
 import { observer } from 'mobx-react-lite';
 
 import usePress from '!/hooks/use-press';
+import localize from '!/services/localize';
 import { CountryWageModel } from '!/stores/models/CountryWageModel';
 import { ProductModel } from '!/stores/models/ProductModel';
 import { ListItemRightProps, MainNavigationProp } from '!/types';
 import calculateWorkingHours from '!/utils/calculate-working-hours';
 import { CurrencyInfo } from '!/utils/currency-list';
 import findCurrency from '!/utils/find-currency';
-import { toMoneyMask } from '!/utils/money-mask';
 
 interface Props {
   activeCurrencyId?: CurrencyInfo['id'];
@@ -37,7 +36,7 @@ const ProductItem = observer<ListRenderItemInfo<ProductModel> & Props>(
       activePrice?.value && currencyInfo && (wage?.value || currencyInfo.hourlyWage) ? (
         <Text style={[style, { color }, styles.hourNumber]}>
           {calculateWorkingHours({ price: activePrice, currencyInfo, wage })}
-          <Text style={[{ color }, styles.hourText]}>{t('hr')}</Text>
+          <Text style={[{ color }, styles.hourText]}>{localize.t('hr')}</Text>
         </Text>
       ) : (
         <Text style={[style, { color }, styles.hourNumber]}>---</Text>
@@ -45,7 +44,9 @@ const ProductItem = observer<ListRenderItemInfo<ProductModel> & Props>(
 
     return (
       <List.Item
-        description={activePrice ? toMoneyMask(activePrice?.value) : t('noPriceForPreferredCurrency')}
+        description={
+          activePrice ? localize.toCurrency(activePrice?.value) : localize.t('noPriceForPreferredCurrency')
+        }
         onPress={onPress}
         right={renderRight}
         title={product.description}

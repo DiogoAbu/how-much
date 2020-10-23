@@ -3,11 +3,11 @@ import { View } from 'react-native';
 
 import { Button, Divider, Menu, overlay } from 'react-native-paper';
 import SkeletonContent from 'react-native-skeleton-content';
-import { t } from 'i18n-js';
 import { observer } from 'mobx-react-lite';
 
 import usePress from '!/hooks/use-press';
 import useTheme from '!/hooks/use-theme';
+import localize from '!/services/localize';
 import { useStores } from '!/stores';
 
 import styles from './styles';
@@ -57,7 +57,7 @@ const ListOptions: FC = observer(() => {
 
   const sortButton = (
     <Button compact icon='chevron-down' mode='text' onPress={handleShowMenu}>
-      {t('label.sort')}: {t(`label.${productsStore.sortBy}`)}
+      {localize.t('label.sort')}: {localize.t(`label.${productsStore.sortBy}`)}
     </Button>
   );
 
@@ -91,13 +91,13 @@ const ListOptions: FC = observer(() => {
           mode='text'
           onPress={handleSortOrderPress}
         >
-          {t(productsStore.sortByOrder === 'asc' ? 'label.ascending' : 'label.descending')}
+          {localize.t(productsStore.sortByOrder === 'asc' ? 'label.ascending' : 'label.descending')}
         </Button>
 
         <Menu anchor={sortButton} onDismiss={handleHideMenu} visible={isMenuVisible}>
-          <Menu.Item onPress={handleSortByAlphabeticallyPress} title={t('label.alphabetically')} />
-          <Menu.Item onPress={handleSortByDatePress} title={t('label.date')} />
-          <Menu.Item onPress={handleSortByPricePress} title={t('label.price')} />
+          <Menu.Item onPress={handleSortByAlphabeticallyPress} title={localize.t('label.alphabetically')} />
+          <Menu.Item onPress={handleSortByDatePress} title={localize.t('label.date')} />
+          <Menu.Item onPress={handleSortByPricePress} title={localize.t('label.price')} />
         </Menu>
       </View>
       <Divider />

@@ -3,15 +3,14 @@ import React, { FC, memo } from 'react';
 import { List } from 'react-native-paper';
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { t } from 'i18n-js';
 import { observer } from 'mobx-react-lite';
 
 import { DEFAULT_ICON_SIZE } from '!/constants';
 import usePress from '!/hooks/use-press';
+import localize from '!/services/localize';
 import { useStores } from '!/stores';
 import { ListItemRightProps, MainNavigationProp } from '!/types';
 import { CurrencyInfo } from '!/utils/currency-list';
-import { toMoneyMask } from '!/utils/money-mask';
 
 import styles from './styles';
 
@@ -46,8 +45,8 @@ const CountryWageItem: FC<Props> = observer(({ currencyInfo }) => {
       right={renderRight}
       title={
         wage || currencyInfo.hourlyWage
-          ? `${toMoneyMask(wage?.value || currencyInfo.hourlyWage)}/${t('hr')}`
-          : t('unknown')
+          ? `${localize.toCurrency(wage?.value || currencyInfo.hourlyWage)}/${localize.t('hr')}`
+          : localize.t('unknown')
       }
       titleStyle={!wage && !currencyInfo.hourlyWage && styles.itemTitleEmpty}
     />

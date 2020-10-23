@@ -2,19 +2,18 @@ import React from 'react';
 import { ListRenderItemInfo, StyleSheet, View } from 'react-native';
 
 import { Colors, IconButton, Text, TextInput } from 'react-native-paper';
-import { t } from 'i18n-js';
 import { observer } from 'mobx-react-lite';
 
 import { DEFAULT_PADDING } from '!/constants';
 import usePress from '!/hooks/use-press';
 import useTheme from '!/hooks/use-theme';
+import localize, { toNumberfromCurrency } from '!/services/localize';
 import { useStores } from '!/stores';
 import { PriceModel } from '!/stores/models/PriceModel';
 import findCurrency from '!/utils/find-currency';
-import { toMoneyMask, toMoneyRaw } from '!/utils/money-mask';
 
 const PriceInput = observer<ListRenderItemInfo<PriceModel>>(({ item: price }) => {
-  const { colors, dark, fonts } = useTheme();
+  const { dark, fonts } = useTheme();
   const { productsStore } = useStores();
 
   const handlePressDelete = usePress(() => {
@@ -24,7 +23,7 @@ const PriceInput = observer<ListRenderItemInfo<PriceModel>>(({ item: price }) =>
   });
 
   const handlePriceChange = (text: string) => {
-    price.setValue(toMoneyRaw(text));
+    price.setValue(toNumberfromCurrency(text));
   };
 
   const currencyInfo = findCurrency(price.currencyId);
@@ -42,13 +41,13 @@ const PriceInput = observer<ListRenderItemInfo<PriceModel>>(({ item: price }) =>
         autoCorrect={false}
         keyboardAppearance={dark ? 'dark' : 'light'}
         keyboardType='decimal-pad'
-        label={t('price')}
+        label={localize.t('price')}
         maxLength={14}
         mode='outlined'
         onChangeText={handlePriceChange}
         returnKeyType='done'
         style={styles.input}
-        value={toMoneyMask(price.value)}
+        value={localize.toCurrency(price.value)}
       />
 
       <IconButton

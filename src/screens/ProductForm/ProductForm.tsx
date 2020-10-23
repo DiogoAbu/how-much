@@ -4,7 +4,6 @@ import { FlatList, ListRenderItem, TextInput as NativeTextInput, View } from 're
 import { Divider, IconButton, Text } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { t } from 'i18n-js';
 import { observer } from 'mobx-react-lite';
 
 import HeaderButton from '!/components/HeaderButton';
@@ -13,6 +12,7 @@ import { DEFAULT_APPBAR_HEIGHT, DEFAULT_PADDING } from '!/constants';
 import useFocusEffect from '!/hooks/use-focus-effect';
 import usePress from '!/hooks/use-press';
 import useTheme from '!/hooks/use-theme';
+import localize from '!/services/localize';
 import { useStores } from '!/stores';
 import { PriceModel } from '!/stores/models/PriceModel';
 import { MainNavigationProp, MainRouteProp } from '!/types';
@@ -50,7 +50,7 @@ const ProductForm = observer(() => {
 
   const handleDone = usePress(() => {
     if (!productsStore.isDescriptionValid()) {
-      setDescriptionError(t('descriptionCannotBeEmpty'));
+      setDescriptionError(localize.t('descriptionCannotBeEmpty'));
       return;
     }
 
@@ -74,10 +74,10 @@ const ProductForm = observer(() => {
     generalStore.setFab({ fabVisible: false });
 
     navigation.setOptions({
-      title: params?.isEditing ? t('editingProduct') : t('newProduct'),
+      title: params?.isEditing ? localize.t('editingProduct') : localize.t('newProduct'),
       headerRight: () => (
         <HeaderButton icon='check' mode='text' onPress={handleDone}>
-          {t('label.done')}
+          {localize.t('label.done')}
         </HeaderButton>
       ),
     });
@@ -106,7 +106,7 @@ const ProductForm = observer(() => {
 
           <Divider />
           <View style={styles.pricesHeader}>
-            <Text>{t('prices')}</Text>
+            <Text>{localize.t('prices')}</Text>
             <IconButton icon='plus' onPress={handleAddCurrency} />
           </View>
         </>

@@ -1,5 +1,4 @@
 import React, { FC } from 'react';
-import { StyleSheet } from 'react-native';
 
 import { Appbar } from 'react-native-paper';
 import { StackHeaderProps } from '@react-navigation/stack';
@@ -29,17 +28,11 @@ const Header: FC<StackHeaderProps> = ({ scene, previous, navigation }) => {
 
       {options?.headerLeft?.({ tintColor: colors.text }) || null}
 
-      <Appbar.Content style={styles.content} title={title} />
+      {title ? <Appbar.Content title={title} /> : null}
 
       {options?.headerRight?.({ tintColor: colors.text }) || null}
     </Appbar.Header>
   );
 };
-
-const styles = StyleSheet.create({
-  content: {
-    marginLeft: 0,
-  },
-});
 
 export default Header;

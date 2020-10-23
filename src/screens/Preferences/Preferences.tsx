@@ -1,14 +1,14 @@
 import React, { FC } from 'react';
-import { ScrollView } from 'react-native';
+import { Platform, ScrollView } from 'react-native';
 
 import { Divider, List } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { t } from 'i18n-js';
 
 import { DEFAULT_APPBAR_HEIGHT, DEFAULT_PADDING } from '!/constants';
 import useFocusEffect from '!/hooks/use-focus-effect';
 import usePress from '!/hooks/use-press';
 import useTheme from '!/hooks/use-theme';
+import localize from '!/services/localize';
 import { useStores } from '!/stores';
 import { MainNavigationProp } from '!/types';
 
@@ -34,7 +34,7 @@ const Preferences: FC<Props> = ({ navigation }) => {
     generalStore.setFab({ fabVisible: false });
 
     navigation.setOptions({
-      title: t('preferences'),
+      title: localize.t('preferences'),
     });
   }, [generalStore, navigation]);
 
@@ -42,11 +42,19 @@ const Preferences: FC<Props> = ({ navigation }) => {
     <ScrollView
       contentContainerStyle={[
         styles.contentContainer,
-        { paddingTop: insets.top + DEFAULT_APPBAR_HEIGHT + DEFAULT_PADDING },
+        {
+          paddingTop:
+            insets.top +
+            Platform.select({ default: DEFAULT_APPBAR_HEIGHT, ios: DEFAULT_PADDING }) +
+            DEFAULT_PADDING,
+        },
       ]}
       contentInsetAdjustmentBehavior='automatic'
       keyboardDismissMode='interactive'
       keyboardShouldPersistTaps='handled'
+      scrollIndicatorInsets={{
+        top: insets.top + Platform.select({ default: DEFAULT_APPBAR_HEIGHT, ios: DEFAULT_PADDING }),
+      }}
       style={{ backgroundColor: colors.background }}
     >
       <List.Item
@@ -55,7 +63,7 @@ const Preferences: FC<Props> = ({ navigation }) => {
         )}
         onPress={handleCountriesWagesPress}
         right={(props) => <List.Icon {...props} icon='chevron-right' />}
-        title={t('countriesWages')}
+        title={localize.t('countriesWages')}
       />
 
       <Divider />

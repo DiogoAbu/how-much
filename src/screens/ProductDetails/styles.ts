@@ -4,7 +4,7 @@ import { DEFAULT_PADDING } from '!/constants';
 
 const styles = StyleSheet.create({
   content: {
-    flexGrow: 1,
+    // flexGrow: 1,
   },
 
   hourNumber: {

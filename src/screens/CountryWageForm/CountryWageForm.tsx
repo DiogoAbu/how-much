@@ -4,7 +4,6 @@ import { ScrollView } from 'react-native';
 import { Divider, List, Text, TextInput } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { t } from 'i18n-js';
 import { observer } from 'mobx-react-lite';
 
 import EmptyCenteredView from '!/components/EmptyCenteredView';
@@ -13,10 +12,10 @@ import { DEFAULT_APPBAR_HEIGHT, DEFAULT_PADDING } from '!/constants';
 import useFocusEffect from '!/hooks/use-focus-effect';
 import usePress from '!/hooks/use-press';
 import useTheme from '!/hooks/use-theme';
+import localize, { toNumberfromCurrency } from '!/services/localize';
 import { useStores } from '!/stores';
 import { MainNavigationProp, MainRouteProp } from '!/types';
 import findCurrency from '!/utils/find-currency';
-import { toMoneyMask, toMoneyRaw } from '!/utils/money-mask';
 
 import styles from './styles';
 
@@ -31,7 +30,7 @@ const CountryWageForm: FC = observer(() => {
 
   const handleWageValueChange = useCallback(
     (text: string) => {
-      wagesStore.wageForm?.setValue(toMoneyRaw(text));
+      wagesStore.wageForm?.setValue(toNumberfromCurrency(text));
     },
     [wagesStore.wageForm],
   );
@@ -54,17 +53,17 @@ const CountryWageForm: FC = observer(() => {
     generalStore.setFab({ fabVisible: false });
 
     navigation.setOptions({
-      title: t('editingWage'),
+      title: localize.t('editingWage'),
       headerRight: () => (
         <HeaderButton icon='check' mode='text' onPress={handleDone}>
-          {t('label.done')}
+          {localize.t('label.done')}
         </HeaderButton>
       ),
     });
   }, [generalStore, handleDone, navigation]);
 
   if (!currency) {
-    return <EmptyCenteredView text={t('currencyNotFound')} />;
+    return <EmptyCenteredView text={localize.t('currencyNotFound')} />;
   }
 
   return (
@@ -80,7 +79,7 @@ const CountryWageForm: FC = observer(() => {
       <List.Item
         left={(props) => (
           <Text {...props} style={[props.style, styles.itemRight]}>
-            {t('currency')}
+            {localize.t('currency')}
           </Text>
         )}
         right={(props) => (
@@ -96,7 +95,7 @@ const CountryWageForm: FC = observer(() => {
       <List.Item
         left={(props) => (
           <Text {...props} style={[props.style, styles.itemRight]}>
-            {t('country')}
+            {localize.t('country')}
           </Text>
         )}
         right={(props) => (
@@ -114,7 +113,7 @@ const CountryWageForm: FC = observer(() => {
         autoCorrect={false}
         keyboardAppearance={dark ? 'dark' : 'light'}
         keyboardType='decimal-pad'
-        label={t('hourlyWageValue')}
+        label={localize.t('hourlyWageValue')}
         maxLength={14}
         mode='outlined'
         onChangeText={handleWageValueChange}
@@ -128,7 +127,7 @@ const CountryWageForm: FC = observer(() => {
           />
         }
         style={styles.input}
-        value={toMoneyMask(wagesStore.wageForm?.value ?? 0)}
+        value={localize.toCurrency(wagesStore.wageForm?.value ?? 0)}
       />
     </ScrollView>
   );

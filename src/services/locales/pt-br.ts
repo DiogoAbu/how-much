@@ -79,6 +79,27 @@ const translation = {
   colorScheme_dark: 'Escuro',
   colorScheme_light: 'Claro',
 
+  number: {
+    currency: {
+      format: {
+        delimiter: '.',
+        format: '%u %n',
+        precision: 2,
+        separator: ',',
+        significant: false,
+        strip_insignificant_zeros: false,
+        unit: '',
+      },
+    },
+    format: {
+      delimiter: '.',
+      precision: 3,
+      separator: ',',
+      significant: false,
+      strip_insignificant_zeros: false,
+    },
+  },
+
   time: {
     formats: {
       default: '%a, %d de %B de %Y, %H:%M:%S %z',

@@ -6,11 +6,11 @@ import {
 } from 'react-native';
 
 import { HelperText, TextInput } from 'react-native-paper';
-import { t } from 'i18n-js';
 import { observer } from 'mobx-react-lite';
 
 import { DEFAULT_PADDING } from '!/constants';
 import useTheme from '!/hooks/use-theme';
+import localize from '!/services/localize';
 import { ProductModel } from '!/stores/models/ProductModel';
 
 interface Props {
@@ -42,7 +42,7 @@ const DescriptionInput = observer<Props, NativeTextInput>(
           blurOnSubmit={blurOnSubmit}
           error={!!descriptionError}
           keyboardAppearance={dark ? 'dark' : 'light'}
-          label={t('description')}
+          label={localize.t('description')}
           maxLength={100}
           mode='outlined'
           onChangeText={handleOnChangeText}

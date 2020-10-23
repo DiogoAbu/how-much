@@ -4,13 +4,13 @@ import { FlatList, InteractionManager, ListRenderItem } from 'react-native';
 import { Caption, Divider, Snackbar } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { t } from 'i18n-js';
 import { observer } from 'mobx-react-lite';
 
 import { DEFAULT_APPBAR_HEIGHT, LIST_ITEM_HEIGHT } from '!/constants';
 import useFocusEffect from '!/hooks/use-focus-effect';
 import usePress from '!/hooks/use-press';
 import useTheme from '!/hooks/use-theme';
+import localize from '!/services/localize';
 import { useStores } from '!/stores';
 import { PriceModel } from '!/stores/models/PriceModel';
 import { MainNavigationProp, MainRouteProp } from '!/types';
@@ -63,7 +63,7 @@ const ProductDetails = observer(() => {
 
       <AdBanner />
 
-      <Caption style={styles.listCaption}>{t('prices')}</Caption>
+      <Caption style={styles.listCaption}>{localize.t('prices')}</Caption>
     </>
   );
 

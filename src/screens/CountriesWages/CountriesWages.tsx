@@ -4,11 +4,11 @@ import { ListRenderItem, View } from 'react-native';
 import { Caption, Divider } from 'react-native-paper';
 import { useCollapsibleStack } from 'react-navigation-collapsible';
 import { useNavigation } from '@react-navigation/native';
-import { t } from 'i18n-js';
 
 import CurrencyList from '!/components/CurrencyList';
 import { DEFAULT_PADDING } from '!/constants';
 import useFocusEffect from '!/hooks/use-focus-effect';
+import localize from '!/services/localize';
 import { useStores } from '!/stores';
 import { MainNavigationProp } from '!/types';
 import { CurrencyInfo } from '!/utils/currency-list';
@@ -26,7 +26,7 @@ const CountriesWages: FC = () => {
     generalStore.setFab({ fabVisible: false });
 
     navigation.setOptions({
-      title: t('countriesWages'),
+      title: localize.t('countriesWages'),
     });
 
     // Cannot have a blur function
@@ -39,14 +39,14 @@ const CountriesWages: FC = () => {
   const ListHeader = (
     <View>
       <Caption style={{ paddingHorizontal: DEFAULT_PADDING, marginTop: DEFAULT_PADDING }}>
-        {t('activeCurrency')}
+        {localize.t('activeCurrency')}
       </Caption>
 
       <CountryWageItem currencyInfo={findCurrency(generalStore.activeCurrencyId)!} />
       <Divider />
 
       <Caption style={{ paddingHorizontal: DEFAULT_PADDING, marginTop: DEFAULT_PADDING }}>
-        {t('availableCurrencies')}
+        {localize.t('availableCurrencies')}
       </Caption>
     </View>
   );

@@ -2,15 +2,14 @@ import React, { FC } from 'react';
 import { Text } from 'react-native';
 
 import { Appbar, Button } from 'react-native-paper';
-import { t } from 'i18n-js';
 import { Observer } from 'mobx-react-lite';
 
 import usePress from '!/hooks/use-press';
 import useTheme from '!/hooks/use-theme';
+import localize from '!/services/localize';
 import { useStores } from '!/stores';
 import { MainNavigationProp } from '!/types';
 import findCurrency from '!/utils/find-currency';
-import { toMoneyMask } from '!/utils/money-mask';
 
 import styles from '../CountriesWages/styles';
 
@@ -55,9 +54,9 @@ const HeaderRight: FC<Props> = ({ navigation }) => {
               {currencyInfo.currency}
               {' • '}
               {wage?.value || currencyInfo.hourlyWage
-                ? toMoneyMask(wage?.value || currencyInfo.hourlyWage)
+                ? localize.toCurrency(wage?.value || currencyInfo.hourlyWage)
                 : '---'}
-              <Text style={styles.hourlyWageUnit}>/{t('hr')}</Text>
+              <Text style={styles.hourlyWageUnit}>/{localize.t('hr')}</Text>
             </Button>
           );
         }}

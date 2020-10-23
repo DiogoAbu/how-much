@@ -1,9 +1,9 @@
-import { t } from 'i18n-js';
 import { makeAutoObservable } from 'mobx';
 import { format, ignore } from 'mobx-sync';
 // @ts-ignore
 import sortArray from 'sort-array';
 
+import localize from '!/services/localize';
 import { ProductSortBy, ProductSortByOrder } from '!/types';
 
 import { PriceModel } from './models/PriceModel';
@@ -166,7 +166,7 @@ export class ProductsStore {
 
   isPricesValid(): string | true {
     if (this.productForm?.prices.length === 0) {
-      return t('needsAtLeastOnePrice');
+      return localize.t('needsAtLeastOnePrice');
     }
     return true;
   }

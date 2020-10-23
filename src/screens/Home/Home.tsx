@@ -1,10 +1,16 @@
 import React, { Fragment } from 'react';
-import { Alert, Animated, ListRenderItem, NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
+import {
+  Alert,
+  Animated,
+  ListRenderItem,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  Platform,
+} from 'react-native';
 
-import { Divider } from 'react-native-paper';
+import { Divider, Text } from 'react-native-paper';
 import { useCollapsibleStack } from 'react-navigation-collapsible';
 import { useNavigation } from '@react-navigation/native';
-import { t } from 'i18n-js';
 import { Observer, observer } from 'mobx-react-lite';
 
 import SlideIn from '!/components/SlideIn';
@@ -13,6 +19,7 @@ import useAutorunOnFocus from '!/hooks/use-autorun-on-focus';
 import useFocusEffect from '!/hooks/use-focus-effect';
 import usePress from '!/hooks/use-press';
 import useTheme from '!/hooks/use-theme';
+import localize from '!/services/localize';
 import { useStores } from '!/stores';
 import { ProductModel } from '!/stores/models/ProductModel';
 import { MainNavigationProp } from '!/types';
@@ -31,14 +38,14 @@ const NEAR_BOTTOM_OFFSET = 20;
 const Home = observer(() => {
   const navigation = useNavigation<MainNavigationProp<'Home'>>();
   const stores = useStores();
-  const { colors } = useTheme();
+  const { colors, dark, fonts } = useTheme();
 
   const { onScrollWithListener, containerPaddingTop, scrollIndicatorInsetTop } = useCollapsibleStack();
   const onScroll = onScrollWithListener(({ nativeEvent }: NativeSyntheticEvent<NativeScrollEvent>) => {
     const { contentOffset, contentSize, layoutMeasurement } = nativeEvent;
 
     const targetOffset = contentSize.height - layoutMeasurement.height - NEAR_BOTTOM_OFFSET;
-    const isNearBottom = contentOffset.y >= targetOffset;
+    const isNearBottom = targetOffset > 0 && contentOffset.y >= targetOffset;
 
     stores.generalStore.setFab({ fabVisible: !isNearBottom });
   });
@@ -51,12 +58,12 @@ const Home = observer(() => {
 
     if (stores.productsStore.isDraft()) {
       Alert.alert(
-        t('draftFound'),
-        t('doYouWantToDiscardThisDraftOrEditIt'),
+        localize.t('draftFound'),
+        localize.t('doYouWantToDiscardThisDraftOrEditIt'),
         [
-          { text: t('label.return'), style: 'cancel' },
+          { text: localize.t('label.return'), style: 'cancel' },
           {
-            text: t('label.discard'),
+            text: localize.t('label.discard'),
             style: 'destructive',
             onPress: () => {
               stores.productsStore.resetProductForm();
@@ -66,7 +73,7 @@ const Home = observer(() => {
             },
           },
           {
-            text: t('label.edit'),
+            text: localize.t('label.edit'),
             onPress: () => {
               requestAnimationFrame(() => {
                 navigation.navigate('ProductForm');
@@ -126,10 +133,31 @@ const Home = observer(() => {
     stores.generalStore.setFab({ fabIcon: 'plus', handleFabPress });
 
     navigation.setOptions({
-      title: t('howMuch'),
+      title: Platform.OS === 'ios' ? '' : localize.t('howMuch'),
+      headerLeft: () =>
+        Platform.OS === 'ios' ? (
+          <Text
+            style={[
+              fonts.regular,
+              styles.headerLeftTitle,
+              { color: dark ? colors.text : colors.textOnPrimary },
+            ]}
+          >
+            {localize.t('howMuch')}
+          </Text>
+        ) : undefined,
       headerRight: () => <HeaderRight navigation={navigation} />,
     });
-  }, [handleFabPress, navigation, stores]);
+  }, [
+    colors.text,
+    colors.textOnPrimary,
+    dark,
+    fonts.medium,
+    fonts.regular,
+    handleFabPress,
+    navigation,
+    stores.generalStore,
+  ]);
 
   const placeholderAmount = amountToCoverHeight(containerPaddingTop);
 
@@ -143,7 +171,7 @@ const Home = observer(() => {
       keyboardDismissMode='interactive'
       keyboardShouldPersistTaps='handled'
       keyExtractor={keyExtractor}
-      ListEmptyComponent={<EmptyCenteredView text={t('nothingHereYet')} />}
+      ListEmptyComponent={<EmptyCenteredView text={localize.t('nothingHereYet')} />}
       ListHeaderComponent={ListOptions}
       onScroll={onScroll as any}
       renderItem={renderProduct}
