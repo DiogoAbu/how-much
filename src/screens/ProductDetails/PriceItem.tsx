@@ -38,7 +38,7 @@ const PriceItem = observer<ListRenderItemInfo<PriceModel>>(({ item: price }) => 
           : t('unknown')
       }`}
       right={renderRight}
-      title={price.value ? `${currencyInfo?.currency ?? ''} ${toMoneyMask(price.value)}` : t('noValidPrice')}
+      title={`${currencyInfo?.currency ?? ''} ${price.value ? toMoneyMask(price.value) : t('noValidPrice')}`}
     />
   );
 });

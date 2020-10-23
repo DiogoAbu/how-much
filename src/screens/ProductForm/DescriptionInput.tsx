@@ -9,6 +9,7 @@ import { HelperText, TextInput } from 'react-native-paper';
 import { t } from 'i18n-js';
 import { observer } from 'mobx-react-lite';
 
+import { DEFAULT_PADDING } from '!/constants';
 import useTheme from '!/hooks/use-theme';
 import { ProductModel } from '!/stores/models/ProductModel';
 
@@ -48,9 +49,10 @@ const DescriptionInput = observer<Props, NativeTextInput>(
           onSubmitEditing={handleOnSubmit}
           ref={ref}
           returnKeyType='next'
+          style={{ marginTop: DEFAULT_PADDING }}
           value={productForm?.description}
         />
-        <HelperText type='error' visible>
+        <HelperText style={{ marginBottom: DEFAULT_PADDING }} type='error' visible>
           {descriptionError}
         </HelperText>
       </>

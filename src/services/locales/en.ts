@@ -32,6 +32,9 @@ const translation = {
   contentNotLoadedTryAgain: 'Content not loaded, please try again.',
   sharingUnavailable: 'Sharing unavailable on this device.',
   somethingWentWrong: 'Something went wrong!',
+  saveInGallery: 'Save in gallery?',
+  doYouWantToSaveThisChartIntoYourGallery: 'Do you want to save this chart into your gallery?',
+  chartImageSavedInGallery: 'Chart image saved in gallery',
 
   description: 'Description',
   price: 'Price',
@@ -52,8 +55,8 @@ const translation = {
   },
 
   label: {
-    yes: 'yes',
-    no: 'no',
+    yes: 'Yes',
+    no: 'No',
     ok: 'Ok',
     return: 'Return',
     discard: 'Discard',

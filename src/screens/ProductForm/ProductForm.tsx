@@ -1,7 +1,7 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { FlatList, ListRenderItem, TextInput as NativeTextInput } from 'react-native';
+import { FlatList, ListRenderItem, TextInput as NativeTextInput, View } from 'react-native';
 
-import { Button, Divider } from 'react-native-paper';
+import { Divider, IconButton, Text } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { t } from 'i18n-js';
@@ -94,19 +94,22 @@ const ProductForm = observer(() => {
       keyboardDismissMode='interactive'
       keyboardShouldPersistTaps='handled'
       keyExtractor={keyExtractor}
-      ListFooterComponent={
-        <Button mode='contained' onPress={handleAddCurrency} style={styles.buttonAdd}>
-          {t('label.addCurrency')}
-        </Button>
-      }
       ListHeaderComponent={
-        <DescriptionInput
-          descriptionError={descriptionError}
-          handleOnChange={handleOnChangeDescription}
-          handleOnSubmit={handleFocusPrice}
-          productForm={productsStore.productForm}
-          ref={inputRef}
-        />
+        <>
+          <DescriptionInput
+            descriptionError={descriptionError}
+            handleOnChange={handleOnChangeDescription}
+            handleOnSubmit={handleFocusPrice}
+            productForm={productsStore.productForm}
+            ref={inputRef}
+          />
+
+          <Divider />
+          <View style={styles.pricesHeader}>
+            <Text>{t('prices')}</Text>
+            <IconButton icon='plus' onPress={handleAddCurrency} />
+          </View>
+        </>
       }
       renderItem={renderPrice}
       style={{ backgroundColor: colors.background }}

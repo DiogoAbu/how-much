@@ -22,7 +22,7 @@ import CurrencyItem from './CurrencyItem';
 const Currencies = observer(() => {
   const navigation = useNavigation<MainNavigationProp<'Currencies'>>();
   const { params } = useRoute<MainRouteProp<'Currencies'>>();
-  const { generalStore, productsStore } = useStores();
+  const { generalStore, productsStore, wagesStore } = useStores();
 
   const [selectedId, setSelectedId] = useState<CurrencyInfo['id'] | null>(null);
   const [dialogVisible, setDialogVisible] = useState(() => !generalStore.activeCurrencyId);
@@ -73,7 +73,12 @@ const Currencies = observer(() => {
 
   const renderCurrency: ListRenderItem<CurrencyInfo> = ({ item }) => {
     return (
-      <CurrencyItem currencyInfo={item} isSelected={selectedId === item.id} setSelectedId={setSelectedId} />
+      <CurrencyItem
+        currencyInfo={item}
+        isSelected={selectedId === item.id}
+        setSelectedId={setSelectedId}
+        wage={wagesStore.findWage(item.id)}
+      />
     );
   };
 
@@ -88,6 +93,7 @@ const Currencies = observer(() => {
         isActive
         isSelected={selectedId === generalStore.activeCurrencyId}
         setSelectedId={setSelectedId}
+        wage={wagesStore.findWage(generalStore.activeCurrencyId)}
       />
       <Divider />
 

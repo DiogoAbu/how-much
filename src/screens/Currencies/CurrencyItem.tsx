@@ -2,28 +2,32 @@ import React, { FC, memo } from 'react';
 
 import { List } from 'react-native-paper';
 import { useRoute } from '@react-navigation/native';
+import { t } from 'i18n-js';
 
 import FadeIcon from '!/components/FadeIcon';
 import { DEFAULT_ICON_SIZE } from '!/constants';
 import usePress from '!/hooks/use-press';
 import useTheme from '!/hooks/use-theme';
+import { CountryWageModel } from '!/stores/models/CountryWageModel';
 import { ListItemRightProps, MainRouteProp } from '!/types';
 import { CurrencyInfo } from '!/utils/currency-list';
+import { toMoneyMask } from '!/utils/money-mask';
 
 import styles from './styles';
 
 interface Props {
   currencyInfo: CurrencyInfo;
+  wage?: CountryWageModel;
   setSelectedId?: (currencyInfoId: CurrencyInfo['id'] | null) => void;
   isSelected?: boolean;
   isActive?: boolean;
 }
 
-const CurrencyItem: FC<Props> = ({ currencyInfo, setSelectedId, isSelected, isActive }) => {
+const CurrencyItem: FC<Props> = ({ currencyInfo, wage, setSelectedId, isSelected, isActive }) => {
   const { params } = useRoute<MainRouteProp<'Currencies'>>();
   const { colors } = useTheme();
 
-  const { countryCode, currency, countryName: name } = currencyInfo;
+  const { currency, countryName, hourlyWage } = currencyInfo;
 
   const handleOnPress = usePress(() => {
     requestAnimationFrame(() => {
@@ -44,7 +48,9 @@ const CurrencyItem: FC<Props> = ({ currencyInfo, setSelectedId, isSelected, isAc
 
   return (
     <List.Item
-      description={`${countryCode} • ${name}`}
+      description={`${countryName} • ${
+        wage?.value || hourlyWage ? `${toMoneyMask(wage?.value || hourlyWage || 0)}/${t('hr')}` : t('unknown')
+      }`}
       disabled={params.action === 'productForm' ? false : isActive}
       onPress={handleOnPress}
       right={params.action === 'productForm' || !isActive ? renderRight : undefined}

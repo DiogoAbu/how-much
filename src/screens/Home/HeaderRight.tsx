@@ -1,7 +1,7 @@
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 import { Text } from 'react-native';
 
-import { Appbar, Button, Menu } from 'react-native-paper';
+import { Appbar, Button } from 'react-native-paper';
 import { t } from 'i18n-js';
 import { Observer } from 'mobx-react-lite';
 
@@ -22,18 +22,6 @@ const HeaderRight: FC<Props> = ({ navigation }) => {
   const { colors, dark } = useTheme();
   const { generalStore, wagesStore } = useStores();
 
-  // State for menu visiblity
-  const [isMenuVisible, setIsMenuVisible] = useState(false);
-
-  // Handlers
-  const handleHideMenu = usePress(() => {
-    setIsMenuVisible(() => false);
-  });
-
-  const handleShowMenu = usePress(() => {
-    setIsMenuVisible(() => true);
-  });
-
   const handleActiveCurrencyPress = usePress(() => {
     requestAnimationFrame(() => {
       navigation.navigate('Currencies', { action: 'activeCurrency' });
@@ -41,20 +29,10 @@ const HeaderRight: FC<Props> = ({ navigation }) => {
   });
 
   const handlePreferencesPress = usePress(() => {
-    handleHideMenu();
     requestAnimationFrame(() => {
       navigation.navigate('Preferences');
     });
   });
-
-  const dotsIcon = (
-    <Appbar.Action
-      color={dark ? colors.text : colors.textOnPrimary}
-      disabled={isMenuVisible}
-      icon='dots-vertical'
-      onPress={handleShowMenu}
-    />
-  );
 
   return (
     <>
@@ -85,9 +63,11 @@ const HeaderRight: FC<Props> = ({ navigation }) => {
         }}
       </Observer>
 
-      <Menu anchor={dotsIcon} onDismiss={handleHideMenu} visible={isMenuVisible}>
-        <Menu.Item icon='tune' onPress={handlePreferencesPress} title={t('preferences')} />
-      </Menu>
+      <Appbar.Action
+        color={dark ? colors.text : colors.textOnPrimary}
+        icon='tune'
+        onPress={handlePreferencesPress}
+      />
     </>
   );
 };

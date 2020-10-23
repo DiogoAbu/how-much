@@ -51,7 +51,9 @@ const ProductDetails = observer(() => {
     });
 
     return () => {
-      setShouldRender(false);
+      requestAnimationFrame(() => {
+        setShouldRender(false);
+      });
     };
   }, [generalStore, navigation, product.description, route]);
 
@@ -59,7 +61,7 @@ const ProductDetails = observer(() => {
     <>
       <PricesChart product={product} setSnackBarText={setSnackBarText} shouldRender={shouldRender} />
 
-      <AdBanner shouldRender={shouldRender} />
+      <AdBanner />
 
       <Caption style={styles.listCaption}>{t('prices')}</Caption>
     </>

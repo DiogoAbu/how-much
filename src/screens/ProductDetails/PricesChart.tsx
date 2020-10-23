@@ -1,7 +1,7 @@
 import React, { useCallback, useRef } from 'react';
 import { Alert, useWindowDimensions, View } from 'react-native';
 
-import { ActivityIndicator, Caption, Chip, Colors, IconButton, Text } from 'react-native-paper';
+import { ActivityIndicator, Caption, Chip, Colors, FAB, Text } from 'react-native-paper';
 import ViewShot from 'react-native-view-shot';
 import * as MediaLibrary from 'expo-media-library';
 import * as Sharing from 'expo-sharing';
@@ -75,27 +75,42 @@ const PricesChart = observer<Props>(({ product, shouldRender, setSnackBarText })
     }
   });
 
-  const handleDownloadPress = usePress(async () => {
-    try {
-      const { status } = await MediaLibrary.requestPermissionsAsync();
-      if (status !== MediaLibrary.PermissionStatus.GRANTED) {
-        Alert.alert(t('title.oops'), t('accessToGaleryDenied'));
-      }
+  const handleDownloadPress = usePress(() => {
+    Alert.alert(
+      t('saveInGallery'),
+      t('doYouWantToSaveThisChartIntoYourGallery'),
+      [
+        {
+          text: t('label.no'),
+        },
+        {
+          text: t('label.yes'),
+          onPress: async () => {
+            try {
+              const { status } = await MediaLibrary.requestPermissionsAsync();
+              if (status !== MediaLibrary.PermissionStatus.GRANTED) {
+                Alert.alert(t('title.oops'), t('accessToGaleryDenied'));
+              }
 
-      const imageUri = await takeScreenshot();
-      if (!imageUri) {
-        Alert.alert(t('title.oops'), t('somethingWentWrong'));
-        return;
-      }
+              const imageUri = await takeScreenshot();
+              if (!imageUri) {
+                Alert.alert(t('title.oops'), t('somethingWentWrong'));
+                return;
+              }
 
-      const imageAsset = await MediaLibrary.createAssetAsync(imageUri);
-      await MediaLibrary.createAlbumAsync('How Much', imageAsset, false);
+              const imageAsset = await MediaLibrary.createAssetAsync(imageUri);
+              await MediaLibrary.createAlbumAsync('How Much', imageAsset, false);
 
-      setSnackBarText('Chart image saved to gallery');
-    } catch (err) {
-      console.log(err);
-      Alert.alert(t('title.oops'), t('somethingWentWrong'));
-    }
+              setSnackBarText(t('chartImageSavedInGallery'));
+            } catch (err) {
+              console.log(err);
+              Alert.alert(t('title.oops'), t('somethingWentWrong'));
+            }
+          },
+        },
+      ],
+      { cancelable: true },
+    );
   });
 
   let theme = VictoryTheme.material;
@@ -236,9 +251,23 @@ const PricesChart = observer<Props>(({ product, shouldRender, setSnackBarText })
         </View>
       </ViewShot>
 
-      <View style={styles.buttonsContainer}>
-        <IconButton color={colors.primary} icon='share-variant' onPress={handleSharePress} />
-        <IconButton color={colors.primary} icon='download' onPress={handleDownloadPress} />
+      <View style={styles.chartButtonsContainer}>
+        <FAB
+          color={colors.textOnPrimary}
+          icon='share-variant'
+          onPress={handleSharePress}
+          small
+          style={styles.chartButton}
+          theme={{ colors: { accent: colors.primary } }}
+        />
+        <FAB
+          color={colors.textOnPrimary}
+          icon='download'
+          onPress={handleDownloadPress}
+          small
+          style={styles.chartButton}
+          theme={{ colors: { accent: colors.primary } }}
+        />
       </View>
     </View>
   );

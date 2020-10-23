@@ -5,6 +5,7 @@ import { Colors, IconButton, Text, TextInput } from 'react-native-paper';
 import { t } from 'i18n-js';
 import { observer } from 'mobx-react-lite';
 
+import { DEFAULT_PADDING } from '!/constants';
 import usePress from '!/hooks/use-press';
 import useTheme from '!/hooks/use-theme';
 import { useStores } from '!/stores';
@@ -34,7 +35,7 @@ const PriceInput = observer<ListRenderItemInfo<PriceModel>>(({ item: price }) =>
 
   return (
     <View style={styles.container}>
-      <Text style={[styles.currency, fonts.medium, { color: colors.accent }]}>{currencyInfo.currency}</Text>
+      <Text style={[styles.currency, fonts.medium]}>{currencyInfo.currency}</Text>
 
       <TextInput
         autoCompleteType='off'
@@ -70,14 +71,15 @@ const styles = StyleSheet.create({
   currency: {
     width: 70,
     fontSize: 16,
-    paddingLeft: 8,
-    paddingTop: 8,
+    paddingLeft: DEFAULT_PADDING,
+    paddingTop: DEFAULT_PADDING,
   },
   input: {
     flex: 1,
   },
   buttonDelete: {
-    paddingTop: 8,
+    paddingTop: DEFAULT_PADDING,
+    marginLeft: DEFAULT_PADDING * 2,
   },
 });
 

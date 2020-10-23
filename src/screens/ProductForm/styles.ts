@@ -5,8 +5,10 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
 
-  buttonAdd: {
-    marginTop: 16,
+  pricesHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 });
 

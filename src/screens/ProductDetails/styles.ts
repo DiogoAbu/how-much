@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
   },
 
   loadingChartContainer: {
-    height: 430,
+    height: 400,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -74,17 +74,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: DEFAULT_PADDING,
   },
-  loadingAdContainer: {
-    width: 320,
-    height: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
 
-  buttonsContainer: {
+  chartButtonsContainer: {
     position: 'absolute',
     top: 0,
-    right: 0,
+    right: DEFAULT_PADDING / 2,
+  },
+  chartButton: {
+    marginTop: DEFAULT_PADDING,
   },
 
   listCaption: {
