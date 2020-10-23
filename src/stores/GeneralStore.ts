@@ -3,6 +3,8 @@ import { ViewStyle } from 'react-native';
 import { action, makeObservable, observable } from 'mobx';
 import { ignore } from 'mobx-sync';
 
+import { CurrencyInfo } from '!/utils/currency-list';
+
 import { Stores } from './Stores';
 
 export class GeneralStore {
@@ -21,18 +23,19 @@ export class GeneralStore {
   @ignore
   handleFabPress?: () => void = () => null;
 
+  activeCurrencyId?: CurrencyInfo['id'] = '';
+
   constructor(stores: Stores) {
     this.stores = stores;
 
-    // makeAutoObservable<this, 'stores'>(this, {
-    //   stores: false,
-    // });
     makeObservable(this, {
       fabIcon: observable,
       fabStyle: observable,
       fabVisible: observable,
       handleFabPress: observable,
+      activeCurrencyId: observable,
       setFab: action,
+      setActiveCurrencyId: action,
     });
   }
 
@@ -46,5 +49,9 @@ export class GeneralStore {
     this.fabVisible = fabVisible ?? this.fabVisible;
     this.fabStyle = fabStyle ?? this.fabStyle;
     this.handleFabPress = handleFabPress ?? this.handleFabPress;
+  }
+
+  setActiveCurrencyId(activeCurrencyId: CurrencyInfo['id']): void {
+    this.activeCurrencyId = activeCurrencyId;
   }
 }

@@ -5,26 +5,28 @@ import {
   TextInputSubmitEditingEventData,
 } from 'react-native';
 
-import { HelperText, TextInput, useTheme } from 'react-native-paper';
+import { HelperText, TextInput } from 'react-native-paper';
 import { t } from 'i18n-js';
 import { observer } from 'mobx-react-lite';
 
+import useTheme from '!/hooks/use-theme';
 import { ProductModel } from '!/stores/models/ProductModel';
 
 interface Props {
-  productForm: ProductModel;
+  productForm: ProductModel | null;
   descriptionError: string;
+  blurOnSubmit?: boolean;
   handleOnChange?: (text: string) => void;
   handleOnSubmit?: (e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => void;
 }
 
 const DescriptionInput = observer<Props, NativeTextInput>(
-  ({ productForm, descriptionError, handleOnChange, handleOnSubmit }, ref) => {
+  ({ productForm, descriptionError, blurOnSubmit, handleOnChange, handleOnSubmit }, ref) => {
     const { dark } = useTheme();
 
     const handleOnChangeText = useCallback(
       (text: string) => {
-        productForm.setDescription(text);
+        productForm?.setDescription(text);
         handleOnChange?.(text);
       },
       [handleOnChange, productForm],
@@ -36,7 +38,7 @@ const DescriptionInput = observer<Props, NativeTextInput>(
           autoCompleteType='off'
           autoCorrect={false}
           autoFocus
-          blurOnSubmit={false}
+          blurOnSubmit={blurOnSubmit}
           error={!!descriptionError}
           keyboardAppearance={dark ? 'dark' : 'light'}
           label={t('description')}
@@ -46,7 +48,7 @@ const DescriptionInput = observer<Props, NativeTextInput>(
           onSubmitEditing={handleOnSubmit}
           ref={ref}
           returnKeyType='next'
-          value={productForm.description}
+          value={productForm?.description}
         />
         <HelperText type='error' visible>
           {descriptionError}

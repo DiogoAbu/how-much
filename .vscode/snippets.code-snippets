@@ -14,7 +14,7 @@
   "use-press": {
     "scope": "typescript,typescriptreact",
     "prefix": "usePress",
-    "body": ["const handle${2/(.*)/${2:/capitalize}/} = usePress$1(() => {", "  $0", "});"],
+    "body": ["const handle${2/(.*)/${1:/capitalize}/} = usePress$1(() => {", "  $0", "});"],
     "description": "usePress"
   },
   "use-theme": {

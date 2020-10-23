@@ -4,9 +4,13 @@ import { createCollapsibleStack } from 'react-navigation-collapsible';
 import { CardStyleInterpolators, createStackNavigator } from '@react-navigation/stack';
 
 import Header from '!/components/Header';
+import CountriesWages from '!/screens/CountriesWages/CountriesWages';
+import CountryWageForm from '!/screens/CountryWageForm/CountryWageForm';
+import Currencies from '!/screens/Currencies/Currencies';
 import Home from '!/screens/Home/Home';
+import Preferences from '!/screens/Preferences/Preferences';
+import ProductDetails from '!/screens/ProductDetails/ProductDetails';
 import ProductForm from '!/screens/ProductForm/ProductForm';
-import ProductPrices from '!/screens/ProductForm/ProductPrices';
 import { MainStackParams } from '!/types';
 
 const Stack = createStackNavigator<MainStackParams>();
@@ -28,7 +32,17 @@ const MainStack: FC = () => {
       })}
 
       <Stack.Screen component={ProductForm} name='ProductForm' />
-      <Stack.Screen component={ProductPrices} name='ProductPrices' />
+      <Stack.Screen component={ProductDetails} name='ProductDetails' />
+
+      <Stack.Screen component={Currencies} name='Currencies' />
+
+      {createCollapsibleStack(<Stack.Screen component={CountriesWages} name='CountriesWages' />, {
+        header: (props) => <Header {...props} />,
+        useNativeDriver: true,
+      })}
+      <Stack.Screen component={CountryWageForm} name='CountryWageForm' />
+
+      <Stack.Screen component={Preferences} name='Preferences' />
     </Stack.Navigator>
   );
 };

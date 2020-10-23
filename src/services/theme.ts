@@ -8,16 +8,32 @@ interface ThemeNavigation {
   };
 }
 
-export type Theme = typeof DefaultTheme & ThemeNavigation;
+interface ThemeCustom {
+  statusBarStyle: 'auto' | 'inverted' | 'light' | 'dark';
+  colors: {
+    textOnPrimary: string;
+    textOnAccent: string;
+    disabledOnPrimary: string;
+    disabledOnAccent: string;
+  };
+}
 
-export const ligth: Theme = {
+export type Theme = typeof DefaultTheme & ThemeNavigation & ThemeCustom;
+
+export const lightTheme: Theme = {
   ...DefaultTheme,
 
+  statusBarStyle: 'light',
   colors: {
     ...DefaultTheme.colors,
 
-    primary: '#1976d2',
-    accent: '#FFDB2C',
+    primary: '#304FFF',
+    accent: '#01C853',
+
+    textOnPrimary: '#ffffff',
+    textOnAccent: '#ffffff',
+    disabledOnPrimary: '#cccccc',
+    disabledOnAccent: '#cccccc',
 
     get card(): string {
       return this.background;
@@ -28,15 +44,21 @@ export const ligth: Theme = {
   },
 };
 
-export const dark: Theme = {
+export const darkTheme: Theme = {
   ...DarkTheme,
 
+  statusBarStyle: 'light',
   colors: {
     ...DarkTheme.colors,
 
-    primary: '#1976d2',
-    accent: '#FFDB2C',
+    primary: '#4a65ff',
+    accent: '#01C853',
     text: '#c0c0c0',
+
+    textOnPrimary: '#ffffff',
+    textOnAccent: '#ffffff',
+    disabledOnPrimary: '#cccccc',
+    disabledOnAccent: '#cccccc',
 
     get card(): string {
       return this.background;

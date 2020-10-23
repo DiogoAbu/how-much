@@ -1,10 +1,11 @@
 import React, { FC } from 'react';
 import { Dimensions, StyleSheet, ViewStyle } from 'react-native';
 
-import { overlay, useTheme } from 'react-native-paper';
+import { overlay } from 'react-native-paper';
 import SkeletonContent from 'react-native-skeleton-content';
 
 import { DEFAULT_APPBAR_HEIGHT } from '!/constants';
+import useTheme from '!/hooks/use-theme';
 
 const BIGGEST_HEIGHT = 36;
 const OUTER_MARGIN = 16;
@@ -56,7 +57,7 @@ const layout: ICustomViewStyle[] = [
     ],
   },
   {
-    width: 36,
+    width: BIGGEST_HEIGHT,
     height: BIGGEST_HEIGHT,
   },
 ];

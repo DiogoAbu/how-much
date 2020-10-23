@@ -1,24 +1,36 @@
 import '!/services/i18n';
 
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
+import { Appearance } from 'react-native';
 
 import { Portal, Provider as PaperProvider } from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
+import { observer } from 'mobx-react-lite';
 
 import Fab from './components/Fab';
+import useMethod from './hooks/use-method';
 import MainStack from './navigators/MainStack';
-import { dark, ligth } from './services/theme';
+import { darkTheme, lightTheme } from './services/theme';
 import { Stores } from './stores/Stores';
-import { StoresProvider } from './stores';
+import { StoresProvider, useStores } from './stores';
 
-const isDark = !true;
+const AppWithStores: FC = observer(() => {
+  const { themeStore } = useStores();
 
-const AppWithStores: FC = () => {
-  const theme = isDark ? dark : ligth;
+  const handleSchemeChange = useMethod(({ colorScheme }: Appearance.AppearancePreferences) => {
+    themeStore.setColorSchemeCurrent(colorScheme);
+  });
+
+  useEffect(() => {
+    Appearance.addChangeListener(handleSchemeChange);
+    return () => {
+      Appearance.removeChangeListener(handleSchemeChange);
+    };
+  }, [handleSchemeChange]);
 
   return (
-    <PaperProvider theme={theme}>
-      <NavigationContainer theme={theme}>
+    <PaperProvider theme={themeStore.colorSchemeCurrent === 'dark' ? darkTheme : lightTheme}>
+      <NavigationContainer theme={themeStore.colorSchemeCurrent === 'dark' ? darkTheme : lightTheme}>
         <MainStack />
 
         <Portal>
@@ -27,7 +39,7 @@ const AppWithStores: FC = () => {
       </NavigationContainer>
     </PaperProvider>
   );
-};
+});
 
 const App: FC = () => {
   return (

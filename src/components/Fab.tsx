@@ -1,9 +1,10 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 
-import { FAB as FabPaper, useTheme } from 'react-native-paper';
+import { FAB as FabPaper } from 'react-native-paper';
 import { observer } from 'mobx-react-lite';
 
+import useTheme from '!/hooks/use-theme';
 import { useStores } from '!/stores';
 
 const Fab = observer(() => {
@@ -12,6 +13,7 @@ const Fab = observer(() => {
 
   return (
     <FabPaper
+      color={colors.textOnPrimary}
       icon={generalStore.fabIcon || 'plus'}
       onPress={generalStore.handleFabPress}
       style={[styles.fab, { ...generalStore.fabStyle }]}

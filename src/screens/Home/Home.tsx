@@ -1,35 +1,39 @@
 import React, { Fragment } from 'react';
-import { Animated, ListRenderItem, NativeScrollEvent, NativeSyntheticEvent, StyleSheet } from 'react-native';
+import { Alert, Animated, ListRenderItem, NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 
-import { Divider, useTheme } from 'react-native-paper';
+import { Divider } from 'react-native-paper';
 import { useCollapsibleStack } from 'react-navigation-collapsible';
 import { useNavigation } from '@react-navigation/native';
+import { t } from 'i18n-js';
 import { Observer, observer } from 'mobx-react-lite';
 
-import HeaderRight from '!/components/HeaderRight';
 import SlideIn from '!/components/SlideIn';
+import { LIST_ITEM_HEIGHT } from '!/constants';
 import useAutorunOnFocus from '!/hooks/use-autorun-on-focus';
 import useFocusEffect from '!/hooks/use-focus-effect';
 import usePress from '!/hooks/use-press';
+import useTheme from '!/hooks/use-theme';
 import { useStores } from '!/stores';
 import { ProductModel } from '!/stores/models/ProductModel';
 import { MainNavigationProp } from '!/types';
 
-import EmptyView from './EmptyView';
+import EmptyCenteredView from '../../components/EmptyCenteredView';
+
+import HeaderRight from './HeaderRight';
+import ListOptions from './ListOptions';
 import ProductItem from './ProductItem';
 import SkeletonItem, { amountToCoverHeight } from './SkeletonItem';
+import styles from './styles';
 
 const AMOUNT_ANIMATE = 10;
 const NEAR_BOTTOM_OFFSET = 20;
 
-const keyExtractor = (_: ProductModel, index: number) => `item${index}`;
-
 const Home = observer(() => {
   const navigation = useNavigation<MainNavigationProp<'Home'>>();
-  const { colors } = useTheme();
   const stores = useStores();
-  const { onScrollWithListener, containerPaddingTop, scrollIndicatorInsetTop } = useCollapsibleStack();
+  const { colors } = useTheme();
 
+  const { onScrollWithListener, containerPaddingTop, scrollIndicatorInsetTop } = useCollapsibleStack();
   const onScroll = onScrollWithListener(({ nativeEvent }: NativeSyntheticEvent<NativeScrollEvent>) => {
     const { contentOffset, contentSize, layoutMeasurement } = nativeEvent;
 
@@ -40,9 +44,44 @@ const Home = observer(() => {
   });
 
   const handleFabPress = usePress(() => {
-    requestAnimationFrame(() => {
-      navigation.navigate('ProductForm');
-    });
+    if (!stores.generalStore.activeCurrencyId) {
+      navigation.reset({ routes: [{ name: 'Currencies', params: { action: 'activeCurrency' } }] });
+      return;
+    }
+
+    if (stores.productsStore.isDraft()) {
+      Alert.alert(
+        t('draftFound'),
+        t('doYouWantToDiscardThisDraftOrEditIt'),
+        [
+          { text: t('label.return'), style: 'cancel' },
+          {
+            text: t('label.discard'),
+            style: 'destructive',
+            onPress: () => {
+              stores.productsStore.resetProductForm();
+              requestAnimationFrame(() => {
+                navigation.navigate('ProductForm');
+              });
+            },
+          },
+          {
+            text: t('label.edit'),
+            onPress: () => {
+              requestAnimationFrame(() => {
+                navigation.navigate('ProductForm');
+              });
+            },
+          },
+        ],
+        { cancelable: true },
+      );
+    } else {
+      stores.productsStore.resetProductForm();
+      requestAnimationFrame(() => {
+        navigation.navigate('ProductForm');
+      });
+    }
   });
 
   const renderProduct: ListRenderItem<ProductModel> = ({ item, index, separators }) => {
@@ -50,11 +89,17 @@ const Home = observer(() => {
     return (
       <Observer>
         {() =>
-          !item.description ? (
+          !item?.description ? (
             <SkeletonItem />
           ) : (
             <Component>
-              <ProductItem index={index} item={item} separators={separators} />
+              <ProductItem
+                activeCurrencyId={stores.generalStore.activeCurrencyId}
+                index={index}
+                item={item}
+                separators={separators}
+                wage={stores.wagesStore.findWage(stores.generalStore.activeCurrencyId)}
+              />
             </Component>
           )
         }
@@ -64,9 +109,14 @@ const Home = observer(() => {
 
   useAutorunOnFocus(
     () => {
-      if (stores.hydrated) {
-        stores.generalStore.setFab({ fabVisible: true });
+      if (!stores.hydrated) {
+        return;
       }
+      if (!stores.generalStore.activeCurrencyId) {
+        navigation.reset({ routes: [{ name: 'Currencies', params: { action: 'activeCurrency' } }] });
+        return;
+      }
+      stores.generalStore.setFab({ fabVisible: true });
     },
     [stores],
     { name: 'Home FAB visibility' },
@@ -76,26 +126,25 @@ const Home = observer(() => {
     stores.generalStore.setFab({ fabIcon: 'plus', handleFabPress });
 
     navigation.setOptions({
-      title: 'How much?',
+      title: t('howMuch'),
       headerRight: () => <HeaderRight navigation={navigation} />,
     });
   }, [handleFabPress, navigation, stores]);
 
+  const placeholderAmount = amountToCoverHeight(containerPaddingTop);
+
   return (
     <Animated.FlatList
       contentContainerStyle={[styles.content, { paddingTop: containerPaddingTop }]}
-      data={
-        stores.hydrated
-          ? stores.productsStore.products.slice()
-          : Array<ProductModel>(amountToCoverHeight(containerPaddingTop))
-              .fill(new ProductModel({ description: '', prices: [] }))
-              .slice()
-      }
+      data={stores.hydrated ? stores.productsStore.productsSorted : Array<ProductModel>(placeholderAmount)}
+      getItemLayout={getItemLayout}
+      initialNumToRender={placeholderAmount}
       ItemSeparatorComponent={Divider}
       keyboardDismissMode='interactive'
       keyboardShouldPersistTaps='handled'
       keyExtractor={keyExtractor}
-      ListEmptyComponent={<EmptyView />}
+      ListEmptyComponent={<EmptyCenteredView text={t('nothingHereYet')} />}
+      ListHeaderComponent={ListOptions}
       onScroll={onScroll as any}
       renderItem={renderProduct}
       scrollEnabled={stores.hydrated}
@@ -105,10 +154,12 @@ const Home = observer(() => {
   );
 });
 
-const styles = StyleSheet.create({
-  content: {
-    flexGrow: 1,
-  },
+const keyExtractor = (item: ProductModel, index: number) => `product-${item?.id}-${index}`;
+
+const getItemLayout = (_: any, index: number) => ({
+  length: LIST_ITEM_HEIGHT,
+  offset: LIST_ITEM_HEIGHT * index,
+  index,
 });
 
 export default Home;

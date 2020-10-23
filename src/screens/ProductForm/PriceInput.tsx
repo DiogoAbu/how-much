@@ -1,35 +1,44 @@
 import React from 'react';
 import { ListRenderItemInfo, StyleSheet, View } from 'react-native';
 
-import { Button, Colors, IconButton, TextInput, useTheme } from 'react-native-paper';
-import { countries } from 'countries-list';
+import { Colors, IconButton, Text, TextInput } from 'react-native-paper';
 import { t } from 'i18n-js';
 import { observer } from 'mobx-react-lite';
 
 import usePress from '!/hooks/use-press';
+import useTheme from '!/hooks/use-theme';
+import { useStores } from '!/stores';
 import { PriceModel } from '!/stores/models/PriceModel';
-import { fromMoney, toMoney } from '!/utils/money-mask';
+import findCurrency from '!/utils/find-currency';
+import { toMoneyMask, toMoneyRaw } from '!/utils/money-mask';
 
 const PriceInput = observer<ListRenderItemInfo<PriceModel>>(({ item: price }) => {
-  const { dark } = useTheme();
+  const { colors, dark, fonts } = useTheme();
+  const { productsStore } = useStores();
 
-  const handlePressRemove = usePress(() => {
-    //
+  const handlePressDelete = usePress(() => {
+    requestAnimationFrame(() => {
+      productsStore.deletePriceById(price.id);
+    });
   });
 
   const handlePriceChange = (text: string) => {
-    price.setValue(fromMoney(text));
+    price.setValue(toMoneyRaw(text));
   };
+
+  const currencyInfo = findCurrency(price.currencyId);
+
+  if (!currencyInfo) {
+    return null;
+  }
 
   return (
     <View style={styles.container}>
-      <Button compact icon='chevron-down' mode='text' style={styles.country}>
-        {countries[price.countryCode].currency}
-      </Button>
+      <Text style={[styles.currency, fonts.medium, { color: colors.accent }]}>{currencyInfo.currency}</Text>
+
       <TextInput
         autoCompleteType='off'
         autoCorrect={false}
-        autoFocus
         keyboardAppearance={dark ? 'dark' : 'light'}
         keyboardType='decimal-pad'
         label={t('price')}
@@ -38,9 +47,15 @@ const PriceInput = observer<ListRenderItemInfo<PriceModel>>(({ item: price }) =>
         onChangeText={handlePriceChange}
         returnKeyType='done'
         style={styles.input}
-        value={toMoney(price.value)}
+        value={toMoneyMask(price.value)}
       />
-      <IconButton color={Colors.red300} icon='delete' onPress={handlePressRemove} />
+
+      <IconButton
+        color={Colors.red300}
+        icon='delete'
+        onPress={handlePressDelete}
+        style={styles.buttonDelete}
+      />
     </View>
   );
 });
@@ -52,11 +67,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 8,
   },
-  country: {
-    marginRight: 12,
+  currency: {
+    width: 70,
+    fontSize: 16,
+    paddingLeft: 8,
+    paddingTop: 8,
   },
   input: {
     flex: 1,
+  },
+  buttonDelete: {
+    paddingTop: 8,
   },
 });
 

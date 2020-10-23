@@ -1,22 +1,29 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { InteractionManager, ScrollView, StyleSheet, TextInput as NativeTextInput } from 'react-native';
+import { FlatList, ListRenderItem, TextInput as NativeTextInput } from 'react-native';
 
-import { Button, useTheme } from 'react-native-paper';
+import { Button, Divider } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { t } from 'i18n-js';
 import { observer } from 'mobx-react-lite';
 
+import HeaderButton from '!/components/HeaderButton';
+import SlideIn from '!/components/SlideIn';
 import { DEFAULT_APPBAR_HEIGHT, DEFAULT_PADDING } from '!/constants';
 import useFocusEffect from '!/hooks/use-focus-effect';
 import usePress from '!/hooks/use-press';
+import useTheme from '!/hooks/use-theme';
 import { useStores } from '!/stores';
-import { MainNavigationProp } from '!/types';
+import { PriceModel } from '!/stores/models/PriceModel';
+import { MainNavigationProp, MainRouteProp } from '!/types';
 
 import DescriptionInput from './DescriptionInput';
+import PriceInput from './PriceInput';
+import styles from './styles';
 
 const ProductForm = observer(() => {
   const navigation = useNavigation<MainNavigationProp<'ProductForm'>>();
+  const { params } = useRoute<MainRouteProp<'ProductForm'>>();
   const insets = useSafeAreaInsets();
   const { generalStore, productsStore } = useStores();
   const { colors } = useTheme();
@@ -29,17 +36,37 @@ const ProductForm = observer(() => {
     setDescriptionError('');
   }, []);
 
-  const handleNextScreen = usePress(() => {
-    if (!productsStore.isDescriptionValid) {
-      setDescriptionError(t('error.descriptionCannotBeEmpty'));
+  const handleAddCurrency = usePress(() => {
+    inputRef.current?.blur();
+
+    requestAnimationFrame(() => {
+      navigation.navigate('Currencies', { action: 'productForm' });
+    });
+  });
+
+  const handleFocusPrice = usePress(() => {
+    //
+  });
+
+  const handleDone = usePress(() => {
+    if (!productsStore.isDescriptionValid()) {
+      setDescriptionError(t('descriptionCannotBeEmpty'));
       return;
     }
 
-    productsStore.populatePrices();
-    inputRef.current?.blur();
+    const isPricesValid = productsStore.isPricesValid();
+    if (typeof isPricesValid === 'string') {
+      setDescriptionError(isPricesValid);
+      return;
+    }
 
-    void InteractionManager.runAfterInteractions(() => {
-      navigation.navigate('ProductPrices');
+    productsStore.addProductToList();
+    requestAnimationFrame(() => {
+      if (params?.isEditing) {
+        navigation.pop();
+      } else {
+        navigation.popToTop();
+      }
     });
   });
 
@@ -47,40 +74,54 @@ const ProductForm = observer(() => {
     generalStore.setFab({ fabVisible: false });
 
     navigation.setOptions({
-      title: 'Add a Product',
+      title: params?.isEditing ? t('editingProduct') : t('newProduct'),
       headerRight: () => (
-        <Button mode='outlined' onPress={handleNextScreen}>
-          {t('next')}
-        </Button>
+        <HeaderButton icon='check' mode='text' onPress={handleDone}>
+          {t('label.done')}
+        </HeaderButton>
       ),
     });
-  }, [handleNextScreen, navigation, generalStore]);
+  }, [generalStore, handleDone, navigation, params?.isEditing]);
 
   return (
-    <ScrollView
+    <FlatList
       contentContainerStyle={[
         styles.content,
         { padding: DEFAULT_PADDING, paddingTop: insets.top + DEFAULT_APPBAR_HEIGHT + DEFAULT_PADDING },
       ]}
+      data={productsStore.productForm?.prices.slice()}
+      ItemSeparatorComponent={Divider}
       keyboardDismissMode='interactive'
       keyboardShouldPersistTaps='handled'
+      keyExtractor={keyExtractor}
+      ListFooterComponent={
+        <Button mode='contained' onPress={handleAddCurrency} style={styles.buttonAdd}>
+          {t('label.addCurrency')}
+        </Button>
+      }
+      ListHeaderComponent={
+        <DescriptionInput
+          descriptionError={descriptionError}
+          handleOnChange={handleOnChangeDescription}
+          handleOnSubmit={handleFocusPrice}
+          productForm={productsStore.productForm}
+          ref={inputRef}
+        />
+      }
+      renderItem={renderPrice}
       style={{ backgroundColor: colors.background }}
-    >
-      <DescriptionInput
-        descriptionError={descriptionError}
-        handleOnChange={handleOnChangeDescription}
-        handleOnSubmit={handleNextScreen}
-        productForm={productsStore.productForm}
-        ref={inputRef}
-      />
-    </ScrollView>
+    />
   );
 });
 
-const styles = StyleSheet.create({
-  content: {
-    flexGrow: 1,
-  },
-});
+const keyExtractor = (item: PriceModel) => `priceInput${item.id}`;
+
+const renderPrice: ListRenderItem<PriceModel> = ({ item, index, separators }) => {
+  return (
+    <SlideIn>
+      <PriceInput index={index} item={item} separators={separators} />
+    </SlideIn>
+  );
+};
 
 export default ProductForm;

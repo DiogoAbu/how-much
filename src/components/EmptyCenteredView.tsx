@@ -3,10 +3,14 @@ import { StyleSheet, View } from 'react-native';
 
 import { Text } from 'react-native-paper';
 
-const EmptyView: FC = () => {
+interface Props {
+  text: string;
+}
+
+const EmptyCenteredView: FC<Props> = ({ text }) => {
   return (
     <View style={styles.container}>
-      <Text>Nothing here yet!</Text>
+      <Text>{text}</Text>
     </View>
   );
 };
@@ -19,4 +23,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EmptyView;
+export default EmptyCenteredView;

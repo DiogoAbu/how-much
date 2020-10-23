@@ -1,28 +1,31 @@
 import { v4 } from 'react-native-uuid';
-import { countries } from 'countries-list';
 import { makeAutoObservable } from 'mobx';
 
+import { CurrencyInfo } from '!/utils/currency-list';
+
 export class PriceModel {
-  // @persist
   id = v4();
 
-  // @persist
-  countryCode: keyof typeof countries = 'BR';
+  currencyId: CurrencyInfo['id'] = '';
 
-  // @persist
-  value = '0';
+  value = 0.0;
 
-  constructor(data: Pick<PriceModel, 'countryCode' | 'value'>) {
-    this.countryCode = data.countryCode;
-    this.value = data.value;
+  constructor(data?: Partial<Pick<PriceModel, 'id' | 'currencyId' | 'value'>>) {
+    this.id = data?.id ?? this.id;
+    this.currencyId = data?.currencyId ?? this.currencyId;
+    this.value = data?.value ?? this.value;
 
     makeAutoObservable(this, {
       id: false,
     });
   }
 
-  setCountryCode(countryCode: PriceModel['countryCode']): void {
-    this.countryCode = countryCode;
+  setId(id: PriceModel['id']): void {
+    this.id = id;
+  }
+
+  setCurrencyId(currencyId: PriceModel['currencyId']): void {
+    this.currencyId = currencyId;
   }
 
   setValue(value: PriceModel['value']): void {

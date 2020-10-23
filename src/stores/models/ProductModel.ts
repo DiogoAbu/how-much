@@ -1,31 +1,44 @@
 import { v4 } from 'react-native-uuid';
-import { autorun, makeAutoObservable, toJS } from 'mobx';
+import { makeAutoObservable } from 'mobx';
+import { date, format } from 'mobx-sync';
 
 import { Unarray } from '!/types';
 
 import { PriceModel } from './PriceModel';
 
 export class ProductModel {
-  // @persist
   id = v4();
 
-  // @persist
   description = '';
 
-  // @persist('list', PriceModel)
+  @format(
+    (fromStorage: PriceModel[]) => fromStorage.map((e) => new PriceModel(e)),
+    (toStorage: PriceModel[]) => toStorage,
+  )
   prices: PriceModel[] = [];
 
-  constructor(data: Pick<ProductModel, 'description' | 'prices'>) {
-    this.description = data.description;
-    this.prices = data.prices;
+  @date
+  updatedAt = new Date();
+
+  @date
+  createdAt = new Date();
+
+  constructor(
+    data?: Partial<Pick<ProductModel, 'id' | 'description' | 'prices' | 'updatedAt' | 'createdAt'>>,
+  ) {
+    this.id = data?.id ?? this.id;
+    this.description = data?.description ?? this.description;
+    this.prices = data?.prices ?? this.prices;
+    this.updatedAt = data?.updatedAt ?? this.updatedAt;
+    this.createdAt = data?.createdAt ?? this.createdAt;
 
     makeAutoObservable(this, {
       id: false,
     });
+  }
 
-    autorun(() => {
-      console.log(toJS(this));
-    });
+  setId(id: ProductModel['id']): void {
+    this.id = id;
   }
 
   setDescription(description: ProductModel['description']): void {
@@ -38,5 +51,18 @@ export class ProductModel {
 
   addPrice(price: Unarray<ProductModel['prices']>): void {
     this.prices.push(price);
+  }
+
+  deletePriceById(priceId: Unarray<ProductModel['prices']>['id']): void {
+    const index = this.prices.findIndex((e) => e.id === priceId);
+    this.prices.splice(index, 1);
+  }
+
+  setCreatedAt(createdAt: Date): void {
+    this.createdAt = createdAt;
+  }
+
+  setUpdatedAt(updatedAt: Date): void {
+    this.updatedAt = updatedAt;
   }
 }

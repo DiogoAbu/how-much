@@ -1,30 +1,51 @@
 import React, { FC, useEffect } from 'react';
 
-import { useTheme } from 'react-native-paper';
 import Animated, { Easing, timing } from 'react-native-reanimated';
 import { useValue } from 'react-native-redash/lib/module/v1';
 
-const SlideIn: FC<unknown> = ({ children }) => {
+import useTheme from '!/hooks/use-theme';
+
+interface Props {
+  direction?: 'up' | 'right' | 'down' | 'left';
+}
+
+const SLIDE_AMOUNT = 50;
+
+const SlideIn: FC<Props> = ({ children, direction }) => {
   const {
     animation: { scale },
   } = useTheme();
 
-  const anim = useValue<number>(0);
+  const value = useValue<number>(0);
+
+  const vertical = direction === 'up' || direction === 'down';
+  const initialPos = SLIDE_AMOUNT * (direction === 'up' || direction === 'left' ? -1 : 1);
 
   useEffect(() => {
-    timing(anim, {
+    timing(value, {
       toValue: 1,
       duration: scale * 200,
       easing: Easing.linear,
     }).start();
-  }, [anim, scale]);
+  }, [value, scale]);
 
-  const translateY = anim.interpolate({
+  const animValue = value.interpolate({
     inputRange: [0, 1],
-    outputRange: [-50, 0],
+    outputRange: [initialPos, 0],
   });
 
-  return <Animated.View style={{ opacity: anim, transform: [{ translateY }] }}>{children}</Animated.View>;
+  let transform: Animated.AnimatedTransform;
+  if (vertical) {
+    transform = [{ translateY: animValue }];
+  } else {
+    transform = [{ translateX: animValue }];
+  }
+
+  return <Animated.View style={{ opacity: value, transform }}>{children}</Animated.View>;
+};
+
+SlideIn.defaultProps = {
+  direction: 'right',
 };
 
 export default SlideIn;
