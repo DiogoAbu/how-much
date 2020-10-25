@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Animated, FlatList, FlatListProps, StyleSheet, Text } from 'react-native';
 
 import { Divider, Searchbar } from 'react-native-paper';
@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { observer } from 'mobx-react-lite';
 
 import { DEFAULT_APPBAR_HEIGHT, DEFAULT_PADDING, LIST_ITEM_HEIGHT } from '!/constants';
+import useDebounceValue from '!/hooks/use-debounce-value';
 import useTheme from '!/hooks/use-theme';
 import localize from '!/services/localize';
 import { useStores } from '!/stores';
@@ -20,47 +21,48 @@ const CurrencyList = observer<Props>(({ isAnimated, ListHeaderComponent, ...rest
   const { generalStore } = useStores();
   const insets = useSafeAreaInsets();
 
-  const currencyListMinusActive = currencyList.filter((e) => e.id !== generalStore.activeCurrencyId);
-  const [list, setList] = useState<CurrencyInfo[]>(() => currencyListMinusActive);
+  const currencyListMinusActive = useRef(currencyList.filter((e) => e.id !== generalStore.activeCurrencyId));
+  const [list, setList] = useState<CurrencyInfo[]>(() => currencyListMinusActive.current);
 
   const [query, setQuery] = useState('');
+  const queryDebounced = useDebounceValue(query);
 
-  const onChangeSearch = useCallback(
-    (value: string) => {
-      const text = value.trim();
-      setQuery(text);
+  useEffect(() => {
+    const text = queryDebounced.trim();
 
-      if (!text) {
-        requestAnimationFrame(() => {
-          setList(currencyListMinusActive);
-        });
-        return;
-      }
-
-      const textSafe = text.toUpperCase();
-
-      const filteredList = currencyListMinusActive.filter((each) => {
-        if (each.countryCode.toUpperCase().includes(textSafe)) {
-          return true;
-        }
-        if (each.currency.toUpperCase().includes(textSafe)) {
-          return true;
-        }
-        if (each.countryName.toUpperCase().includes(textSafe)) {
-          return true;
-        }
-        if (each.countryNativeName.toUpperCase().includes(textSafe)) {
-          return true;
-        }
-        return false;
-      });
-
+    if (!text) {
       requestAnimationFrame(() => {
-        setList(filteredList);
+        setList(currencyListMinusActive.current);
       });
-    },
-    [currencyListMinusActive],
-  );
+      return;
+    }
+
+    const textSafe = text.toUpperCase();
+
+    const filteredList = currencyListMinusActive.current.filter((each) => {
+      if (each.countryCode.toUpperCase().includes(textSafe)) {
+        return true;
+      }
+      if (each.currency.toUpperCase().includes(textSafe)) {
+        return true;
+      }
+      if (each.countryName.toUpperCase().includes(textSafe)) {
+        return true;
+      }
+      if (each.countryNativeName.toUpperCase().includes(textSafe)) {
+        return true;
+      }
+      return false;
+    });
+
+    requestAnimationFrame(() => {
+      setList(filteredList);
+    });
+  }, [queryDebounced]);
+
+  const onChangeSearch = useCallback((value: string) => {
+    setQuery(value);
+  }, []);
 
   const ListHeader = (
     <>

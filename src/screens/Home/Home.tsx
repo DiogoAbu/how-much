@@ -137,6 +137,8 @@ const Home = observer(() => {
       headerLeft: () =>
         Platform.OS === 'ios' ? (
           <Text
+            ellipsizeMode='tail'
+            numberOfLines={1}
             style={[
               fonts.regular,
               styles.headerLeftTitle,
