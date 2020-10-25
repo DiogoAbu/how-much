@@ -12,7 +12,7 @@ import { DEFAULT_APPBAR_HEIGHT, DEFAULT_PADDING } from '!/constants';
 import useFocusEffect from '!/hooks/use-focus-effect';
 import usePress from '!/hooks/use-press';
 import useTheme from '!/hooks/use-theme';
-import localize from '!/services/localize';
+import useTranslation from '!/hooks/use-translation';
 import { useStores } from '!/stores';
 import { PriceModel } from '!/stores/models/PriceModel';
 import { MainNavigationProp, MainRouteProp } from '!/types';
@@ -27,6 +27,7 @@ const ProductForm = observer(() => {
   const insets = useSafeAreaInsets();
   const { generalStore, productsStore } = useStores();
   const { colors } = useTheme();
+  const { t } = useTranslation();
 
   const inputRef = useRef<NativeTextInput | null>(null);
 
@@ -50,13 +51,13 @@ const ProductForm = observer(() => {
 
   const handleDone = usePress(() => {
     if (!productsStore.isDescriptionValid()) {
-      setDescriptionError(localize.t('descriptionCannotBeEmpty'));
+      setDescriptionError(t('descriptionCannotBeEmpty'));
       return;
     }
 
     const isPricesValid = productsStore.isPricesValid();
-    if (typeof isPricesValid === 'string') {
-      setDescriptionError(isPricesValid);
+    if (isPricesValid === 'needsAtLeastOnePrice') {
+      setDescriptionError(t('needsAtLeastOnePrice'));
       return;
     }
 
@@ -74,14 +75,14 @@ const ProductForm = observer(() => {
     generalStore.setFab({ fabVisible: false });
 
     navigation.setOptions({
-      title: params?.isEditing ? localize.t('editingProduct') : localize.t('newProduct'),
+      title: params?.isEditing ? t('editingProduct') : t('newProduct'),
       headerRight: () => (
         <HeaderButton icon='check' mode='text' onPress={handleDone}>
-          {localize.t('label.done')}
+          {t('label.done')}
         </HeaderButton>
       ),
     });
-  }, [generalStore, handleDone, navigation, params?.isEditing]);
+  }, [generalStore, handleDone, navigation, params?.isEditing, t]);
 
   return (
     <FlatList
@@ -106,7 +107,7 @@ const ProductForm = observer(() => {
 
           <Divider />
           <View style={styles.pricesHeader}>
-            <Text>{localize.t('prices')}</Text>
+            <Text>{t('prices')}</Text>
             <IconButton icon='plus' onPress={handleAddCurrency} />
           </View>
         </>

@@ -8,11 +8,12 @@ import { DEFAULT_APPBAR_HEIGHT, DEFAULT_PADDING } from '!/constants';
 import useFocusEffect from '!/hooks/use-focus-effect';
 import usePress from '!/hooks/use-press';
 import useTheme from '!/hooks/use-theme';
-import localize from '!/services/localize';
+import useTranslation from '!/hooks/use-translation';
 import { useStores } from '!/stores';
 import { MainNavigationProp } from '!/types';
 
 import ColorSchemeItem from './ColorSchemeItem';
+import LanguageItem from './LanguageItem';
 import styles from './styles';
 
 interface Props {
@@ -23,6 +24,7 @@ const Preferences: FC<Props> = ({ navigation }) => {
   const { colors } = useTheme();
   const { generalStore } = useStores();
   const insets = useSafeAreaInsets();
+  const { t } = useTranslation();
 
   const handleCountriesWagesPress = usePress(() => {
     requestAnimationFrame(() => {
@@ -34,9 +36,9 @@ const Preferences: FC<Props> = ({ navigation }) => {
     generalStore.setFab({ fabVisible: false });
 
     navigation.setOptions({
-      title: localize.t('preferences'),
+      title: t('preferences'),
     });
-  }, [generalStore, navigation]);
+  }, [generalStore, navigation, t]);
 
   return (
     <ScrollView
@@ -63,8 +65,12 @@ const Preferences: FC<Props> = ({ navigation }) => {
         )}
         onPress={handleCountriesWagesPress}
         right={(props) => <List.Icon {...props} icon='chevron-right' />}
-        title={localize.t('countriesWages')}
+        title={t('countriesWages')}
       />
+
+      <Divider />
+
+      <LanguageItem />
 
       <Divider />
 

@@ -7,10 +7,11 @@ import FadeIcon from '!/components/FadeIcon';
 import { DEFAULT_ICON_SIZE } from '!/constants';
 import usePress from '!/hooks/use-press';
 import useTheme from '!/hooks/use-theme';
-import localize from '!/services/localize';
+import useTranslation from '!/hooks/use-translation';
 import { CountryWageModel } from '!/stores/models/CountryWageModel';
 import { ListItemRightProps, MainRouteProp } from '!/types';
 import { CurrencyInfo } from '!/utils/currency-list';
+import toCurrency from '!/utils/to-currency';
 
 import styles from './styles';
 
@@ -25,6 +26,7 @@ interface Props {
 const CurrencyItem: FC<Props> = ({ currencyInfo, wage, setSelectedId, isSelected, isActive }) => {
   const { params } = useRoute<MainRouteProp<'Currencies'>>();
   const { colors } = useTheme();
+  const { t } = useTranslation();
 
   const { currency, countryName, hourlyWage } = currencyInfo;
 
@@ -49,8 +51,8 @@ const CurrencyItem: FC<Props> = ({ currencyInfo, wage, setSelectedId, isSelected
     <List.Item
       description={`${countryName} • ${
         wage?.value || hourlyWage
-          ? `${localize.toCurrency(wage?.value || hourlyWage || 0)}/${localize.t('hr')}`
-          : localize.t('unknown')
+          ? `${toCurrency(wage?.value || hourlyWage || 0, currency)}/${t('hr')}`
+          : t('unknown')
       }`}
       disabled={params.action === 'productForm' ? false : isActive}
       onPress={handleOnPress}

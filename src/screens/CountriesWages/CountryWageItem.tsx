@@ -7,10 +7,11 @@ import { observer } from 'mobx-react-lite';
 
 import { DEFAULT_ICON_SIZE } from '!/constants';
 import usePress from '!/hooks/use-press';
-import localize from '!/services/localize';
+import useTranslation from '!/hooks/use-translation';
 import { useStores } from '!/stores';
 import { ListItemRightProps, MainNavigationProp } from '!/types';
 import { CurrencyInfo } from '!/utils/currency-list';
+import toCurrency from '!/utils/to-currency';
 
 import styles from './styles';
 
@@ -21,6 +22,7 @@ interface Props {
 const CountryWageItem: FC<Props> = observer(({ currencyInfo }) => {
   const navigation = useNavigation<MainNavigationProp<'CountriesWages'>>();
   const { wagesStore } = useStores();
+  const { t } = useTranslation();
 
   const wage = wagesStore.findWage(currencyInfo.id);
 
@@ -45,8 +47,8 @@ const CountryWageItem: FC<Props> = observer(({ currencyInfo }) => {
       right={renderRight}
       title={
         wage || currencyInfo.hourlyWage
-          ? `${localize.toCurrency(wage?.value || currencyInfo.hourlyWage)}/${localize.t('hr')}`
-          : localize.t('unknown')
+          ? `${toCurrency(wage?.value || currencyInfo.hourlyWage, currency)}/${t('hr')}`
+          : t('unknown')
       }
       titleStyle={!wage && !currencyInfo.hourlyWage && styles.itemTitleEmpty}
     />

@@ -6,13 +6,14 @@ import { useNavigation } from '@react-navigation/native';
 import { observer } from 'mobx-react-lite';
 
 import usePress from '!/hooks/use-press';
-import localize from '!/services/localize';
+import useTranslation from '!/hooks/use-translation';
 import { CountryWageModel } from '!/stores/models/CountryWageModel';
 import { ProductModel } from '!/stores/models/ProductModel';
 import { ListItemRightProps, MainNavigationProp } from '!/types';
 import calculateWorkingHours from '!/utils/calculate-working-hours';
 import { CurrencyInfo } from '!/utils/currency-list';
 import findCurrency from '!/utils/find-currency';
+import toCurrency from '!/utils/to-currency';
 
 interface Props {
   activeCurrencyId?: CurrencyInfo['id'];
@@ -22,6 +23,7 @@ interface Props {
 const ProductItem = observer<ListRenderItemInfo<ProductModel> & Props>(
   ({ item: product, activeCurrencyId, wage }) => {
     const navigation = useNavigation<MainNavigationProp<'Home'>>();
+    const { t } = useTranslation();
 
     const activePrice = product.prices.find((e) => e.currencyId === activeCurrencyId);
     const currencyInfo = findCurrency(activeCurrencyId);
@@ -36,7 +38,7 @@ const ProductItem = observer<ListRenderItemInfo<ProductModel> & Props>(
       activePrice?.value && currencyInfo && (wage?.value || currencyInfo.hourlyWage) ? (
         <Text style={[style, { color }, styles.hourNumber]}>
           {calculateWorkingHours({ price: activePrice, currencyInfo, wage })}
-          <Text style={[{ color }, styles.hourText]}>{localize.t('hr')}</Text>
+          <Text style={[{ color }, styles.hourText]}>{t('hr')}</Text>
         </Text>
       ) : (
         <Text style={[style, { color }, styles.hourNumber]}>---</Text>
@@ -45,7 +47,9 @@ const ProductItem = observer<ListRenderItemInfo<ProductModel> & Props>(
     return (
       <List.Item
         description={
-          activePrice ? localize.toCurrency(activePrice?.value) : localize.t('noPriceForPreferredCurrency')
+          activePrice?.value && currencyInfo
+            ? toCurrency(activePrice.value, currencyInfo.currency)
+            : t('noPriceForPreferredCurrency')
         }
         onPress={onPress}
         right={renderRight}

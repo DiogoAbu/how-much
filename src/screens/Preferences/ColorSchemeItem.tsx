@@ -5,43 +5,44 @@ import { Observer } from 'mobx-react-lite';
 
 import usePress from '!/hooks/use-press';
 import useStatusBar from '!/hooks/use-status-bar';
-import localize from '!/services/localize';
+import useTranslation from '!/hooks/use-translation';
 import { useStores } from '!/stores';
 
 import styles from './styles';
 
-const ColorSchemeItem: FC<unknown> = () => {
+const ColorSchemeItem: FC = () => {
   const { themeStore } = useStores();
+  const { t } = useTranslation();
 
-  const [colorSchemeMenuVisible, setColorSchemeMenuVisible] = useState(false);
+  const [isMenuVisible, setIsMenuVisible] = useState(false);
 
-  const handleOpenColorSchemeMenu = usePress(() => {
+  const handleOpenMenu = usePress(() => {
     requestAnimationFrame(() => {
-      setColorSchemeMenuVisible(true);
+      setIsMenuVisible(true);
     });
   });
 
-  const handleCloseColorSchemeMenu = usePress(() => {
+  const handleCloseMenu = usePress(() => {
     requestAnimationFrame(() => {
-      setColorSchemeMenuVisible(false);
+      setIsMenuVisible(false);
     });
   });
 
   const handleSetColorSchemeAuto = usePress(() => {
     requestAnimationFrame(() => {
-      handleCloseColorSchemeMenu();
+      handleCloseMenu();
       themeStore.setColorSchemePreferred('auto');
     });
   });
   const handleSetColorSchemeDark = usePress(() => {
     requestAnimationFrame(() => {
-      handleCloseColorSchemeMenu();
+      handleCloseMenu();
       themeStore.setColorSchemePreferred('dark');
     });
   });
   const handleSetColorSchemeLight = usePress(() => {
     requestAnimationFrame(() => {
-      handleCloseColorSchemeMenu();
+      handleCloseMenu();
       themeStore.setColorSchemePreferred('light');
     });
   });
@@ -51,30 +52,30 @@ const ColorSchemeItem: FC<unknown> = () => {
   return (
     <List.Item
       left={(props) => <List.Icon {...props} icon='lightbulb' style={[props.style, styles.noMarginRight]} />}
-      onPress={handleOpenColorSchemeMenu}
+      onPress={handleOpenMenu}
       right={(props) => (
         <Observer>
           {() => (
             <Menu
               anchor={
                 <Text {...props} style={[props.style, styles.rightText]}>
-                  {localize.t(`colorScheme_${themeStore.colorSchemePreferred}`)}
+                  {t(`colorScheme_${themeStore.colorSchemePreferred}`)}
                   {themeStore.colorSchemePreferred === 'auto'
-                    ? ` (${localize.t(`colorScheme_${themeStore.colorSchemeCurrent}`)})`
+                    ? ` (${t(`colorScheme_${themeStore.colorSchemeCurrent}`)})`
                     : null}
                 </Text>
               }
-              onDismiss={handleCloseColorSchemeMenu}
-              visible={colorSchemeMenuVisible}
+              onDismiss={handleCloseMenu}
+              visible={isMenuVisible}
             >
-              <Menu.Item onPress={handleSetColorSchemeAuto} title={localize.t('colorScheme_auto')} />
-              <Menu.Item onPress={handleSetColorSchemeDark} title={localize.t('colorScheme_dark')} />
-              <Menu.Item onPress={handleSetColorSchemeLight} title={localize.t('colorScheme_light')} />
+              <Menu.Item onPress={handleSetColorSchemeAuto} title={t('colorScheme_auto')} />
+              <Menu.Item onPress={handleSetColorSchemeDark} title={t('colorScheme_dark')} />
+              <Menu.Item onPress={handleSetColorSchemeLight} title={t('colorScheme_light')} />
             </Menu>
           )}
         </Observer>
       )}
-      title={localize.t('colorScheme')}
+      title={t('colorScheme')}
     />
   );
 };

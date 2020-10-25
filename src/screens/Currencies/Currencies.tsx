@@ -10,7 +10,7 @@ import HeaderButton from '!/components/HeaderButton';
 import { DEFAULT_PADDING } from '!/constants';
 import useFocusEffect from '!/hooks/use-focus-effect';
 import usePress from '!/hooks/use-press';
-import localize from '!/services/localize';
+import useTranslation from '!/hooks/use-translation';
 import { useStores } from '!/stores';
 import { PriceModel } from '!/stores/models/PriceModel';
 import { MainNavigationProp, MainRouteProp } from '!/types';
@@ -23,6 +23,7 @@ const Currencies = observer(() => {
   const navigation = useNavigation<MainNavigationProp<'Currencies'>>();
   const { params } = useRoute<MainRouteProp<'Currencies'>>();
   const { generalStore, productsStore, wagesStore } = useStores();
+  const { t } = useTranslation();
 
   const [selectedId, setSelectedId] = useState<CurrencyInfo['id'] | null>(null);
   const [dialogVisible, setDialogVisible] = useState(() => !generalStore.activeCurrencyId);
@@ -60,16 +61,16 @@ const Currencies = observer(() => {
     generalStore.setFab({ fabVisible: false });
 
     navigation.setOptions({
-      title: localize.t(params.action === 'productForm' ? 'pickACurrency' : 'preferredCurrency'),
+      title: params.action === 'productForm' ? t('pickACurrency') : t('preferredCurrency'),
       headerRight: () => (
         <HeaderButton disabled={!selectedId} icon='check' mode='text' onPress={handleDone}>
-          {localize.t('label.done')}
+          {t('label.done')}
         </HeaderButton>
       ),
     });
 
     // Cannot have a blur function
-  }, [generalStore, handleDone, navigation, params.action, selectedId]);
+  }, [generalStore, handleDone, navigation, params.action, selectedId, t]);
 
   const renderCurrency: ListRenderItem<CurrencyInfo> = ({ item }) => {
     return (
@@ -85,7 +86,7 @@ const Currencies = observer(() => {
   const ListHeader = generalStore.activeCurrencyId ? (
     <View>
       <Caption style={{ paddingHorizontal: DEFAULT_PADDING, marginTop: DEFAULT_PADDING }}>
-        {localize.t('activeCurrency')}
+        {t('activeCurrency')}
       </Caption>
 
       <CurrencyItem
@@ -98,20 +99,20 @@ const Currencies = observer(() => {
       <Divider />
 
       <Caption style={{ paddingHorizontal: DEFAULT_PADDING, marginTop: DEFAULT_PADDING }}>
-        {localize.t('availableCurrencies')}
+        {t('availableCurrencies')}
       </Caption>
     </View>
   ) : (
     <View>
       <Caption style={{ paddingHorizontal: DEFAULT_PADDING, marginTop: DEFAULT_PADDING }}>
-        {localize.t('noActiveCurrency')}
+        {t('noActiveCurrency')}
       </Caption>
-      <Text style={{ paddingHorizontal: DEFAULT_PADDING }}>{localize.t('pickPreferredCurrencyBelow')}</Text>
+      <Text style={{ paddingHorizontal: DEFAULT_PADDING }}>{t('pickPreferredCurrencyBelow')}</Text>
 
       <Divider style={{ marginTop: DEFAULT_PADDING }} />
 
       <Caption style={{ paddingHorizontal: DEFAULT_PADDING, marginTop: DEFAULT_PADDING }}>
-        {localize.t('availableCurrencies')}
+        {t('availableCurrencies')}
       </Caption>
     </View>
   );
@@ -122,14 +123,14 @@ const Currencies = observer(() => {
 
       <Portal>
         <Dialog dismissable={false} visible={dialogVisible}>
-          <Dialog.Title>{localize.t('title.welcome')}</Dialog.Title>
+          <Dialog.Title>{t('title.welcome')}</Dialog.Title>
           <Dialog.Content>
-            <Paragraph>{localize.t('toStartUsingThisAppYouNeedToPickYourPreferredCurrency')}</Paragraph>
-            <Paragraph>{localize.t('dontWorryYouCanChangeItLater')}</Paragraph>
+            <Paragraph>{t('toStartUsingThisAppYouNeedToPickYourPreferredCurrency')}</Paragraph>
+            <Paragraph>{t('dontWorryYouCanChangeItLater')}</Paragraph>
           </Dialog.Content>
           <Dialog.Actions>
             <Button labelStyle={{ paddingHorizontal: DEFAULT_PADDING * 2 }} onPress={handleHideDialog}>
-              {localize.t('label.ok')}
+              {t('label.ok')}
             </Button>
           </Dialog.Actions>
         </Dialog>

@@ -7,7 +7,7 @@ import { observer } from 'mobx-react-lite';
 
 import usePress from '!/hooks/use-press';
 import useTheme from '!/hooks/use-theme';
-import localize from '!/services/localize';
+import useTranslation from '!/hooks/use-translation';
 import { useStores } from '!/stores';
 
 import styles from './styles';
@@ -15,6 +15,7 @@ import styles from './styles';
 const ListOptions: FC = observer(() => {
   const { productsStore, hydrated } = useStores();
   const { colors } = useTheme();
+  const { t } = useTranslation();
 
   // State for menu visiblity
   const [isMenuVisible, setIsMenuVisible] = useState(false);
@@ -57,7 +58,7 @@ const ListOptions: FC = observer(() => {
 
   const sortButton = (
     <Button compact icon='chevron-down' mode='text' onPress={handleShowMenu}>
-      {localize.t('label.sort')}: {localize.t(`label.${productsStore.sortBy}`)}
+      {t('label.sort')}: {t(`label.${productsStore.sortBy}`)}
     </Button>
   );
 
@@ -91,13 +92,13 @@ const ListOptions: FC = observer(() => {
           mode='text'
           onPress={handleSortOrderPress}
         >
-          {localize.t(productsStore.sortByOrder === 'asc' ? 'label.ascending' : 'label.descending')}
+          {productsStore.sortByOrder === 'asc' ? t('label.ascending') : t('label.descending')}
         </Button>
 
         <Menu anchor={sortButton} onDismiss={handleHideMenu} visible={isMenuVisible}>
-          <Menu.Item onPress={handleSortByAlphabeticallyPress} title={localize.t('label.alphabetically')} />
-          <Menu.Item onPress={handleSortByDatePress} title={localize.t('label.date')} />
-          <Menu.Item onPress={handleSortByPricePress} title={localize.t('label.price')} />
+          <Menu.Item onPress={handleSortByAlphabeticallyPress} title={t('label.alphabetically')} />
+          <Menu.Item onPress={handleSortByDatePress} title={t('label.date')} />
+          <Menu.Item onPress={handleSortByPricePress} title={t('price')} />
         </Menu>
       </View>
       <Divider />

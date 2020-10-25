@@ -19,7 +19,7 @@ import useAutorunOnFocus from '!/hooks/use-autorun-on-focus';
 import useFocusEffect from '!/hooks/use-focus-effect';
 import usePress from '!/hooks/use-press';
 import useTheme from '!/hooks/use-theme';
-import localize from '!/services/localize';
+import useTranslation from '!/hooks/use-translation';
 import { useStores } from '!/stores';
 import { ProductModel } from '!/stores/models/ProductModel';
 import { MainNavigationProp } from '!/types';
@@ -39,6 +39,7 @@ const Home = observer(() => {
   const navigation = useNavigation<MainNavigationProp<'Home'>>();
   const stores = useStores();
   const { colors, dark, fonts } = useTheme();
+  const { t } = useTranslation();
 
   const { onScrollWithListener, containerPaddingTop, scrollIndicatorInsetTop } = useCollapsibleStack();
   const onScroll = onScrollWithListener(({ nativeEvent }: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -58,12 +59,12 @@ const Home = observer(() => {
 
     if (stores.productsStore.isDraft()) {
       Alert.alert(
-        localize.t('draftFound'),
-        localize.t('doYouWantToDiscardThisDraftOrEditIt'),
+        t('draftFound'),
+        t('doYouWantToDiscardThisDraftOrEditIt'),
         [
-          { text: localize.t('label.return'), style: 'cancel' },
+          { text: t('label.return'), style: 'cancel' },
           {
-            text: localize.t('label.discard'),
+            text: t('label.discard'),
             style: 'destructive',
             onPress: () => {
               stores.productsStore.resetProductForm();
@@ -73,7 +74,7 @@ const Home = observer(() => {
             },
           },
           {
-            text: localize.t('label.edit'),
+            text: t('label.edit'),
             onPress: () => {
               requestAnimationFrame(() => {
                 navigation.navigate('ProductForm');
@@ -133,7 +134,7 @@ const Home = observer(() => {
     stores.generalStore.setFab({ fabIcon: 'plus', handleFabPress });
 
     navigation.setOptions({
-      title: Platform.OS === 'ios' ? '' : localize.t('howMuch'),
+      title: Platform.OS === 'ios' ? '' : t('howMuch'),
       headerLeft: () =>
         Platform.OS === 'ios' ? (
           <Text
@@ -145,7 +146,7 @@ const Home = observer(() => {
               { color: dark ? colors.text : colors.textOnPrimary },
             ]}
           >
-            {localize.t('howMuch')}
+            {t('howMuch')}
           </Text>
         ) : undefined,
       headerRight: () => <HeaderRight navigation={navigation} />,
@@ -159,6 +160,7 @@ const Home = observer(() => {
     handleFabPress,
     navigation,
     stores.generalStore,
+    t,
   ]);
 
   const placeholderAmount = amountToCoverHeight(containerPaddingTop);
@@ -173,7 +175,7 @@ const Home = observer(() => {
       keyboardDismissMode='interactive'
       keyboardShouldPersistTaps='handled'
       keyExtractor={keyExtractor}
-      ListEmptyComponent={<EmptyCenteredView text={localize.t('nothingHereYet')} />}
+      ListEmptyComponent={<EmptyCenteredView text={t('nothingHereYet')} />}
       ListHeaderComponent={ListOptions}
       onScroll={onScroll as any}
       renderItem={renderProduct}

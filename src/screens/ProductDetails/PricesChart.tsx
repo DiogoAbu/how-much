@@ -13,13 +13,15 @@ import { VictoryAxis, VictoryBar, VictoryChart, VictoryLabel, VictoryTheme } fro
 
 import usePress from '!/hooks/use-press';
 import useTheme from '!/hooks/use-theme';
-import localize from '!/services/localize';
+import useTranslation from '!/hooks/use-translation';
 import { useStores } from '!/stores';
 import { ProductModel } from '!/stores/models/ProductModel';
 import calculateWorkingHours from '!/utils/calculate-working-hours';
 import { CurrencyInfo } from '!/utils/currency-list';
 import findCurrency from '!/utils/find-currency';
+import formatDate from '!/utils/format-date';
 import notEmpty from '!/utils/not-empty';
+import toCurrency from '!/utils/to-currency';
 
 import styles from './styles';
 
@@ -42,68 +44,69 @@ const PricesChart = observer<Props>(({ product, shouldRender, setSnackBarText })
   const { wagesStore } = useStores();
   const { colors, dark } = useTheme();
   const dimensions = useWindowDimensions();
+  const { t } = useTranslation();
 
   const viewShotRef = useRef<ViewShot | null>(null);
 
   const takeScreenshot = useCallback(async (): Promise<string | null> => {
     if (!viewShotRef.current?.capture) {
-      Alert.alert(localize.t('title.oops'), localize.t('contentNotLoadedTryAgain'));
+      Alert.alert(t('title.oops'), t('contentNotLoadedTryAgain'));
       return null;
     }
     if (!(await Sharing.isAvailableAsync())) {
-      Alert.alert(localize.t('title.oops'), localize.t('sharingUnavailable'));
+      Alert.alert(t('title.oops'), t('sharingUnavailable'));
       return null;
     }
 
     const imageUri = await viewShotRef.current.capture();
     return imageUri;
-  }, []);
+  }, [t]);
 
   const handleSharePress = usePress(async () => {
     try {
       const imageUri = await takeScreenshot();
       if (!imageUri) {
-        Alert.alert(localize.t('title.oops'), localize.t('somethingWentWrong'));
+        Alert.alert(t('title.oops'), t('somethingWentWrong'));
         return;
       }
 
       await Sharing.shareAsync(imageUri);
     } catch (err) {
       console.log(err);
-      Alert.alert(localize.t('title.oops'), localize.t('somethingWentWrong'));
+      Alert.alert(t('title.oops'), t('somethingWentWrong'));
     }
   });
 
   const handleDownloadPress = usePress(() => {
     Alert.alert(
-      localize.t('saveInGallery'),
-      localize.t('doYouWantToSaveThisChartIntoYourGallery'),
+      t('saveInGallery'),
+      t('doYouWantToSaveThisChartIntoYourGallery'),
       [
         {
-          text: localize.t('label.no'),
+          text: t('label.no'),
         },
         {
-          text: localize.t('label.yes'),
+          text: t('label.yes'),
           onPress: async () => {
             try {
               const { status } = await MediaLibrary.requestPermissionsAsync();
               if (status !== MediaLibrary.PermissionStatus.GRANTED) {
-                Alert.alert(localize.t('title.oops'), localize.t('accessToGaleryDenied'));
+                Alert.alert(t('title.oops'), t('accessToGaleryDenied'));
               }
 
               const imageUri = await takeScreenshot();
               if (!imageUri) {
-                Alert.alert(localize.t('title.oops'), localize.t('somethingWentWrong'));
+                Alert.alert(t('title.oops'), t('somethingWentWrong'));
                 return;
               }
 
               const imageAsset = await MediaLibrary.createAssetAsync(imageUri);
               await MediaLibrary.createAlbumAsync('How Much', imageAsset, false);
 
-              setSnackBarText(localize.t('chartImageSavedInGallery'));
+              setSnackBarText(t('chartImageSavedInGallery'));
             } catch (err) {
               console.log(err);
-              Alert.alert(localize.t('title.oops'), localize.t('somethingWentWrong'));
+              Alert.alert(t('title.oops'), t('somethingWentWrong'));
             }
           },
         },
@@ -170,7 +173,7 @@ const PricesChart = observer<Props>(({ product, shouldRender, setSnackBarText })
         style={{ backgroundColor: colors.background }}
       >
         <Text style={styles.chartTitle}>
-          {localize.t('costOfProductByWorkingHours', { description: product.description })}
+          {t('costOfProductByWorkingHours', { description: product.description })}
         </Text>
 
         <View style={styles.chartContainer}>
@@ -226,8 +229,8 @@ const PricesChart = observer<Props>(({ product, shouldRender, setSnackBarText })
         </View>
 
         <View style={styles.footerContainer}>
-          <Caption>{localize.t('byHowMuch')}</Caption>
-          <Caption style={styles.dateText}>{localize.l('date.formats.long', new Date())}</Caption>
+          <Caption>{t('byHowMuch')}</Caption>
+          <Caption style={styles.dateText}>{formatDate(new Date())}</Caption>
         </View>
 
         <View style={styles.legendContainer}>
@@ -241,9 +244,9 @@ const PricesChart = observer<Props>(({ product, shouldRender, setSnackBarText })
               >
                 {each.currencyInfo.countryName}
                 {' • '}
-                {localize.toCurrency(each.value)}
+                {toCurrency(each.value, each.currencyInfo.currency)}
                 {' • '}
-                {localize.toCurrency(each.hourlyWage)}/{localize.t('hr')}
+                {toCurrency(each.hourlyWage, each.currencyInfo.currency)}/{t('hr')}
               </Chip>
             );
           })}

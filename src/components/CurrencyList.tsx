@@ -8,7 +8,7 @@ import { observer } from 'mobx-react-lite';
 import { DEFAULT_APPBAR_HEIGHT, DEFAULT_PADDING, LIST_ITEM_HEIGHT } from '!/constants';
 import useDebounceValue from '!/hooks/use-debounce-value';
 import useTheme from '!/hooks/use-theme';
-import localize from '!/services/localize';
+import useTranslation from '!/hooks/use-translation';
 import { useStores } from '!/stores';
 import currencyList, { CurrencyInfo } from '!/utils/currency-list';
 
@@ -20,6 +20,7 @@ const CurrencyList = observer<Props>(({ isAnimated, ListHeaderComponent, ...rest
   const { colors } = useTheme();
   const { generalStore } = useStores();
   const insets = useSafeAreaInsets();
+  const { t } = useTranslation();
 
   const currencyListMinusActive = useRef(currencyList.filter((e) => e.id !== generalStore.activeCurrencyId));
   const [list, setList] = useState<CurrencyInfo[]>(() => currencyListMinusActive.current);
@@ -71,7 +72,7 @@ const CurrencyList = observer<Props>(({ isAnimated, ListHeaderComponent, ...rest
         autoCorrect={false}
         maxLength={50}
         onChangeText={onChangeSearch}
-        placeholder={localize.t('lookForAcurrency')}
+        placeholder={t('lookForAcurrency')}
         style={styles.searchbar}
         value={query}
       />
@@ -97,7 +98,7 @@ const CurrencyList = observer<Props>(({ isAnimated, ListHeaderComponent, ...rest
       keyboardDismissMode='interactive'
       keyboardShouldPersistTaps='handled'
       keyExtractor={keyExtractor}
-      ListEmptyComponent={<Text style={styles.emptyText}>{localize.t('noResults')}</Text>}
+      ListEmptyComponent={<Text style={styles.emptyText}>{t('noResults')}</Text>}
       ListHeaderComponent={ListHeader}
       maxToRenderPerBatch={2}
       removeClippedSubviews

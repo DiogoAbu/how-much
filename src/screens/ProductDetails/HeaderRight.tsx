@@ -5,7 +5,7 @@ import { Appbar, Menu } from 'react-native-paper';
 
 import usePress from '!/hooks/use-press';
 import useTheme from '!/hooks/use-theme';
-import localize from '!/services/localize';
+import useTranslation from '!/hooks/use-translation';
 import { useStores } from '!/stores';
 import { MainNavigationProp, MainRouteProp } from '!/types';
 
@@ -17,6 +17,7 @@ interface Props {
 const HeaderRight: FC<Props> = ({ navigation, route }) => {
   const { colors, dark } = useTheme();
   const { productsStore } = useStores();
+  const { t } = useTranslation();
 
   const { params } = route;
 
@@ -54,14 +55,14 @@ const HeaderRight: FC<Props> = ({ navigation, route }) => {
     setIsMenuVisible(() => false);
 
     Alert.alert(
-      localize.t('areYouSure'),
-      localize.t('doYouWantToDeleteThisProduct'),
+      t('areYouSure'),
+      t('doYouWantToDeleteThisProduct'),
       [
         {
-          text: localize.t('label.no'),
+          text: t('label.no'),
         },
         {
-          text: localize.t('label.yes'),
+          text: t('label.yes'),
           style: 'destructive',
           onPress: () => {
             requestAnimationFrame(() => {
@@ -88,9 +89,9 @@ const HeaderRight: FC<Props> = ({ navigation, route }) => {
 
   return (
     <Menu anchor={dotsIcon} onDismiss={handleHideMenu} visible={isMenuVisible}>
-      <Menu.Item icon='pencil' onPress={handleEdit} title={localize.t('label.edit')} />
-      <Menu.Item icon='content-copy' onPress={handleDuplicate} title={localize.t('label.duplicate')} />
-      <Menu.Item icon='delete' onPress={handleDelete} title={localize.t('label.delete')} />
+      <Menu.Item icon='pencil' onPress={handleEdit} title={t('label.edit')} />
+      <Menu.Item icon='content-copy' onPress={handleDuplicate} title={t('label.duplicate')} />
+      <Menu.Item icon='delete' onPress={handleDelete} title={t('label.delete')} />
     </Menu>
   );
 };

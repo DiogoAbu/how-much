@@ -6,10 +6,11 @@ import { Observer } from 'mobx-react-lite';
 
 import usePress from '!/hooks/use-press';
 import useTheme from '!/hooks/use-theme';
-import localize from '!/services/localize';
+import useTranslation from '!/hooks/use-translation';
 import { useStores } from '!/stores';
 import { MainNavigationProp } from '!/types';
 import findCurrency from '!/utils/find-currency';
+import toCurrency from '!/utils/to-currency';
 
 import styles from '../CountriesWages/styles';
 
@@ -20,6 +21,7 @@ interface Props {
 const HeaderRight: FC<Props> = ({ navigation }) => {
   const { colors, dark } = useTheme();
   const { generalStore, wagesStore } = useStores();
+  const { t } = useTranslation();
 
   const handleActiveCurrencyPress = usePress(() => {
     requestAnimationFrame(() => {
@@ -54,9 +56,9 @@ const HeaderRight: FC<Props> = ({ navigation }) => {
               {currencyInfo.currency}
               {' • '}
               {wage?.value || currencyInfo.hourlyWage
-                ? localize.toCurrency(wage?.value || currencyInfo.hourlyWage)
+                ? toCurrency(wage?.value || currencyInfo.hourlyWage, currencyInfo.currency)
                 : '---'}
-              <Text style={styles.hourlyWageUnit}>/{localize.t('hr')}</Text>
+              <Text style={styles.hourlyWageUnit}>/{t('hr')}</Text>
             </Button>
           );
         }}

@@ -3,7 +3,6 @@ import { format, ignore } from 'mobx-sync';
 // @ts-ignore
 import sortArray from 'sort-array';
 
-import localize from '!/services/localize';
 import { ProductSortBy, ProductSortByOrder } from '!/types';
 
 import { PriceModel } from './models/PriceModel';
@@ -164,9 +163,9 @@ export class ProductsStore {
     return !!this.productForm?.description;
   }
 
-  isPricesValid(): string | true {
+  isPricesValid(): 'needsAtLeastOnePrice' | true {
     if (this.productForm?.prices.length === 0) {
-      return localize.t('needsAtLeastOnePrice');
+      return 'needsAtLeastOnePrice';
     }
     return true;
   }

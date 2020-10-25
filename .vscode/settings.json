@@ -34,6 +34,12 @@
   "editor.formatOnSave": true,
   "eslint.enable": true,
   "eslint.format.enable": true,
+  "i18n-ally.enabledFrameworks": ["i18next", "react"],
+  "i18n-ally.keepFulfilled": true,
+  "i18n-ally.keystyle": "nested",
+  "i18n-ally.localesPaths": "src/services/locales",
+  "i18n-ally.namespace": true,
+  "i18n-ally.sortKeys": true,
   "tslint.enable": false,
   "xmlTools.enforcePrettySelfClosingTagOnFormat": true,
   "xmlTools.splitAttributesOnFormat": true

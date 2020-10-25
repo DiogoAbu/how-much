@@ -10,7 +10,7 @@ import { observer } from 'mobx-react-lite';
 
 import { DEFAULT_PADDING } from '!/constants';
 import useTheme from '!/hooks/use-theme';
-import localize from '!/services/localize';
+import useTranslation from '!/hooks/use-translation';
 import { ProductModel } from '!/stores/models/ProductModel';
 
 interface Props {
@@ -24,6 +24,7 @@ interface Props {
 const DescriptionInput = observer<Props, NativeTextInput>(
   ({ productForm, descriptionError, blurOnSubmit, handleOnChange, handleOnSubmit }, ref) => {
     const { dark } = useTheme();
+    const { t } = useTranslation();
 
     const handleOnChangeText = useCallback(
       (text: string) => {
@@ -42,7 +43,7 @@ const DescriptionInput = observer<Props, NativeTextInput>(
           blurOnSubmit={blurOnSubmit}
           error={!!descriptionError}
           keyboardAppearance={dark ? 'dark' : 'light'}
-          label={localize.t('description')}
+          label={t('description')}
           maxLength={100}
           mode='outlined'
           onChangeText={handleOnChangeText}

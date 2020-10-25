@@ -8,7 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import CurrencyList from '!/components/CurrencyList';
 import { DEFAULT_PADDING } from '!/constants';
 import useFocusEffect from '!/hooks/use-focus-effect';
-import localize from '!/services/localize';
+import useTranslation from '!/hooks/use-translation';
 import { useStores } from '!/stores';
 import { MainNavigationProp } from '!/types';
 import { CurrencyInfo } from '!/utils/currency-list';
@@ -19,6 +19,7 @@ import CountryWageItem from './CountryWageItem';
 const CountriesWages: FC = () => {
   const navigation = useNavigation<MainNavigationProp<'CountriesWages'>>();
   const { onScroll, containerPaddingTop, scrollIndicatorInsetTop } = useCollapsibleStack();
+  const { t } = useTranslation();
 
   const { generalStore } = useStores();
 
@@ -26,11 +27,11 @@ const CountriesWages: FC = () => {
     generalStore.setFab({ fabVisible: false });
 
     navigation.setOptions({
-      title: localize.t('countriesWages'),
+      title: t('countriesWages'),
     });
 
     // Cannot have a blur function
-  }, [generalStore, navigation]);
+  }, [generalStore, navigation, t]);
 
   const renderCountryWage: ListRenderItem<CurrencyInfo> = ({ item }) => {
     return <CountryWageItem currencyInfo={item} />;
@@ -39,14 +40,14 @@ const CountriesWages: FC = () => {
   const ListHeader = (
     <View>
       <Caption style={{ paddingHorizontal: DEFAULT_PADDING, marginTop: DEFAULT_PADDING }}>
-        {localize.t('activeCurrency')}
+        {t('activeCurrency')}
       </Caption>
 
       <CountryWageItem currencyInfo={findCurrency(generalStore.activeCurrencyId)!} />
       <Divider />
 
       <Caption style={{ paddingHorizontal: DEFAULT_PADDING, marginTop: DEFAULT_PADDING }}>
-        {localize.t('availableCurrencies')}
+        {t('availableCurrencies')}
       </Caption>
     </View>
   );

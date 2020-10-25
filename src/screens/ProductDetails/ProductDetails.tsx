@@ -10,7 +10,7 @@ import { DEFAULT_APPBAR_HEIGHT, LIST_ITEM_HEIGHT } from '!/constants';
 import useFocusEffect from '!/hooks/use-focus-effect';
 import usePress from '!/hooks/use-press';
 import useTheme from '!/hooks/use-theme';
-import localize from '!/services/localize';
+import useTranslation from '!/hooks/use-translation';
 import { useStores } from '!/stores';
 import { PriceModel } from '!/stores/models/PriceModel';
 import { MainNavigationProp, MainRouteProp } from '!/types';
@@ -27,6 +27,7 @@ const ProductDetails = observer(() => {
   const { productsStore, generalStore } = useStores();
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
+  const { t } = useTranslation();
 
   const { params } = route;
   const product = productsStore.findProductById(params.productId)!;
@@ -63,7 +64,7 @@ const ProductDetails = observer(() => {
 
       <AdBanner />
 
-      <Caption style={styles.listCaption}>{localize.t('prices')}</Caption>
+      <Caption style={styles.listCaption}>{t('prices')}</Caption>
     </>
   );
 
