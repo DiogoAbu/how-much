@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useCallback, useState } from 'react';
 import { useWindowDimensions, View } from 'react-native';
 
 import { Divider } from 'react-native-paper';
@@ -9,12 +9,19 @@ import decideBannerSize from '!/utils/decide-banner-size';
 
 import styles from './styles';
 
-const handleDidFailToReceiveAdWithError = (errorDescription: string) => {
-  console.log(errorDescription);
-};
-
 const AdBanner: FC = () => {
   const { width } = useWindowDimensions();
+
+  const [error, setError] = useState(false);
+
+  const handleDidFailToReceiveAdWithError = useCallback((errorDescription: string) => {
+    console.log('AdBanner', errorDescription);
+    setError(true);
+  }, []);
+
+  if (error) {
+    return null;
+  }
 
   return (
     <>
