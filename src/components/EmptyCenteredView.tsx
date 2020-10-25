@@ -3,6 +3,8 @@ import { StyleSheet, View } from 'react-native';
 
 import { Text } from 'react-native-paper';
 
+import { DEFAULT_PADDING } from '!/constants';
+
 interface Props {
   text: string;
 }
@@ -20,6 +22,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    padding: DEFAULT_PADDING * 2,
   },
 });
 

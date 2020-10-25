@@ -277,7 +277,6 @@
   "hourlyWageValue": "Hourly wage value",
   "howMuch": "How much?",
   "hr": "hr",
-  "idiom": "Idiom",
   "label": {
     "alphabetically": {
       "asc": "A-Z",
@@ -304,6 +303,7 @@
     "sort": "Sort",
     "yes": "Yes"
   },
+  "language": "Language",
   "languageName": "English (US)",
   "lookForAcurrency": "Look for a currency",
   "needsAtLeastOnePrice": "Needs at least one price",

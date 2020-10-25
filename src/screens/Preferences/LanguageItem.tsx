@@ -53,7 +53,7 @@ const LanguageItem: FC = () => {
           ))}
         </Menu>
       )}
-      title={t('idiom')}
+      title={t('language')}
     />
   );
 };

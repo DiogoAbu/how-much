@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Animated, FlatList, FlatListProps, StyleSheet, Text } from 'react-native';
+import { Animated, FlatList, FlatListProps, StyleSheet } from 'react-native';
 
 import { Divider, Searchbar } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -12,6 +12,8 @@ import useTranslation from '!/hooks/use-translation';
 import { useStores } from '!/stores';
 import currencyList, { CurrencyInfo } from '!/utils/currency-list';
 import stripCountryName from '!/utils/strip-country-name';
+
+import EmptyCenteredView from './EmptyCenteredView';
 
 interface Props extends Omit<FlatListProps<CurrencyInfo>, 'data'> {
   isAnimated?: boolean;
@@ -95,7 +97,7 @@ const CurrencyList = observer<Props>(({ isAnimated, ListHeaderComponent, ...rest
     <Component
       bounces={false}
       contentContainerStyle={[
-        styles.content,
+        styles.contentContainer,
         { paddingTop: insets.top + DEFAULT_APPBAR_HEIGHT + DEFAULT_PADDING },
         rest.contentContainerStyle,
       ]}
@@ -106,7 +108,7 @@ const CurrencyList = observer<Props>(({ isAnimated, ListHeaderComponent, ...rest
       keyboardDismissMode='interactive'
       keyboardShouldPersistTaps='handled'
       keyExtractor={keyExtractor}
-      ListEmptyComponent={<Text style={styles.emptyText}>{t('noResults')}</Text>}
+      ListEmptyComponent={<EmptyCenteredView text={t('noResults')} />}
       ListHeaderComponent={ListHeader}
       maxToRenderPerBatch={2}
       removeClippedSubviews
@@ -119,7 +121,7 @@ const CurrencyList = observer<Props>(({ isAnimated, ListHeaderComponent, ...rest
 });
 
 const styles = StyleSheet.create({
-  content: {
+  contentContainer: {
     // flexGrow: 1,
   },
   emptyText: {

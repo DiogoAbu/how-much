@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import { DEFAULT_PADDING } from '!/constants';
 
 const styles = StyleSheet.create({
-  content: {
+  contentContainer: {
     // flexGrow: 1,
   },
   emptyText: {

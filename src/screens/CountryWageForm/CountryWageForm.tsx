@@ -73,7 +73,7 @@ const CountryWageForm: FC = observer(() => {
   return (
     <ScrollView
       contentContainerStyle={[
-        styles.content,
+        styles.contentContainer,
         { padding: DEFAULT_PADDING, paddingTop: insets.top + DEFAULT_APPBAR_HEIGHT + DEFAULT_PADDING },
       ]}
       keyboardDismissMode='interactive'

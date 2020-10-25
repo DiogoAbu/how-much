@@ -75,7 +75,7 @@ const ProductDetails = observer(() => {
   return (
     <>
       <FlatList
-        contentContainerStyle={[styles.content, { paddingTop: insets.top + DEFAULT_APPBAR_HEIGHT }]}
+        contentContainerStyle={[styles.contentContainer, { paddingTop: insets.top + DEFAULT_APPBAR_HEIGHT }]}
         data={product.prices}
         getItemLayout={getItemLayout}
         ItemSeparatorComponent={Divider}

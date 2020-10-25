@@ -277,7 +277,6 @@
   "hourlyWageValue": "Valor de remuneração por hora",
   "howMuch": "Quanto Custa?",
   "hr": "hr",
-  "idiom": "Idioma",
   "label": {
     "alphabetically": {
       "asc": "A-Z",
@@ -304,6 +303,7 @@
     "sort": "Ordernar",
     "yes": "Sim"
   },
+  "language": "Língua",
   "languageName": "Português (BR)",
   "lookForAcurrency": "Procurar moeda",
   "needsAtLeastOnePrice": "Precisa de ao menos um preço",

@@ -20,7 +20,7 @@ const AdBanner: FC = () => {
   }, []);
 
   if (error) {
-    return null;
+    return <Divider />;
   }
 
   return (

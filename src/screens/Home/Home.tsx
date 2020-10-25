@@ -167,7 +167,7 @@ const Home = observer(() => {
 
   return (
     <Animated.FlatList
-      contentContainerStyle={[styles.content, { paddingTop: containerPaddingTop }]}
+      contentContainerStyle={[styles.contentContainer, { paddingTop: containerPaddingTop }]}
       data={stores.hydrated ? stores.productsStore.productsSorted : Array<ProductModel>(placeholderAmount)}
       getItemLayout={getItemLayout}
       initialNumToRender={placeholderAmount}

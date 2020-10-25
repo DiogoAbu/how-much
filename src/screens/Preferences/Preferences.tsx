@@ -1,8 +1,9 @@
 import React, { FC } from 'react';
 import { Platform, ScrollView } from 'react-native';
 
-import { Divider, List } from 'react-native-paper';
+import { Caption, Divider, List } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Constants from 'expo-constants';
 
 import { DEFAULT_APPBAR_HEIGHT, DEFAULT_PADDING } from '!/constants';
 import useFocusEffect from '!/hooks/use-focus-effect';
@@ -75,6 +76,8 @@ const Preferences: FC<Props> = ({ navigation }) => {
       <Divider />
 
       <ColorSchemeItem />
+
+      <Caption style={styles.version}>v{Constants.nativeAppVersion}</Caption>
     </ScrollView>
   );
 };
