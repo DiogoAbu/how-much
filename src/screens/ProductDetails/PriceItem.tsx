@@ -10,6 +10,7 @@ import { PriceModel } from '!/stores/models/PriceModel';
 import { ListItemRightProps } from '!/types';
 import calculateWorkingHours from '!/utils/calculate-working-hours';
 import findCurrency from '!/utils/find-currency';
+import stripCountryName from '!/utils/strip-country-name';
 import toCurrency from '!/utils/to-currency';
 
 import styles from './styles';
@@ -33,7 +34,9 @@ const PriceItem = observer<ListRenderItemInfo<PriceModel>>(({ item: price }) => 
 
   return (
     <List.Item
-      description={`${currencyInfo?.countryName ?? ''} • ${
+      description={`${t(`countryName.${stripCountryName(currencyInfo!.countryName)}`, {
+        defaultValue: currencyInfo!.countryName,
+      })} • ${
         wage?.value || currencyInfo?.hourlyWage
           ? `${toCurrency(wage?.value || currencyInfo?.hourlyWage || 0, currencyInfo?.currency)}/${t('hr')}`
           : t('unknown')

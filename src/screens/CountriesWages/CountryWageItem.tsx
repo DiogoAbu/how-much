@@ -11,6 +11,7 @@ import useTranslation from '!/hooks/use-translation';
 import { useStores } from '!/stores';
 import { ListItemRightProps, MainNavigationProp } from '!/types';
 import { CurrencyInfo } from '!/utils/currency-list';
+import stripCountryName from '!/utils/strip-country-name';
 import toCurrency from '!/utils/to-currency';
 
 import styles from './styles';
@@ -26,7 +27,7 @@ const CountryWageItem: FC<Props> = observer(({ currencyInfo }) => {
 
   const wage = wagesStore.findWage(currencyInfo.id);
 
-  const { currency, countryName: name } = currencyInfo;
+  const { currency, countryName } = currencyInfo;
 
   const handleOnPress = usePress(() => {
     wagesStore.prepareWageForm(currencyInfo);
@@ -42,7 +43,9 @@ const CountryWageItem: FC<Props> = observer(({ currencyInfo }) => {
 
   return (
     <List.Item
-      description={`${currency} • ${name}`}
+      description={`${currency} • ${t(`countryName.${stripCountryName(countryName)}`, {
+        defaultValue: countryName,
+      })}`}
       onPress={handleOnPress}
       right={renderRight}
       title={

@@ -16,6 +16,7 @@ import useTranslation from '!/hooks/use-translation';
 import { useStores } from '!/stores';
 import { MainNavigationProp, MainRouteProp } from '!/types';
 import findCurrency from '!/utils/find-currency';
+import stripCountryName from '!/utils/strip-country-name';
 import toCurrency from '!/utils/to-currency';
 import toNumber from '!/utils/to-number';
 
@@ -103,7 +104,9 @@ const CountryWageForm: FC = observer(() => {
         )}
         right={(props) => (
           <Text {...props} style={[props.style, styles.itemRight]}>
-            {currency.countryName}
+            {t(`countryName.${stripCountryName(currency.countryName)}`, {
+              defaultValue: currency.countryName,
+            })}
           </Text>
         )}
         title=''

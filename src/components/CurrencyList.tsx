@@ -11,6 +11,7 @@ import useTheme from '!/hooks/use-theme';
 import useTranslation from '!/hooks/use-translation';
 import { useStores } from '!/stores';
 import currencyList, { CurrencyInfo } from '!/utils/currency-list';
+import stripCountryName from '!/utils/strip-country-name';
 
 interface Props extends Omit<FlatListProps<CurrencyInfo>, 'data'> {
   isAnimated?: boolean;
@@ -47,7 +48,14 @@ const CurrencyList = observer<Props>(({ isAnimated, ListHeaderComponent, ...rest
       if (each.currency.toUpperCase().includes(textSafe)) {
         return true;
       }
-      if (each.countryName.toUpperCase().includes(textSafe)) {
+      if (
+        t(`countryName.${stripCountryName(each.countryName)}`, {
+          defaultValue: each.countryName,
+        })
+          .toUpperCase()
+          .includes(textSafe) ||
+        each.countryName.toUpperCase().includes(textSafe)
+      ) {
         return true;
       }
       if (each.countryNativeName.toUpperCase().includes(textSafe)) {
@@ -59,7 +67,7 @@ const CurrencyList = observer<Props>(({ isAnimated, ListHeaderComponent, ...rest
     requestAnimationFrame(() => {
       setList(filteredList);
     });
-  }, [queryDebounced]);
+  }, [queryDebounced, t]);
 
   const onChangeSearch = useCallback((value: string) => {
     setQuery(value);

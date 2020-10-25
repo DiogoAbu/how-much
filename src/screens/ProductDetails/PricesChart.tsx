@@ -21,6 +21,7 @@ import { CurrencyInfo } from '!/utils/currency-list';
 import findCurrency from '!/utils/find-currency';
 import formatDate from '!/utils/format-date';
 import notEmpty from '!/utils/not-empty';
+import stripCountryName from '!/utils/strip-country-name';
 import toCurrency from '!/utils/to-currency';
 
 import styles from './styles';
@@ -242,7 +243,9 @@ const PricesChart = observer<Props>(({ product, shouldRender, setSnackBarText })
                 style={[styles.legendChip, { backgroundColor }]}
                 textStyle={[styles.legendChipText, { color }]}
               >
-                {each.currencyInfo.countryName}
+                {t(`countryName.${stripCountryName(each.currencyInfo.countryName)}`, {
+                  defaultValue: each.currencyInfo.countryName,
+                })}
                 {' • '}
                 {toCurrency(each.value, each.currencyInfo.currency)}
                 {' • '}

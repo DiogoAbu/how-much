@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { FlatList, ListRenderItem, TextInput as NativeTextInput, View } from 'react-native';
+import { ScrollView, TextInput as NativeTextInput, View } from 'react-native';
 
 import { Divider, IconButton, Text } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -14,7 +14,6 @@ import usePress from '!/hooks/use-press';
 import useTheme from '!/hooks/use-theme';
 import useTranslation from '!/hooks/use-translation';
 import { useStores } from '!/stores';
-import { PriceModel } from '!/stores/models/PriceModel';
 import { MainNavigationProp, MainRouteProp } from '!/types';
 
 import DescriptionInput from './DescriptionInput';
@@ -85,47 +84,36 @@ const ProductForm = observer(() => {
   }, [generalStore, handleDone, navigation, params?.isEditing, t]);
 
   return (
-    <FlatList
+    <ScrollView
       contentContainerStyle={[
         styles.content,
         { padding: DEFAULT_PADDING, paddingTop: insets.top + DEFAULT_APPBAR_HEIGHT + DEFAULT_PADDING },
       ]}
-      data={productsStore.productForm?.prices.slice()}
-      ItemSeparatorComponent={Divider}
-      keyboardDismissMode='interactive'
+      keyboardDismissMode='none'
       keyboardShouldPersistTaps='handled'
-      keyExtractor={keyExtractor}
-      ListHeaderComponent={
-        <>
-          <DescriptionInput
-            descriptionError={descriptionError}
-            handleOnChange={handleOnChangeDescription}
-            handleOnSubmit={handleFocusPrice}
-            productForm={productsStore.productForm}
-            ref={inputRef}
-          />
-
-          <Divider />
-          <View style={styles.pricesHeader}>
-            <Text>{t('prices')}</Text>
-            <IconButton icon='plus' onPress={handleAddCurrency} />
-          </View>
-        </>
-      }
-      renderItem={renderPrice}
       style={{ backgroundColor: colors.background }}
-    />
+    >
+      <DescriptionInput
+        descriptionError={descriptionError}
+        handleOnChange={handleOnChangeDescription}
+        handleOnSubmit={handleFocusPrice}
+        productForm={productsStore.productForm}
+        ref={inputRef}
+      />
+
+      <Divider />
+      <View style={styles.pricesHeader}>
+        <Text>{t('prices')}</Text>
+        <IconButton icon='plus' onPress={handleAddCurrency} />
+      </View>
+
+      {productsStore.productForm?.prices.map((price) => (
+        <SlideIn key={`priceInput${price.id}`}>
+          <PriceInput price={price} />
+        </SlideIn>
+      ))}
+    </ScrollView>
   );
 });
-
-const keyExtractor = (item: PriceModel) => `priceInput${item.id}`;
-
-const renderPrice: ListRenderItem<PriceModel> = ({ item, index, separators }) => {
-  return (
-    <SlideIn>
-      <PriceInput index={index} item={item} separators={separators} />
-    </SlideIn>
-  );
-};
 
 export default ProductForm;

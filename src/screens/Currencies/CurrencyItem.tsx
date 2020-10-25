@@ -11,6 +11,7 @@ import useTranslation from '!/hooks/use-translation';
 import { CountryWageModel } from '!/stores/models/CountryWageModel';
 import { ListItemRightProps, MainRouteProp } from '!/types';
 import { CurrencyInfo } from '!/utils/currency-list';
+import stripCountryName from '!/utils/strip-country-name';
 import toCurrency from '!/utils/to-currency';
 
 import styles from './styles';
@@ -49,7 +50,7 @@ const CurrencyItem: FC<Props> = ({ currencyInfo, wage, setSelectedId, isSelected
 
   return (
     <List.Item
-      description={`${countryName} • ${
+      description={`${t(`countryName.${stripCountryName(countryName)}`, { defaultValue: countryName })} • ${
         wage?.value || hourlyWage
           ? `${toCurrency(wage?.value || hourlyWage || 0, currency)}/${t('hr')}`
           : t('unknown')

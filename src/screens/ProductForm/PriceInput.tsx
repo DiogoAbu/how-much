@@ -1,5 +1,5 @@
 import React from 'react';
-import { ListRenderItemInfo, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { Colors, IconButton, Text, TextInput } from 'react-native-paper';
 import { observer } from 'mobx-react-lite';
@@ -14,8 +14,12 @@ import findCurrency from '!/utils/find-currency';
 import toCurrency from '!/utils/to-currency';
 import toNumber from '!/utils/to-number';
 
-const PriceInput = observer<ListRenderItemInfo<PriceModel>>(({ item: price }) => {
-  const { dark, fonts } = useTheme();
+interface Props {
+  price: PriceModel;
+}
+
+const PriceInput = observer<Props>(({ price }) => {
+  const { dark } = useTheme();
   const { productsStore } = useStores();
   const { t } = useTranslation();
 
@@ -37,7 +41,7 @@ const PriceInput = observer<ListRenderItemInfo<PriceModel>>(({ item: price }) =>
 
   return (
     <View style={styles.container}>
-      <Text style={[styles.currency, fonts.medium]}>{currencyInfo.currency}</Text>
+      <Text style={styles.currency}>{currencyInfo.currency}</Text>
 
       <TextInput
         autoCompleteType='off'
