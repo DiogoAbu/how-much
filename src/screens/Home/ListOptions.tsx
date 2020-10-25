@@ -29,36 +29,57 @@ const ListOptions: FC = observer(() => {
     setIsMenuVisible(() => true);
   });
 
-  const handleSortOrderPress = usePress(() => {
-    requestAnimationFrame(() => {
-      productsStore.toggleSortByOrder();
-    });
-  });
-
-  const handleSortByAlphabeticallyPress = usePress(() => {
+  const handleSortByAlphabeticallyAscPress = usePress(() => {
     handleHideMenu();
     requestAnimationFrame(() => {
       productsStore.setSortBy('alphabetically');
+      productsStore.setSortByOrder('asc');
     });
   });
 
-  const handleSortByDatePress = usePress(() => {
+  const handleSortByAlphabeticallyDescPress = usePress(() => {
     handleHideMenu();
     requestAnimationFrame(() => {
-      productsStore.setSortBy('date');
+      productsStore.setSortBy('alphabetically');
+      productsStore.setSortByOrder('desc');
     });
   });
 
-  const handleSortByPricePress = usePress(() => {
+  const handleSortByMostExpensivePress = usePress(() => {
     handleHideMenu();
     requestAnimationFrame(() => {
       productsStore.setSortBy('price');
+      productsStore.setSortByOrder('desc');
+    });
+  });
+
+  const handleSortByLeastExpensivePress = usePress(() => {
+    handleHideMenu();
+    requestAnimationFrame(() => {
+      productsStore.setSortBy('price');
+      productsStore.setSortByOrder('asc');
+    });
+  });
+
+  const handleSortByMostRecentPress = usePress(() => {
+    handleHideMenu();
+    requestAnimationFrame(() => {
+      productsStore.setSortBy('date');
+      productsStore.setSortByOrder('desc');
+    });
+  });
+
+  const handleSortByLeastRecentPress = usePress(() => {
+    handleHideMenu();
+    requestAnimationFrame(() => {
+      productsStore.setSortBy('date');
+      productsStore.setSortByOrder('asc');
     });
   });
 
   const sortButton = (
     <Button compact icon='chevron-down' mode='text' onPress={handleShowMenu}>
-      {t('label.sort')}: {t(`label.${productsStore.sortBy}`)}
+      {t('label.sort')}: {t(`label.${productsStore.sortBy}.${productsStore.sortByOrder}`)}
     </Button>
   );
 
@@ -86,19 +107,13 @@ const ListOptions: FC = observer(() => {
   return (
     <>
       <View style={styles.sorterContainer}>
-        <Button
-          compact
-          icon={productsStore.sortByOrder === 'asc' ? 'sort-ascending' : 'sort-descending'}
-          mode='text'
-          onPress={handleSortOrderPress}
-        >
-          {productsStore.sortByOrder === 'asc' ? t('label.ascending') : t('label.descending')}
-        </Button>
-
         <Menu anchor={sortButton} onDismiss={handleHideMenu} visible={isMenuVisible}>
-          <Menu.Item onPress={handleSortByAlphabeticallyPress} title={t('label.alphabetically')} />
-          <Menu.Item onPress={handleSortByDatePress} title={t('label.date')} />
-          <Menu.Item onPress={handleSortByPricePress} title={t('price')} />
+          <Menu.Item onPress={handleSortByAlphabeticallyAscPress} title={t('label.alphabetically.asc')} />
+          <Menu.Item onPress={handleSortByAlphabeticallyDescPress} title={t('label.alphabetically.desc')} />
+          <Menu.Item onPress={handleSortByMostExpensivePress} title={t('label.price.desc')} />
+          <Menu.Item onPress={handleSortByLeastExpensivePress} title={t('label.price.asc')} />
+          <Menu.Item onPress={handleSortByMostRecentPress} title={t('label.date.desc')} />
+          <Menu.Item onPress={handleSortByLeastRecentPress} title={t('label.date.asc')} />
         </Menu>
       </View>
       <Divider />

@@ -15,7 +15,6 @@
   "country": "Country",
   "countryName": {
     "Afghanistan": "Afghanistan",
-    "Åland": "Åland",
     "Albania": "Albania",
     "Algeria": "Algeria",
     "American Samoa": "American Samoa",
@@ -193,10 +192,10 @@
     "Puerto Rico": "Puerto Rico",
     "Qatar": "Qatar",
     "Republic of the Congo": "Republic of the Congo",
-    "Réunion": "Réunion",
     "Romania": "Romania",
     "Russia": "Russia",
     "Rwanda": "Rwanda",
+    "Réunion": "Réunion",
     "Saint Barthélemy": "Saint Barthélemy",
     "Saint Helena": "Saint Helena",
     "Saint Kitts and Nevis": "Saint Kitts and Nevis",
@@ -206,7 +205,6 @@
     "Saint Vincent and the Grenadines": "Saint Vincent and the Grenadines",
     "Samoa": "Samoa",
     "San Marino": "San Marino",
-    "São Tomé and Príncipe": "São Tomé and Príncipe",
     "Saudi Arabia": "Saudi Arabia",
     "Senegal": "Senegal",
     "Serbia": "Serbia",
@@ -231,6 +229,7 @@
     "Sweden": "Sweden",
     "Switzerland": "Switzerland",
     "Syria": "Syria",
+    "São Tomé and Príncipe": "São Tomé and Príncipe",
     "Taiwan": "Taiwan",
     "Tajikistan": "Tajikistan",
     "Tanzania": "Tanzania",
@@ -261,7 +260,8 @@
     "Western Sahara": "Western Sahara",
     "Yemen": "Yemen",
     "Zambia": "Zambia",
-    "Zimbabwe": "Zimbabwe"
+    "Zimbabwe": "Zimbabwe",
+    "Åland": "Åland"
   },
   "currency": "Currency",
   "currencyNotFound": "Currency not found",
@@ -279,9 +279,15 @@
   "hr": "hr",
   "idiom": "Idiom",
   "label": {
-    "alphabetically": "Alphabetically",
+    "alphabetically": {
+      "asc": "A-Z",
+      "desc": "Z-A"
+    },
     "ascending": "ascending",
-    "date": "Date",
+    "date": {
+      "asc": "Least recent",
+      "desc": "Most recent"
+    },
     "delete": "Delete",
     "descending": "descending",
     "discard": "Discard",
@@ -290,6 +296,10 @@
     "edit": "Edit",
     "no": "No",
     "ok": "Ok",
+    "price": {
+      "asc": "Least expensive",
+      "desc": "Most expensive"
+    },
     "return": "Return",
     "sort": "Sort",
     "yes": "Yes"

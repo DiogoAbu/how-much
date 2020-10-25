@@ -15,7 +15,6 @@
   "country": "País",
   "countryName": {
     "Afghanistan": "Afeganistão",
-    "Åland": "Alanda",
     "Albania": "Albânia",
     "Algeria": "Argélia",
     "American Samoa": "Samoa Americana",
@@ -193,10 +192,10 @@
     "Puerto Rico": "Porto Rico",
     "Qatar": "Catar",
     "Republic of the Congo": "República do Congo",
-    "Réunion": "Reunião",
     "Romania": "Romênia",
     "Russia": "Rússia",
     "Rwanda": "Ruanda",
+    "Réunion": "Reunião",
     "Saint Barthélemy": "São Bartolomeu",
     "Saint Helena": "Santa Helena",
     "Saint Kitts and Nevis": "São Cristóvão e Neves",
@@ -206,7 +205,6 @@
     "Saint Vincent and the Grenadines": "São Vicente e Granadinas",
     "Samoa": "Samoa",
     "San Marino": "San Marino",
-    "São Tomé and Príncipe": "São Tomé e Príncipe",
     "Saudi Arabia": "Arábia Saudita",
     "Senegal": "Senegal",
     "Serbia": "Sérvia",
@@ -231,6 +229,7 @@
     "Sweden": "Suécia",
     "Switzerland": "Suíça",
     "Syria": "Síria",
+    "São Tomé and Príncipe": "São Tomé e Príncipe",
     "Taiwan": "Taiwan",
     "Tajikistan": "Tajiquistão",
     "Tanzania": "Tanzânia",
@@ -261,7 +260,8 @@
     "Western Sahara": "Saara Ocidental",
     "Yemen": "Iémen",
     "Zambia": "Zâmbia",
-    "Zimbabwe": "Zimbábue"
+    "Zimbabwe": "Zimbábue",
+    "Åland": "Alanda"
   },
   "currency": "Moeda",
   "currencyNotFound": "Moeda não encontrada",
@@ -279,9 +279,15 @@
   "hr": "hr",
   "idiom": "Idioma",
   "label": {
-    "alphabetically": "Alfabeticamente",
+    "alphabetically": {
+      "asc": "A-Z",
+      "desc": "Z-A"
+    },
     "ascending": "ascendendo",
-    "date": "Data",
+    "date": {
+      "asc": "Mais antigo",
+      "desc": "Mais recente"
+    },
     "delete": "Deletar",
     "descending": "descendendo",
     "discard": "Descartar",
@@ -290,6 +296,10 @@
     "edit": "Editar",
     "no": "Não",
     "ok": "Ok",
+    "price": {
+      "asc": "Mais barato",
+      "desc": "Mais caro"
+    },
     "return": "Retornar",
     "sort": "Ordernar",
     "yes": "Sim"
