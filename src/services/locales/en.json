@@ -265,6 +265,7 @@
   },
   "currency": "Currency",
   "currencyNotFound": "Currency not found",
+  "dailyWorkHours": "Daily work hours",
   "description": "Description",
   "descriptionCannotBeEmpty": "Description cannot be empty",
   "doYouWantToDeleteThisProduct": "Do you want to delete this product?",
@@ -274,7 +275,12 @@
   "draftFound": "Draft found",
   "editingProduct": "Editing product",
   "editingWage": "Editing wage",
+  "general": "General",
   "hourlyWageValue": "Hourly wage value",
+  "howManyDaysYouWorkInAWeek": "How many days you work in a week.",
+  "howManyHoursYouWorkDaily": "How many hours you work daily.",
+  "howManyHoursYouWorkWeekly": "How many hours you work weekly.",
+  "howManyWeeksInAYear": "How many weeks you work in a year.",
   "howMuch": "How much?",
   "hr": "hr",
   "label": {
@@ -282,17 +288,19 @@
       "asc": "A-Z",
       "desc": "Z-A"
     },
-    "ascending": "ascending",
+    "annualWage": "Annual wage",
+    "dailyWage": "Daily wage",
     "date": {
       "asc": "Least recent",
       "desc": "Most recent"
     },
     "delete": "Delete",
-    "descending": "descending",
     "discard": "Discard",
     "done": "Done",
     "duplicate": "Duplicate",
     "edit": "Edit",
+    "hourlyWage": "Hourly wage",
+    "monthlyWage": "Monthly wage",
     "no": "No",
     "ok": "Ok",
     "price": {
@@ -301,6 +309,7 @@
     },
     "return": "Return",
     "sort": "Sort",
+    "weeklyWage": "Weekly wage",
     "yes": "Yes"
   },
   "language": "Language",
@@ -322,10 +331,16 @@
   "saveInGallery": "Save in gallery?",
   "sharingUnavailable": "Sharing unavailable on this device.",
   "somethingWentWrong": "Something went wrong!",
+  "tapTheCalculatorToFindOutTheHourlyWage": "Use the calculator to find out the hourly wage",
   "title": {
     "oops": "Oops",
     "welcome": "Welcome"
   },
   "toStartUsingThisAppYouNeedToPickYourPreferredCurrency": "To start using this app you need to pick your preferred currency.",
-  "unknown": "Unknown"
+  "unknown": "Unknown",
+  "wage": "Wage",
+  "wageCalculator": "Wage calculator",
+  "weeklyWorkHours": "Weekly work hours",
+  "weeksInAYear": "Weeks in a year",
+  "workDaysInAWeek": "Work days in a week"
 }

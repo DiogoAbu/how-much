@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useMemo } from 'react';
 import { ScrollView } from 'react-native';
 
-import { Divider, List, Text, TextInput } from 'react-native-paper';
+import { Divider, HelperText, List, Text, TextInput } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { observer } from 'mobx-react-lite';
@@ -47,9 +47,9 @@ const CountryWageForm: FC = observer(() => {
     });
   });
 
-  const handleHourlyWageInfo = usePress(() => {
+  const handleGoToWageCalculator = usePress(() => {
     requestAnimationFrame(() => {
-      // navigation.navigate('WageCalculator');
+      navigation.navigate('WageCalculator', { currencyId: params.currencyId, isFromForm: true });
     });
   });
 
@@ -128,13 +128,16 @@ const CountryWageForm: FC = observer(() => {
           <TextInput.Icon
             color={colors.text}
             forceTextInputFocus={false}
-            name='information-outline'
-            onPress={handleHourlyWageInfo}
+            name='calculator'
+            onPress={handleGoToWageCalculator}
           />
         }
         style={styles.input}
         value={toCurrency(wagesStore.wageForm?.value ?? 0, currency.currency)}
       />
+      <HelperText type='info' visible>
+        {t('tapTheCalculatorToFindOutTheHourlyWage')}
+      </HelperText>
     </ScrollView>
   );
 });

@@ -13,6 +13,7 @@ import Home from '!/screens/Home/Home';
 import Preferences from '!/screens/Preferences/Preferences';
 import ProductDetails from '!/screens/ProductDetails/ProductDetails';
 import ProductForm from '!/screens/ProductForm/ProductForm';
+import WageCalculator from '!/screens/WageCalculator/WageCalculator';
 import { MainStackParams } from '!/types';
 
 const Stack = createStackNavigator<MainStackParams>();
@@ -44,6 +45,7 @@ const MainStack: FC = () => {
           useNativeDriver: true,
         })}
         <Stack.Screen component={CountryWageForm} name='CountryWageForm' />
+        <Stack.Screen component={WageCalculator} name='WageCalculator' />
 
         <Stack.Screen component={Preferences} name='Preferences' />
       </Stack.Navigator>

@@ -30,6 +30,10 @@ export type MainStackParams = {
   CountryWageForm: {
     currencyId: CurrencyInfo['id'];
   };
+  WageCalculator: {
+    currencyId: CurrencyInfo['id'];
+    isFromForm?: boolean;
+  };
 
   Preferences: undefined;
 };

@@ -265,6 +265,7 @@
   },
   "currency": "Moeda",
   "currencyNotFound": "Moeda não encontrada",
+  "dailyWorkHours": "Horas de trabalho por dia",
   "description": "Descrição",
   "descriptionCannotBeEmpty": "Descrição não pode estar vazia",
   "doYouWantToDeleteThisProduct": "Deseja deletar este produto?",
@@ -274,7 +275,12 @@
   "draftFound": "Rascunho encontrado",
   "editingProduct": "Editar produto",
   "editingWage": "Editar remuneração",
+  "general": "Geral",
   "hourlyWageValue": "Valor de remuneração por hora",
+  "howManyDaysYouWorkInAWeek": "Quantos dias você trabalha por semana.",
+  "howManyHoursYouWorkDaily": "Quantas horas você trabalha por dia.",
+  "howManyHoursYouWorkWeekly": "Quantas horas você trabalha por semana.",
+  "howManyWeeksInAYear": "Quantas semanas você trabalha no ano.",
   "howMuch": "Quanto Custa?",
   "hr": "hr",
   "label": {
@@ -282,17 +288,19 @@
       "asc": "A-Z",
       "desc": "Z-A"
     },
-    "ascending": "ascendendo",
+    "annualWage": "Remuneração anual",
+    "dailyWage": "Remuneração diária",
     "date": {
       "asc": "Mais antigo",
       "desc": "Mais recente"
     },
     "delete": "Deletar",
-    "descending": "descendendo",
     "discard": "Descartar",
     "done": "Feito",
     "duplicate": "Duplicar",
     "edit": "Editar",
+    "hourlyWage": "Remuneração por hora",
+    "monthlyWage": "Remuneração mensal",
     "no": "Não",
     "ok": "Ok",
     "price": {
@@ -301,6 +309,7 @@
     },
     "return": "Retornar",
     "sort": "Ordernar",
+    "weeklyWage": "Remuneração semanal",
     "yes": "Sim"
   },
   "language": "Língua",
@@ -322,10 +331,16 @@
   "saveInGallery": "Salvar na galeria?",
   "sharingUnavailable": "Compartilhamento indisponível nesse dispositivo.",
   "somethingWentWrong": "Algo deu errado!",
+  "tapTheCalculatorToFindOutTheHourlyWage": "Use a calculadora para descobrir sua remuneração por hora",
   "title": {
     "oops": "Oops",
     "welcome": "Bem-vindo"
   },
   "toStartUsingThisAppYouNeedToPickYourPreferredCurrency": "Para começar a usar o app, você deve escolhar sua moeda preferida",
-  "unknown": "Desconhecido"
+  "unknown": "Desconhecido",
+  "wage": "Remuneração",
+  "wageCalculator": "Calculadora de remuneração",
+  "weeklyWorkHours": "Horas de trabalho por semana",
+  "weeksInAYear": "Semanas no ano",
+  "workDaysInAWeek": "Dias de trabalho por semana"
 }

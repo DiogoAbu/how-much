@@ -33,6 +33,15 @@ const Preferences: FC<Props> = ({ navigation }) => {
     });
   });
 
+  const handleGoToWageCalculator = usePress(() => {
+    requestAnimationFrame(() => {
+      navigation.navigate('WageCalculator', {
+        currencyId: generalStore.activeCurrencyId!,
+        isFromForm: false,
+      });
+    });
+  });
+
   useFocusEffect(() => {
     generalStore.setFab({ fabVisible: false });
 
@@ -67,6 +76,17 @@ const Preferences: FC<Props> = ({ navigation }) => {
         onPress={handleCountriesWagesPress}
         right={(props) => <List.Icon {...props} icon='chevron-right' />}
         title={t('countriesWages')}
+      />
+
+      <Divider />
+
+      <List.Item
+        left={(props) => (
+          <List.Icon {...props} icon='calculator' style={[props.style, styles.noMarginRight]} />
+        )}
+        onPress={handleGoToWageCalculator}
+        right={(props) => <List.Icon {...props} icon='chevron-right' />}
+        title={t('wageCalculator')}
       />
 
       <Divider />
