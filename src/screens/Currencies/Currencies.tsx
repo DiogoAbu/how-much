@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ListRenderItem, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { BackHandler, ListRenderItem, View } from 'react-native';
 
 import { Button, Caption, Dialog, Divider, Paragraph, Portal, Text } from 'react-native-paper';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -71,6 +71,18 @@ const Currencies = observer(() => {
 
     // Cannot have a blur function
   }, [generalStore, handleDone, navigation, params.action, selectedId, t]);
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (dialogVisible) {
+        handleHideDialog();
+        return true;
+      }
+      return false;
+    });
+
+    return () => backHandler.remove();
+  }, [dialogVisible, handleHideDialog]);
 
   const renderCurrency: ListRenderItem<CurrencyInfo> = ({ item }) => {
     return (
