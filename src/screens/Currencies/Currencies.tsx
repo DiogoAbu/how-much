@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { ListRenderItem, Text, View } from 'react-native';
+import { ListRenderItem, View } from 'react-native';
 
-import { Button, Caption, Dialog, Divider, Paragraph, Portal } from 'react-native-paper';
+import { Button, Caption, Dialog, Divider, Paragraph, Portal, Text } from 'react-native-paper';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { observer } from 'mobx-react-lite';
 
