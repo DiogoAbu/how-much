@@ -29,7 +29,7 @@
       "@semantic-release/github",
       {
         "githubUrl": "https://api.github.com",
-        "prepend": "This release is also available on:\n| Release | Status |\n| --- | --- |\n| [Expo](https://exp.host/@diogoabu/HowMuch?release-channel=${nextRelease.channel?nextRelease.channel:'main'})|![Publish on Expo](https://github.com/DiogoAbu/ci/workflows/Publish%20on%20Expo/badge.svg?branch=v${nextRelease.version}&event=release) |\n---"
+        "prepend": "This release is also available on:\n| Release | Status |\n| --- | --- |\n| [Expo](https://exp.host/@diogoabu/HowMuch?release-channel=${nextRelease.channel?nextRelease.channel:'main'})|![Publish on Expo](https://github.com/DiogoAbu/how-much/workflows/Publish%20on%20Expo/badge.svg?branch=v${nextRelease.version}&event=release) |\n---"
       }
     ],
     [
