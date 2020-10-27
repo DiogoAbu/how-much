@@ -1,0 +1,70 @@
+name: Generate Release
+
+on:
+  push:
+    branches:
+      - main
+      - beta
+
+env:
+  node-version: "12"
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+
+      - name: Increase watchers to fix Docker
+        run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+
+      - name: Set up Node
+        uses: actions/setup-node@v2-beta
+        with:
+          node-version: ${{ env.node-version }}
+
+      - name: Get Yarn cache dir
+        id: yarn-cache
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Cache Yarn dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ${{ steps.yarn-cache.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install dependencies
+        run: yarn install --prefer-offline --frozen-lockfile --silent
+
+      - name: Start typescript check
+        run: yarn typecheck
+
+      - name: Start doctor check
+        run: yarn doctor
+
+      - name: Start test
+        run: yarn test --forceExit --silent --onlyChanged
+
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v3
+        with:
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
+          git-user-signingkey: true
+          git-commit-gpgsign: true
+          git-tag-gpgsign: true
+
+      - name: Determine version, generate notes, commit and publish tag
+        run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
+          GIT_COMMITTER_NAME: ${{ secrets.GIT_COMMITTER_NAME }}
+          GIT_COMMITTER_EMAIL: ${{ secrets.GIT_COMMITTER_EMAIL }}

@@ -1,0 +1,43 @@
+{
+  "branches": [
+    "main",
+    {
+      "name": "beta",
+      "prerelease": true
+    }
+  ],
+  "plugins": [
+    [
+      "@semantic-release/commit-analyzer",
+      {
+        "preset": "conventionalcommits"
+      }
+    ],
+    [
+      "@semantic-release/release-notes-generator",
+      {
+        "preset": "conventionalcommits"
+      }
+    ],
+    [
+      "@semantic-release/exec",
+      {
+        "prepareCmd": "yarn version --new-version ${nextRelease.version} --no-git-tag-version --allow-same-version"
+      }
+    ],
+    [
+      "@semantic-release/github",
+      {
+        "githubUrl": "https://api.github.com",
+        "prepend": "This release is also available on:\n| Release | Status |\n| --- | --- |\n| [Expo](https://exp.host/@diogoabu/HowMuch?release-channel=${nextRelease.channel?nextRelease.channel:'main'})|![Publish on Expo](https://github.com/DiogoAbu/ci/workflows/Publish%20on%20Expo/badge.svg?branch=v${nextRelease.version}&event=release) |\n---"
+      }
+    ],
+    [
+      "@semantic-release/git",
+      {
+        "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}",
+        "assets": ["package.json"]
+      }
+    ]
+  ]
+}

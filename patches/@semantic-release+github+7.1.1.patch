@@ -1,0 +1,107 @@
+diff --git a/node_modules/@semantic-release/github/lib/definitions/errors.js b/node_modules/@semantic-release/github/lib/definitions/errors.js
+index 952ff5c..b6c08f0 100644
+--- a/node_modules/@semantic-release/github/lib/definitions/errors.js
++++ b/node_modules/@semantic-release/github/lib/definitions/errors.js
+@@ -63,6 +63,18 @@ Your configuration for the \`releasedLabels\` option is \`${stringify(releasedLa
+     details: `The [addReleases option](${linkify('README.md#options')}) if defined, must be one of \`false|top|bottom\`.
+ 
+ Your configuration for the \`addReleases\` option is \`${stringify(addReleases)}\`.`,
++  }),
++  EINVALIDPREPEND: ({prepend}) => ({
++    message: 'Invalid `prepend` option.',
++    details: `The [prepend option](${linkify('README.md#options')}) if defined, must be a \`String\`.
++
++Your configuration for the \`prepend\` option is \`${stringify(prepend)}\`.`,
++  }),
++  EINVALIDAPPEND: ({append}) => ({
++    message: 'Invalid `append` option.',
++    details: `The [append option](${linkify('README.md#options')}) if defined, must be a \`String\`.
++
++Your configuration for the \`append\` option is \`${stringify(append)}\`.`,
+   }),
+   EINVALIDGITHUBURL: () => ({
+     message: 'The git repository URL is not a valid GitHub URL.',
+diff --git a/node_modules/@semantic-release/github/lib/resolve-config.js b/node_modules/@semantic-release/github/lib/resolve-config.js
+index c463581..775c772 100644
+--- a/node_modules/@semantic-release/github/lib/resolve-config.js
++++ b/node_modules/@semantic-release/github/lib/resolve-config.js
+@@ -13,6 +13,8 @@ module.exports = (
+     assignees,
+     releasedLabels,
+     addReleases,
++    prepend,
++    append
+   },
+   {env}
+ ) => ({
+@@ -32,4 +34,6 @@ module.exports = (
+     ? false
+     : castArray(releasedLabels),
+   addReleases: isNil(addReleases) ? false : addReleases,
++  prepend: isNil(prepend) ? '' : prepend,
++  append: isNil(append) ? '' : append,
+ });
+diff --git a/node_modules/@semantic-release/github/lib/success.js b/node_modules/@semantic-release/github/lib/success.js
+index a62bec8..c8bba58 100644
+--- a/node_modules/@semantic-release/github/lib/success.js
++++ b/node_modules/@semantic-release/github/lib/success.js
+@@ -30,6 +30,8 @@ module.exports = async (pluginConfig, context) => {
+     failTitle,
+     releasedLabels,
+     addReleases,
++    prepend,
++    append
+   } = resolveConfig(pluginConfig, context);
+ 
+   const github = getClient({githubToken, githubUrl, githubApiPathPrefix, proxy});
+@@ -143,17 +145,29 @@ module.exports = async (pluginConfig, context) => {
+     );
+   }
+ 
+-  if (addReleases !== false && errors.length === 0) {
++  if(errors.length === 0){
+     const ghRelease = releases.find((release) => release.name && release.name === RELEASE_NAME);
+     if (!isNil(ghRelease)) {
+       const ghRelaseId = ghRelease.id;
+-      const additionalReleases = getReleaseLinks(releases);
+-      if (!isEmpty(additionalReleases) && !isNil(ghRelaseId)) {
+-        const newBody =
+-          addReleases === 'top'
+-            ? additionalReleases.concat('\n---\n', nextRelease.notes)
+-            : nextRelease.notes.concat('\n---\n', additionalReleases);
+-        await github.repos.updateRelease({owner, repo, release_id: ghRelaseId, body: newBody});
++      if (!isNil(ghRelaseId)) {
++        let newBody = `${nextRelease.notes}`;
++
++        if(addReleases){
++          const additionalReleases = getReleaseLinks(releases);
++          if (!isEmpty(additionalReleases)) {
++            newBody =  addReleases === 'top'
++                ? additionalReleases.concat('\n---\n', newBody)
++                : newBody.concat('\n---\n', additionalReleases);
++          }
++        }
++
++        if(prepend || append) {
++          newBody = template(prepend)(context).concat(prepend ? '\n' : '', newBody, append ? '\n' : '', template(append)(context));
++        }
++
++        if(newBody !== nextRelease.notes){
++          await github.repos.updateRelease({owner, repo, release_id: ghRelaseId, body: newBody});
++        }
+       }
+     }
+   }
+diff --git a/node_modules/@semantic-release/github/lib/verify.js b/node_modules/@semantic-release/github/lib/verify.js
+index 465e166..d41abce 100644
+--- a/node_modules/@semantic-release/github/lib/verify.js
++++ b/node_modules/@semantic-release/github/lib/verify.js
+@@ -26,6 +26,8 @@ const VALIDATORS = {
+   assignees: isArrayOf(isNonEmptyString),
+   releasedLabels: canBeDisabled(isArrayOf(isNonEmptyString)),
+   addReleases: canBeDisabled(oneOf(['bottom', 'top'])),
++  prepend: canBeDisabled(isNonEmptyString),
++  append: canBeDisabled(isNonEmptyString),
+ };
+ 
+ module.exports = async (pluginConfig, context) => {
