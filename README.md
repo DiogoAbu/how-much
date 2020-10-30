@@ -12,6 +12,11 @@
   <strong>How many hours you have to work to buy something?</strong>
 </div>
 
+## Try it out
+Get the latest version [here](https://github.com/DiogoAbu/how-much/releases/latest).
+
+![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=exp://exp.host/@diogoabu/HowMuch?release-channel=main)
+
 ## Screenshots
 
 | Dark                                                                                   | Light                                                                                        |
