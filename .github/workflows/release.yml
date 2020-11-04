@@ -45,8 +45,21 @@ jobs:
       - name: Install dependencies
         run: yarn install --prefer-offline --frozen-lockfile --silent
 
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v3
+        with:
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
+          git-user-signingkey: true
+          git-commit-gpgsign: true
+          git-tag-gpgsign: true
+
       - name: Start linter
-        run: yarn lint-fix
+        run: |
+          yarn lint-fix
+          git add .
+          git commit -m "style: lint fixes [skip ci]"
+          git push
 
       - name: Start typescript check
         run: yarn typecheck
@@ -64,15 +77,6 @@ jobs:
 
       - name: Start expo doctor check
         run: yarn doctor
-
-      - name: Import GPG key
-        uses: crazy-max/ghaction-import-gpg@v3
-        with:
-          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
-          passphrase: ${{ secrets.GPG_PASSPHRASE }}
-          git-user-signingkey: true
-          git-commit-gpgsign: true
-          git-tag-gpgsign: true
 
       - name: Determine version, generate notes, commit and publish tag
         run: npx semantic-release

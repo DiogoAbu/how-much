@@ -15,7 +15,7 @@
     "typecheck": "tsc --noEmit",
     "test": "echo \"No test specified\" && exit 0",
     "eslint": "eslint . --ext .ts,.tsx,.js --max-warnings 0 --config ./.eslintrc",
-    "prettier": "prettier **/*.json --config ./.prettierrc",
+    "prettier": "prettier \"**/*.{json,eslintrc,prettierrc}\" --config ./.prettierrc",
     "lint": "yarn eslint && yarn prettier",
     "lint-fix": "yarn eslint --fix && yarn prettier --write",
     "fix-lockfile": "node ./scripts/fix-lockfile.js",
