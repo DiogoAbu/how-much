@@ -8,6 +8,7 @@ on:
 
 env:
   node-version: "12"
+  expo-version: "3.x"
 
 jobs:
   release:
@@ -44,14 +45,25 @@ jobs:
       - name: Install dependencies
         run: yarn install --prefer-offline --frozen-lockfile --silent
 
+      - name: Start linter
+        run: yarn lint-fix
+
       - name: Start typescript check
         run: yarn typecheck
 
-      - name: Start doctor check
-        run: yarn doctor
-
       - name: Start test
         run: yarn test --forceExit --silent --onlyChanged
+
+      - name: Install Expo
+        uses: expo/expo-github-action@v5
+        with:
+          expo-packager: yarn
+          expo-version: ${{ env.expo-version }}
+          expo-token: ${{ secrets.EXPO_TOKEN }}
+          expo-cache: true
+
+      - name: Start expo doctor check
+        run: yarn doctor
 
       - name: Import GPG key
         uses: crazy-max/ghaction-import-gpg@v3
