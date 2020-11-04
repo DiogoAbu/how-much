@@ -134,7 +134,7 @@ const Home = observer(() => {
     stores.generalStore.setFab({ fabIcon: 'plus', handleFabPress });
 
     navigation.setOptions({
-      title: Platform.OS === 'ios' ? '' : t('howMuch'),
+      title: Platform.OS === 'ios' ? '' : t('title.home', { name: t('howMuch') }),
       headerLeft: () =>
         Platform.OS === 'ios' ? (
           <Text
@@ -146,7 +146,7 @@ const Home = observer(() => {
               { color: dark ? colors.text : colors.textOnPrimary },
             ]}
           >
-            {t('howMuch')}
+            {t('title.home', { name: t('howMuch') })}
           </Text>
         ) : undefined,
       headerRight: () => <HeaderRight navigation={navigation} />,

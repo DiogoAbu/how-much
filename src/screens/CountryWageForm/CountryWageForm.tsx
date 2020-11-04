@@ -57,7 +57,7 @@ const CountryWageForm: FC = observer(() => {
     generalStore.setFab({ fabVisible: false });
 
     navigation.setOptions({
-      title: t('editingWage'),
+      title: t('title.editingWage'),
       headerRight: () => (
         <HeaderButton icon='check' mode='text' onPress={handleDone}>
           {t('label.done')}

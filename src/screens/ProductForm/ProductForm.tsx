@@ -74,7 +74,7 @@ const ProductForm = observer(() => {
     generalStore.setFab({ fabVisible: false });
 
     navigation.setOptions({
-      title: params?.isEditing ? t('editingProduct') : t('newProduct'),
+      title: params?.isEditing ? t('title.editingProduct') : t('title.newProduct'),
       headerRight: () => (
         <HeaderButton icon='check' mode='text' onPress={handleDone}>
           {t('label.done')}

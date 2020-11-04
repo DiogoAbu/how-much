@@ -46,7 +46,7 @@ const Preferences: FC<Props> = ({ navigation }) => {
     generalStore.setFab({ fabVisible: false });
 
     navigation.setOptions({
-      title: t('preferences'),
+      title: t('title.preferences'),
     });
   }, [generalStore, navigation, t]);
 
@@ -75,7 +75,7 @@ const Preferences: FC<Props> = ({ navigation }) => {
         )}
         onPress={handleCountriesWagesPress}
         right={(props) => <List.Icon {...props} icon='chevron-right' />}
-        title={t('countriesWages')}
+        title={t('title.countriesWages')}
       />
 
       <Divider />
@@ -86,7 +86,7 @@ const Preferences: FC<Props> = ({ navigation }) => {
         )}
         onPress={handleGoToWageCalculator}
         right={(props) => <List.Icon {...props} icon='chevron-right' />}
-        title={t('wageCalculator')}
+        title={t('title.wageCalculator')}
       />
 
       <Divider />

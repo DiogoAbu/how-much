@@ -27,7 +27,7 @@ const CountriesWages: FC = () => {
     generalStore.setFab({ fabVisible: false });
 
     navigation.setOptions({
-      title: t('countriesWages'),
+      title: t('title.countriesWages'),
     });
 
     // Cannot have a blur function

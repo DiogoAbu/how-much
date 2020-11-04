@@ -230,7 +230,7 @@ const WageCalculator: FC = () => {
     generalStore.setFab({ fabVisible: false });
 
     navigation.setOptions({
-      title: t('wageCalculator'),
+      title: t('title.wageCalculator'),
     });
 
     // Cannot have a blur function

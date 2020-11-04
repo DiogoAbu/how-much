@@ -102,7 +102,7 @@ const PricesChart = observer<Props>(({ product, shouldRender, setSnackBarText })
               }
 
               const imageAsset = await MediaLibrary.createAssetAsync(imageUri);
-              await MediaLibrary.createAlbumAsync('How Much', imageAsset, false);
+              await MediaLibrary.createAlbumAsync(t('howMuch'), imageAsset, false);
 
               setSnackBarText(t('chartImageSavedInGallery'));
             } catch (err) {
@@ -230,7 +230,7 @@ const PricesChart = observer<Props>(({ product, shouldRender, setSnackBarText })
         </View>
 
         <View style={styles.footerContainer}>
-          <Caption>{t('byHowMuch')}</Caption>
+          <Caption>{t('byAppName', { name: t('howMuch') })}</Caption>
           <Caption style={styles.dateText}>{formatDate(new Date())}</Caption>
         </View>
 

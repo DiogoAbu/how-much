@@ -61,7 +61,7 @@ const Currencies = observer(() => {
     generalStore.setFab({ fabVisible: false });
 
     navigation.setOptions({
-      title: params.action === 'productForm' ? t('pickACurrency') : t('preferredCurrency'),
+      title: params.action === 'productForm' ? t('title.pickACurrency') : t('title.preferredCurrency'),
       headerRight: () => (
         <HeaderButton disabled={!selectedId} icon='check' mode='text' onPress={handleDone}>
           {t('label.done')}

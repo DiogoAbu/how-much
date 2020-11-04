@@ -6,21 +6,22 @@ import semverPatch from 'semver/functions/patch';
 
 import * as pkg from './package.json';
 
-const major = semverMajor(pkg.version);
-const minor = semverMinor(pkg.version);
-const patch = semverPatch(pkg.version);
+const { version } = pkg;
+
+const major = semverMajor(version);
+const minor = semverMinor(version);
+const patch = semverPatch(version);
 
 const versionCode = major * 10000 + minor * 100 + patch;
 
 export default {
-  name: 'How Much',
-  slug: 'HowMuch',
-  version: pkg.version,
+  name: 'Quanto Custa',
+  version,
+  slug: 'how-much',
   scheme: 'how-much',
   owner: 'diogoabu',
   privacy: 'public',
   icon: './assets/multitask.png',
-  orientation: 'portrait',
   userInterfaceStyle: 'automatic',
   backgroundColor: '#304FFF',
   primaryColor: '#304FFF',
@@ -32,7 +33,7 @@ export default {
   updates: {
     fallbackToCacheTimeout: 0,
   },
-  assetBundlePatterns: ['**/*'],
+  assetBundlePatterns: ['assets/**/*'],
   androidStatusBar: {
     barStyle: 'light-content',
     backgroundColor: '#304FFF',
@@ -57,7 +58,7 @@ export default {
   },
   ios: {
     bundleIdentifier: 'com.diogoabu.howmuch',
-    buildNumber: pkg.version,
+    buildNumber: version,
     icon: './assets/icon-ios.png',
     supportsTablet: true,
     config: {
