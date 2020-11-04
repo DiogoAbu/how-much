@@ -60,8 +60,8 @@ jobs:
           [[ `git status --porcelain` ]] || exit
           git remote set-url origin "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
           git add .
-          git commit -m --no-verify "style: lint fixes [skip ci]"
-          git push -nu origin ${{ github.ref }}
+          git commit -m "style: lint fixes [skip ci]" --no-verify
+          git push -nu origin ${{ github.ref }} --no-verify
 
       - name: Start typescript check
         run: yarn typecheck
