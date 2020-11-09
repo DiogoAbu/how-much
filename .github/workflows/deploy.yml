@@ -30,7 +30,9 @@ jobs:
           ref: ${{ github.event.inputs.checkoutRef || github.event.client_payload.checkoutRef }}
 
       - name: Increase watchers to fix Docker
-        run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+        run: |
+          sudo sysctl -w kern.maxfiles=20480
+          sudo sysctl -w kern.maxfilesperproc=24576
 
       - name: Set up Node
         uses: actions/setup-node@v2-beta
@@ -60,6 +62,9 @@ jobs:
       - name: Display version
         run: echo ${{ steps.get-version.outputs.version }}
 
+      - name: Display platforms
+        run: echo ${{ github.event.inputs.platforms }}
+
       - name: Should deploy
         id: should-deploy
         run: echo ::set-output name=continue::$(node ./scripts/should-deploy.js ${{ steps.get-version.outputs.version }})
@@ -68,7 +73,7 @@ jobs:
         run: echo ${{ steps.should-deploy.outputs.continue }}
 
       - name: Install Expo
-        if: "steps.should-deploy.outputs.continue"
+        if: "steps.should-deploy.outputs.continue == 'true'"
         uses: expo/expo-github-action@v5
         with:
           expo-packager: yarn
@@ -77,21 +82,23 @@ jobs:
           expo-cache: true
 
       - name: Get prerelease
-        if: "steps.should-deploy.outputs.continue"
+        if: "steps.should-deploy.outputs.continue == 'true'"
         id: get-prerelease
         run: echo ::set-output name=is-prerelease::$(node -p "!!require('semver/functions/prerelease')('${{ steps.get-version.outputs.version }}')")
 
       - name: Display prerelease
-        if: "steps.should-deploy.outputs.continue"
+        if: "steps.should-deploy.outputs.continue == 'true'"
         run: echo ${{ steps.get-prerelease.outputs.is-prerelease }}
 
       - name: Decrypt service account json
-        if: "steps.should-deploy.outputs.continue && contains(github.event.inputs.platforms, 'android')"
+        if: "steps.should-deploy.outputs.continue == 'true' && contains(github.event.inputs.platforms, 'android')"
         run: |
           echo "$GOOGLE_PLAY_SERVICE_ACCOUNT" | base64 --decode > ./google-play-service-account.json
           chmod 600 ./google-play-service-account.json
         env:
           GOOGLE_PLAY_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT }}
+        working-directory: ${{ runner.temp }}
+
       # - name: Upload latest to Google Play
-      #   if: "steps.should-deploy.outputs.continue && contains(github.event.inputs.platforms, 'android')"
-      #   run: expo upload:android --latest --key ./google-play-service-account.json --track ${{ (steps.get-prerelease.outputs.is-prerelease == 'true' && 'alpha') || 'production' }}
+      #   if: "steps.should-deploy.outputs.continue == 'true' && contains(github.event.inputs.platforms, 'android')"
+      #   run: expo upload:android --latest --key ${{ runner.temp }}/google-play-service-account.json --track ${{ (steps.get-prerelease.outputs.is-prerelease == 'true' && 'alpha') || 'production' }}
