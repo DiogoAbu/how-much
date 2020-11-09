@@ -70,20 +70,17 @@ jobs:
         run: echo ::set-output name=is-prerelease::$(node -p "!!require('semver/functions/prerelease')('${{ steps.get-version.outputs.version }}')")
 
       - name: Display prerelease
-        run: |
-          echo ${{ steps.get-prerelease.outputs.is-prerelease }}
-          echo ${{ (steps.get-prerelease.outputs.is-prerelease == 'false' && 'false') || 'true' }}
-          echo ${{ (steps.get-prerelease.outputs.is-prerelease == 'true' && 'true') || 'false' }}
+        run: echo ${{ steps.get-prerelease.outputs.is-prerelease }}
 
       - name: Decrypt dotenv
         run: |
           echo "$DOTENV" | base64 --decode > ./.env
           chmod 600 ./.env
         env:
-          DOTENV: ${{ (steps.get-prerelease.outputs.is-prerelease && secrets.DOTENV_BETA) || secrets.DOTENV_MAIN }}
+          DOTENV: ${{ (steps.get-prerelease.outputs.is-prerelease == 'true' && secrets.DOTENV_BETA) || secrets.DOTENV_MAIN }}
 
       - name: Publish to expo
-        run: expo publish --non-interactive --release-channel ${{ (steps.get-prerelease.outputs.is-prerelease && 'beta') || 'main' }}
+        run: expo publish --non-interactive --release-channel ${{ (steps.get-prerelease.outputs.is-prerelease == 'true' && 'beta') || 'main' }}
 
       - name: Dispatch Deploy to Stores
         run: |
