@@ -82,7 +82,7 @@ jobs:
       - name: Publish to expo
         run: expo publish --non-interactive --release-channel ${{ steps.get-prerelease.outputs.IS_PRERELEASE && 'beta' || 'main' }}
 
-      - name: Dispatch deploy to stores
+      - name: Dispatch Deploy to Stores
         run: |
           curl --request POST \
             -H "Accept: application/vnd.github.everest-preview+json" \
