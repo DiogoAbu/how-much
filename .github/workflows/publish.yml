@@ -67,12 +67,10 @@ jobs:
 
       - name: Get prerelease
         id: get-prerelease
-        run: echo ::set-output name=IS_PRERELEASE::$(node -p "!!require('semver/functions/prerelease')(${{ steps.get-version.outputs.VERSION }})")
+        run: echo ::set-output name=IS_PRERELEASE::$(node -p "!!require('semver/functions/prerelease')('${{ steps.get-version.outputs.VERSION }}')")
 
       - name: Display prerelease
-        run: |
-          echo ${{ steps.get-prerelease.outputs.IS_PRERELEASE }}
-          echo ${{ steps.get-prerelease.outputs.IS_PRERELEASE && 'beta' || 'main' }}
+        run: echo ${{ steps.get-prerelease.outputs.IS_PRERELEASE }}
 
       - name: Decrypt dotenv
         run: |
