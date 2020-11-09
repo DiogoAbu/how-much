@@ -3,11 +3,17 @@ import { StyleSheet } from 'react-native';
 import { DEFAULT_PADDING } from '!/constants';
 
 const styles = StyleSheet.create({
-  container: {
+  contentContainer: {
     padding: DEFAULT_PADDING * 2,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+
+  languageContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    padding: DEFAULT_PADDING,
   },
 
   textCenter: {

@@ -7,10 +7,13 @@ import toMaterialStyle from 'material-color-hash';
 
 import { DEFAULT_PADDING } from '!/constants';
 import usePress from '!/hooks/use-press';
+import useStatusBar from '!/hooks/use-status-bar';
 import useTheme from '!/hooks/use-theme';
 import useTranslation from '!/hooks/use-translation';
 import { MainNavigationProp } from '!/types';
 import currencyList, { CurrencyInfo } from '!/utils/currency-list';
+
+import LanguageItem from '../Preferences/LanguageItem';
 
 import styles from './styles';
 
@@ -44,9 +47,14 @@ const Intro: FC<Props> = ({ navigation }) => {
     });
   });
 
+  useStatusBar();
+
   return (
     <>
-      <View style={[styles.container, { paddingTop: insets.top + DEFAULT_PADDING }]}>
+      <View style={[styles.languageContainer, { paddingTop: insets.top + DEFAULT_PADDING }]}>
+        <LanguageItem />
+      </View>
+      <View style={styles.contentContainer}>
         <Title style={styles.textCenter}>{t('title.welcome')}</Title>
 
         <Paragraph style={styles.textCenter}>

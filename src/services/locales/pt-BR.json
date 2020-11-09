@@ -1,7 +1,7 @@
 {
   "accessToGaleryDenied": "Acesso a galeria recusado",
   "activeCurrency": "Moeda ativa",
-  "andThisAmountMore": "E mais {{amount}}!",
+  "andThisAmountMore": "e mais {{amount}}!",
   "areYouSure": "Tem certeza?",
   "availableCurrencies": "Moedas disponíveis",
   "byAppName": "Por: {{name}} App",
@@ -268,7 +268,8 @@
   "dailyWorkHours": "Horas de trabalho por dia",
   "description": "Descrição",
   "descriptionCannotBeEmpty": "Descrição não pode estar vazia",
-  "doYouWantToDeleteThisProduct": "Deseja deletar este produto?",
+  "doYouWantToDeleteThisPrice": "Deseja excluir este preço?",
+  "doYouWantToDeleteThisProduct": "Deseja excluir este produto?",
   "doYouWantToDiscardThisDraftOrEditIt": "Você quer descartar este rascunho ou editá-lo?",
   "doYouWantToSaveThisChartIntoYourGallery": "Deseja salvar este gráfico na sua galleria?",
   "dontWorryYouCanChangeItLater": "Não se preocupe você pode mudar depois.",
@@ -292,7 +293,7 @@
       "asc": "Mais antigo",
       "desc": "Mais recente"
     },
-    "delete": "Deletar",
+    "delete": "Excluir",
     "discard": "Descartar",
     "done": "Feito",
     "duplicate": "Duplicar",
@@ -340,10 +341,10 @@
     "wageCalculator": "Calculadora de remuneração",
     "welcome": "Bem-vindo"
   },
-  "toStartUsingThisAppYouNeedToPickYourPreferredCurrency": "Para começar a usar o app, você deve escolhar sua moeda preferida",
+  "toStartUsingThisAppYouNeedToPickYourPreferredCurrency": "Para começar a usar o app, você deve escolhar sua moeda preferida.",
   "unknown": "Desconhecido",
   "wage": "Remuneração",
-  "weHaveLotsToChooseFrom": "Nós temos várias disponíveis",
+  "weHaveLotsToChooseFrom": "Nós temos várias disponíveis:",
   "weeklyWorkHours": "Horas de trabalho por semana",
   "weeksInAYear": "Semanas no ano",
   "workDaysInAWeek": "Dias de trabalho por semana"
