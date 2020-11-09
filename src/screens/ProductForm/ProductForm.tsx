@@ -8,7 +8,7 @@ import { observer } from 'mobx-react-lite';
 
 import HeaderButton from '!/components/HeaderButton';
 import SlideIn from '!/components/SlideIn';
-import { DEFAULT_APPBAR_HEIGHT, DEFAULT_PADDING } from '!/constants';
+import { DEFAULT_APPBAR_HEIGHT } from '!/constants';
 import useFocusEffect from '!/hooks/use-focus-effect';
 import usePress from '!/hooks/use-press';
 import useTheme from '!/hooks/use-theme';
@@ -28,7 +28,9 @@ const ProductForm = observer(() => {
   const { colors } = useTheme();
   const { t } = useTranslation();
 
-  const inputRef = useRef<NativeTextInput | null>(null);
+  const scrollRef = useRef<ScrollView | null>(null);
+  const descriptionRef = useRef<NativeTextInput | null>(null);
+  const pricesRef = useRef<(NativeTextInput | null)[]>(Array(productsStore.productForm?.prices.length));
 
   const [descriptionError, setDescriptionError] = useState('');
 
@@ -37,7 +39,7 @@ const ProductForm = observer(() => {
   }, []);
 
   const handleAddCurrency = usePress(() => {
-    inputRef.current?.blur();
+    descriptionRef.current?.blur();
 
     requestAnimationFrame(() => {
       navigation.navigate('Currencies', { action: 'productForm' });
@@ -85,12 +87,10 @@ const ProductForm = observer(() => {
 
   return (
     <ScrollView
-      contentContainerStyle={[
-        styles.contentContainer,
-        { padding: DEFAULT_PADDING, paddingTop: insets.top + DEFAULT_APPBAR_HEIGHT + DEFAULT_PADDING },
-      ]}
+      contentContainerStyle={[styles.contentContainer, { paddingTop: insets.top + DEFAULT_APPBAR_HEIGHT }]}
       keyboardDismissMode='none'
       keyboardShouldPersistTaps='handled'
+      ref={scrollRef}
       style={{ backgroundColor: colors.background }}
     >
       <DescriptionInput
@@ -98,7 +98,7 @@ const ProductForm = observer(() => {
         handleOnChange={handleOnChangeDescription}
         handleOnSubmit={handleFocusPrice}
         productForm={productsStore.productForm}
-        ref={inputRef}
+        ref={descriptionRef}
       />
 
       <Divider />
@@ -107,10 +107,19 @@ const ProductForm = observer(() => {
         <IconButton icon='plus' onPress={handleAddCurrency} />
       </View>
 
-      {productsStore.productForm?.prices.map((price) => (
-        <SlideIn key={`priceInput${price.id}`}>
-          <PriceInput price={price} />
-        </SlideIn>
+      {productsStore.productForm?.prices.map((price, index, arr) => (
+        <>
+          <SlideIn key={`priceInput${price.id}`}>
+            <PriceInput
+              nextIndex={index === arr.length - 1 ? undefined : index + 1}
+              price={price}
+              pricesRef={pricesRef}
+              ref={(ref) => (pricesRef.current[index] = ref)}
+              scrollRef={scrollRef}
+            />
+          </SlideIn>
+          {index < arr.length - 1 ? <Divider key={`priceInputDivider${price.id}`} /> : null}
+        </>
       ))}
     </ScrollView>
   );

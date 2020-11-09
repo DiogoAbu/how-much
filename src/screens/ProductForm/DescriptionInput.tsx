@@ -3,6 +3,7 @@ import {
   NativeSyntheticEvent,
   TextInput as NativeTextInput,
   TextInputSubmitEditingEventData,
+  View,
 } from 'react-native';
 
 import { HelperText, TextInput } from 'react-native-paper';
@@ -35,7 +36,7 @@ const DescriptionInput = observer<Props, NativeTextInput>(
     );
 
     return (
-      <>
+      <View style={{ paddingHorizontal: DEFAULT_PADDING, paddingTop: DEFAULT_PADDING }}>
         <TextInput
           autoCompleteType='off'
           autoCorrect={false}
@@ -56,7 +57,7 @@ const DescriptionInput = observer<Props, NativeTextInput>(
         <HelperText style={{ marginBottom: DEFAULT_PADDING }} type='error' visible>
           {descriptionError}
         </HelperText>
-      </>
+      </View>
     );
   },
   { forwardRef: true },
