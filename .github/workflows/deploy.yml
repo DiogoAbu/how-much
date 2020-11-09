@@ -1,0 +1,98 @@
+name: Deploy to Stores
+
+on:
+  workflow_dispatch:
+    inputs:
+      checkoutRef:
+        description: "Tag or SHA ref to checkout"
+        required: false
+        default: ""
+      platforms:
+        description: "Platforms to deploy"
+        required: false
+        default: "android,ios"
+  repository_dispatch:
+    types: [deploy]
+
+env:
+  node-version: "12"
+  expo-version: "3.x"
+
+jobs:
+  release:
+    name: Deploy
+    runs-on: macos-latest
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          ref: ${{ github.event.inputs.checkoutRef || github.event.client_payload.checkoutRef }}
+
+      - name: Increase watchers to fix Docker
+        run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+
+      - name: Set up Node
+        uses: actions/setup-node@v2-beta
+        with:
+          node-version: ${{ env.node-version }}
+
+      - name: Get Yarn cache dir
+        id: yarn-cache
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Cache Yarn dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ${{ steps.yarn-cache.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install dependencies
+        run: yarn install --prefer-offline --frozen-lockfile --silent
+
+      - name: Get version
+        id: get-version
+        run: echo ::set-output name=VERSION::$(node -p "'v'+require('./package.json').version")
+
+      - name: Display version
+        run: echo ${{ steps.get-version.outputs.VERSION }}
+
+      - name: Should deploy
+        id: should-deploy
+        run: echo ::set-output name=CONTINUE::$(node ./scripts/should-deploy.js ${{ steps.get-version.outputs.VERSION }})
+
+      - name: Display should deploy
+        run: echo ${{ steps.should-deploy.outputs.CONTINUE }}
+
+      - name: Install Expo
+        if: "steps.should-deploy.outputs.CONTINUE"
+        uses: expo/expo-github-action@v5
+        with:
+          expo-packager: yarn
+          expo-version: ${{ env.expo-version }}
+          expo-token: ${{ secrets.EXPO_TOKEN }}
+          expo-cache: true
+
+      - name: Get prerelease
+        if: "steps.should-deploy.outputs.CONTINUE"
+        id: get-prerelease
+        run: echo ::set-output name=IS_PRERELEASE::$(node -p "!!require('semver/functions/prerelease')('${{ steps.get-version.outputs.VERSION }}')")
+
+      - name: Display prerelease
+        if: "steps.should-deploy.outputs.CONTINUE"
+        run: echo ${{ steps.get-prerelease.outputs.IS_PRERELEASE }}
+
+      - name: Decrypt service account json
+        if: "steps.should-deploy.outputs.CONTINUE && contains(github.event.inputs.platforms, 'android')"
+        run: |
+          echo "$GOOGLE_PLAY_SERVICE_ACCOUNT" | base64 --decode > ./google-play-service-account.json
+          chmod 600 ./google-play-service-account.json
+        env:
+          GOOGLE_PLAY_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT }}
+
+      # - name: Upload latest to Google Play
+      #   if: "steps.should-deploy.outputs.CONTINUE && contains(github.event.inputs.platforms, 'android')"
+      #   run: expo upload:android --latest --key ./google-play-service-account.json --track ${{ steps.get-prerelease.outputs.IS_PRERELEASE && 'alpha' || 'production' }}
