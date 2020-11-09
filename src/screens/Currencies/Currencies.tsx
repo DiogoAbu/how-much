@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { BackHandler, ListRenderItem, View } from 'react-native';
+import React, { useState } from 'react';
+import { ListRenderItem, View } from 'react-native';
 
-import { Button, Caption, Dialog, Divider, Paragraph, Portal, Text } from 'react-native-paper';
+import { Caption, Divider, Text } from 'react-native-paper';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { observer } from 'mobx-react-lite';
 
@@ -26,13 +26,6 @@ const Currencies = observer(() => {
   const { t } = useTranslation();
 
   const [selectedId, setSelectedId] = useState<CurrencyInfo['id'] | null>(null);
-  const [dialogVisible, setDialogVisible] = useState(() => !generalStore.activeCurrencyId);
-
-  const handleHideDialog = usePress(() => {
-    requestAnimationFrame(() => {
-      setDialogVisible(false);
-    });
-  });
 
   const handleDone = usePress(() => {
     if (!selectedId) {
@@ -50,7 +43,7 @@ const Currencies = observer(() => {
 
     requestAnimationFrame(() => {
       if (hasPreviousCurrency) {
-        navigation.goBack();
+        navigation.pop();
       } else {
         navigation.reset({ routes: [{ name: 'Home' }] });
       }
@@ -71,18 +64,6 @@ const Currencies = observer(() => {
 
     // Cannot have a blur function
   }, [generalStore, handleDone, navigation, params.action, selectedId, t]);
-
-  useEffect(() => {
-    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-      if (dialogVisible) {
-        handleHideDialog();
-        return true;
-      }
-      return false;
-    });
-
-    return () => backHandler.remove();
-  }, [dialogVisible, handleHideDialog]);
 
   const renderCurrency: ListRenderItem<CurrencyInfo> = ({ item }) => {
     return (
@@ -119,7 +100,7 @@ const Currencies = observer(() => {
       <Caption style={{ paddingHorizontal: DEFAULT_PADDING, marginTop: DEFAULT_PADDING }}>
         {t('noActiveCurrency')}
       </Caption>
-      <Text style={{ paddingHorizontal: DEFAULT_PADDING }}>{t('pickPreferredCurrencyBelow')}</Text>
+      <Text style={{ paddingHorizontal: DEFAULT_PADDING * 2 }}>{t('pickPreferredCurrencyBelow')}</Text>
 
       <Divider style={{ marginTop: DEFAULT_PADDING }} />
 
@@ -129,26 +110,7 @@ const Currencies = observer(() => {
     </View>
   );
 
-  return (
-    <>
-      <CurrencyList ListHeaderComponent={ListHeader} renderItem={renderCurrency} />
-
-      <Portal>
-        <Dialog dismissable={false} visible={dialogVisible}>
-          <Dialog.Title>{t('title.welcome')}</Dialog.Title>
-          <Dialog.Content>
-            <Paragraph>{t('toStartUsingThisAppYouNeedToPickYourPreferredCurrency')}</Paragraph>
-            <Paragraph>{t('dontWorryYouCanChangeItLater')}</Paragraph>
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button labelStyle={{ paddingHorizontal: DEFAULT_PADDING * 2 }} onPress={handleHideDialog}>
-              {t('label.ok')}
-            </Button>
-          </Dialog.Actions>
-        </Dialog>
-      </Portal>
-    </>
-  );
+  return <CurrencyList ListHeaderComponent={ListHeader} renderItem={renderCurrency} />;
 });
 
 export default Currencies;

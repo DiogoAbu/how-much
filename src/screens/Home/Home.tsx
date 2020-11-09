@@ -53,7 +53,9 @@ const Home = observer(() => {
 
   const handleFabPress = usePress(() => {
     if (!stores.generalStore.activeCurrencyId) {
-      navigation.reset({ routes: [{ name: 'Currencies', params: { action: 'activeCurrency' } }] });
+      requestAnimationFrame(() => {
+        navigation.reset({ routes: [{ name: 'Intro' }] });
+      });
       return;
     }
 
@@ -121,7 +123,9 @@ const Home = observer(() => {
         return;
       }
       if (!stores.generalStore.activeCurrencyId) {
-        navigation.reset({ routes: [{ name: 'Currencies', params: { action: 'activeCurrency' } }] });
+        requestAnimationFrame(() => {
+          navigation.reset({ routes: [{ name: 'Intro' }] });
+        });
         return;
       }
       stores.generalStore.setFab({ fabVisible: true });

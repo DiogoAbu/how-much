@@ -14,6 +14,7 @@ export type ColorSchemeCurrent = 'light' | 'dark';
 
 // Main Stack Screens with Parameters
 export type MainStackParams = {
+  Intro: undefined;
   Home: undefined;
   ProductForm?: {
     isEditing: boolean;

@@ -10,6 +10,7 @@ import CountriesWages from '!/screens/CountriesWages/CountriesWages';
 import CountryWageForm from '!/screens/CountryWageForm/CountryWageForm';
 import Currencies from '!/screens/Currencies/Currencies';
 import Home from '!/screens/Home/Home';
+import Intro from '!/screens/Intro/Intro';
 import Preferences from '!/screens/Preferences/Preferences';
 import ProductDetails from '!/screens/ProductDetails/ProductDetails';
 import ProductForm from '!/screens/ProductForm/ProductForm';
@@ -48,6 +49,8 @@ const MainStack: FC = () => {
         <Stack.Screen component={WageCalculator} name='WageCalculator' />
 
         <Stack.Screen component={Preferences} name='Preferences' />
+
+        <Stack.Screen component={Intro} name='Intro' options={{ headerShown: false }} />
       </Stack.Navigator>
 
       {Platform.OS === 'ios' ? <StatusBarBackgroundIos /> : null}
