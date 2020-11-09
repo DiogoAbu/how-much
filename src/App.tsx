@@ -17,11 +17,11 @@ import { Stores } from './stores/Stores';
 import { StoresProvider, useStores } from './stores';
 
 const AppWithStores: FC = observer(() => {
-  const stores = useStores();
+  const { generalStore, themeStore } = useStores();
   const { i18n } = useTranslation();
 
   const handleSchemeChange = useMethod(({ colorScheme }: Appearance.AppearancePreferences) => {
-    stores.themeStore.setColorSchemeCurrent(colorScheme);
+    themeStore.setColorSchemeCurrent(colorScheme);
   });
 
   useEffect(() => {
@@ -33,17 +33,17 @@ const AppWithStores: FC = observer(() => {
 
   useAutorun(
     () => {
-      if (stores.hydrated && stores.generalStore.language) {
-        void i18n.changeLanguage(stores.generalStore.language);
+      if (generalStore.language) {
+        void i18n.changeLanguage(generalStore.language);
       }
     },
-    [i18n, stores.generalStore.language, stores.hydrated],
+    [i18n, generalStore.language],
     { name: 'Change language' },
   );
 
   return (
-    <PaperProvider theme={stores.themeStore.colorSchemeCurrent === 'dark' ? darkTheme : lightTheme}>
-      <NavigationContainer theme={stores.themeStore.colorSchemeCurrent === 'dark' ? darkTheme : lightTheme}>
+    <PaperProvider theme={themeStore.colorSchemeCurrent === 'dark' ? darkTheme : lightTheme}>
+      <NavigationContainer theme={themeStore.colorSchemeCurrent === 'dark' ? darkTheme : lightTheme}>
         <MainStack />
 
         <Portal>
