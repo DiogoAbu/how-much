@@ -29,29 +29,6 @@ jobs:
       - name: Increase watchers to fix Docker
         run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 
-      - name: Get version
-        id: get-version
-        run: echo ::set-output name=VERSION::$(node -p "'v'+require('./package.json').version")
-
-      - name: Display version
-        run: echo ${{ steps.get-version.outputs.VERSION }}
-
-      - name: Decrypt beta dotenv if pre-release
-        if: "contains(steps.get-version.outputs.VERSION, '-')"
-        run: |
-          echo "$DOTENV_BETA" | base64 --decode > ./.env
-          chmod 600 ./.env
-        env:
-          DOTENV_BETA: ${{ secrets.DOTENV_BETA }}
-
-      - name: Decrypt main dotenv
-        if: "!contains(steps.get-version.outputs.VERSION, '-')"
-        run: |
-          echo "$DOTENV_MAIN" | base64 --decode > ./.env
-          chmod 600 ./.env
-        env:
-          DOTENV_MAIN: ${{ secrets.DOTENV_MAIN }}
-
       - name: Set up Node
         uses: actions/setup-node@v2-beta
         with:
@@ -81,10 +58,38 @@ jobs:
       - name: Install dependencies
         run: yarn install --prefer-offline --frozen-lockfile --silent
 
-      - name: Publish to expo at beta channel if pre-release
-        if: "contains(steps.get-version.outputs.VERSION, '-')"
-        run: expo publish --non-interactive --release-channel beta
+      - name: Get version
+        id: get-version
+        run: echo ::set-output name=VERSION::$(node -p "'v'+require('./package.json').version")
 
-      - name: Publish to expo at main channel
-        if: "!contains(steps.get-version.outputs.VERSION, '-')"
-        run: expo publish --non-interactive --release-channel main
+      - name: Display version
+        run: echo ${{ steps.get-version.outputs.VERSION }}
+
+      - name: Get prerelease
+        id: get-prerelease
+        run: echo ::set-output name=IS_PRERELEASE::$(node -p "!!require('semver/functions/prerelease')(${{ steps.get-version.outputs.VERSION }})")
+
+      - name: Display prerelease
+        run: |
+          echo ${{ steps.get-prerelease.outputs.IS_PRERELEASE }}
+          echo ${{ steps.get-prerelease.outputs.IS_PRERELEASE && 'beta' || 'main' }}
+
+      - name: Decrypt dotenv
+        run: |
+          echo "$DOTENV" | base64 --decode > ./.env
+          chmod 600 ./.env
+        env:
+          DOTENV: ${{ steps.get-prerelease.outputs.IS_PRERELEASE && secrets.DOTENV_BETA || secrets.DOTENV_MAIN }}
+
+      - name: Publish to expo
+        run: expo publish --non-interactive --release-channel ${{ steps.get-prerelease.outputs.IS_PRERELEASE && 'beta' || 'main' }}
+
+      - name: Dispatch deploy to stores
+        run: |
+          curl --request POST \
+            -H "Accept: application/vnd.github.everest-preview+json" \
+            -H "Authorization: token $TOKEN" \
+            --data '{ "event_type":"deploy", "client_payload":{ "checkoutRef": "${{ steps.get-version.outputs.VERSION }}" } }' \
+            https://api.github.com/repos/${{ github.repository }}/dispatches \
+        env:
+          TOKEN: ${{ secrets.PERSONAL_TOKEN }}
