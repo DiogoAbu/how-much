@@ -13,7 +13,7 @@ export class ThemeStore {
 
   colorSchemePreferred: ColorSchemePreferred = 'auto';
 
-  colorSchemeCurrent: ColorSchemeCurrent = Appearance.getColorScheme() ?? 'dark';
+  colorSchemeCurrent: ColorSchemeCurrent = Appearance.getColorScheme() ?? 'light';
 
   constructor(stores: Stores) {
     this.stores = stores;
@@ -29,7 +29,7 @@ export class ThemeStore {
     if (this.colorSchemePreferred !== 'auto') {
       this.colorSchemeCurrent = this.colorSchemePreferred;
     } else {
-      this.colorSchemeCurrent = Appearance.getColorScheme() ?? 'dark';
+      this.colorSchemeCurrent = Appearance.getColorScheme() ?? 'light';
     }
   }
 
