@@ -72,8 +72,8 @@ jobs:
       - name: Display prerelease
         run: |
           echo ${{ steps.get-prerelease.outputs.is-prerelease }}
-          echo ${{ (steps.get-prerelease.outputs.is-prerelease && 'beta') || 'main' }}
-          echo ${{ (steps.get-prerelease.outputs.is-prerelease == 'true' && 'beta') || 'main' }}
+          echo ${{ (steps.get-prerelease.outputs.is-prerelease == 'false' && 'false') || 'true' }}
+          echo ${{ (steps.get-prerelease.outputs.is-prerelease == 'true' && 'true') || 'false' }}
 
       - name: Decrypt dotenv
         run: |
