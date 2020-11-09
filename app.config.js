@@ -31,6 +31,7 @@ export default {
     backgroundColor: '#304FFF',
   },
   updates: {
+    enabled: true,
     fallbackToCacheTimeout: 0,
   },
   assetBundlePatterns: ['assets/**/*'],
