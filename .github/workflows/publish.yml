@@ -60,34 +60,37 @@ jobs:
 
       - name: Get version
         id: get-version
-        run: echo ::set-output name=VERSION::$(node -p "'v'+require('./package.json').version")
+        run: echo ::set-output name=version::$(node -p "'v'+require('./package.json').version")
 
       - name: Display version
-        run: echo ${{ steps.get-version.outputs.VERSION }}
+        run: echo ${{ steps.get-version.outputs.version }}
 
       - name: Get prerelease
         id: get-prerelease
-        run: echo ::set-output name=IS_PRERELEASE::$(node -p "!!require('semver/functions/prerelease')('${{ steps.get-version.outputs.VERSION }}')")
+        run: echo ::set-output name=is-prerelease::$(node -p "!!require('semver/functions/prerelease')('${{ steps.get-version.outputs.version }}')")
 
       - name: Display prerelease
-        run: echo ${{ steps.get-prerelease.outputs.IS_PRERELEASE }}
+        run: |
+          echo ${{ steps.get-prerelease.outputs.is-prerelease }}
+          echo ${{ (steps.get-prerelease.outputs.is-prerelease && 'beta') || 'main' }}
+          echo ${{ (steps.get-prerelease.outputs.is-prerelease === 'true' && 'beta') || 'main' }}
 
       - name: Decrypt dotenv
         run: |
           echo "$DOTENV" | base64 --decode > ./.env
           chmod 600 ./.env
         env:
-          DOTENV: ${{ steps.get-prerelease.outputs.IS_PRERELEASE && secrets.DOTENV_BETA || secrets.DOTENV_MAIN }}
+          DOTENV: ${{ (steps.get-prerelease.outputs.is-prerelease && secrets.DOTENV_BETA) || secrets.DOTENV_MAIN }}
 
       - name: Publish to expo
-        run: expo publish --non-interactive --release-channel ${{ steps.get-prerelease.outputs.IS_PRERELEASE && 'beta' || 'main' }}
+        run: expo publish --non-interactive --release-channel ${{ (steps.get-prerelease.outputs.is-prerelease && 'beta') || 'main' }}
 
       - name: Dispatch Deploy to Stores
         run: |
           curl --request POST \
             -H "Accept: application/vnd.github.everest-preview+json" \
             -H "Authorization: token $TOKEN" \
-            --data '{ "event_type":"deploy", "client_payload":{ "checkoutRef": "${{ steps.get-version.outputs.VERSION }}" } }' \
+            --data '{ "event_type":"deploy", "client_payload":{ "checkoutRef": "${{ steps.get-version.outputs.version }}" } }' \
             https://api.github.com/repos/${{ github.repository }}/dispatches \
         env:
           TOKEN: ${{ secrets.PERSONAL_TOKEN }}
