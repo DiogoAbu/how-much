@@ -26,14 +26,6 @@ jobs:
         with:
           node-version: ${{ env.node-version }}
 
-      - name: Install Expo
-        uses: expo/expo-github-action@v5
-        with:
-          expo-packager: yarn
-          expo-version: ${{ env.expo-version }}
-          expo-token: ${{ secrets.EXPO_TOKEN }}
-          expo-cache: true
-
       - name: Get Yarn cache dir
         id: yarn-cache
         run: echo "::set-output name=dir::$(yarn cache dir)"
@@ -50,27 +42,38 @@ jobs:
       - name: Install dependencies
         run: yarn install --prefer-offline --frozen-lockfile --silent
 
+      - name: Start linter
+        run: yarn lint
+
       - name: Start typescript check
         run: yarn typecheck
 
-      - name: Start doctor check
-        run: yarn doctor
-
       - name: Start test
         run: yarn test --forceExit --silent --onlyChanged
+
+      - name: Install Expo
+        uses: expo/expo-github-action@v5
+        with:
+          expo-packager: yarn
+          expo-version: ${{ env.expo-version }}
+          expo-token: ${{ secrets.EXPO_TOKEN }}
+          expo-cache: true
+
+      - name: Start expo doctor check
+        run: yarn doctor
 
       - name: Expo publish PR at own channel
         run: expo publish --non-interactive --release-channel pr${{ github.event.number }}
 
       - name: Comment PR
-        uses: actions/github-script@0.3.0
-        env:
-          BODY: |
-            ## App is ready for review
-            Published to https://exp.host/@diogoabu/how-much?release-channel=pr${{ github.event.number }}
-            [![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=exp://exp.host/@diogoabu/how-much?release-channel=pr${{ github.event.number }})](https://exp.host/@diogoabu/how-much?release-channel=pr${{ github.event.number }})
+        uses: actions/github-script@v3
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const { issue: { number: issue_number }, repo: { owner, repo }  } = context;
             github.issues.createComment({ issue_number, owner, repo, body: ${{ env.BODY }} });
+        env:
+          BODY: |
+            ## App is ready for review
+            Published to https://exp.host/@diogoabu/how-much?release-channel=pr${{ github.event.number }}
+            [![Expo QR](https://api.qrserver.com/v1/create-qr-ode/?size=160x160&data=exp://exp.host/@diogoabu/how-much?release-channel=pr${{ github.event.number }})](https://exp.host/@diogoabu/how-much?release-channel=pr${{ github.event.number }})
