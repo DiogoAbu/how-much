@@ -27,10 +27,18 @@ jobs:
         with:
           ref: ${{ github.event.inputs.checkoutRef || github.event.client_payload.checkoutRef }}
 
-      - name: Increase watchers to fix Docker
+      - name: Define platforms
+        id: platforms
         run: |
-          sudo sysctl -w kern.maxfiles=20480
-          sudo sysctl -w kern.maxfilesperproc=24576
+          echo ::set-output name=is-android::$($PLATFORMS == *"android"*)
+          echo ::set-output name=is-ios::$($PLATFORMS == *"ios"*)
+        env:
+          PLATFORMS: ${{ github.event.client_payload.platforms || github.event.inputs.platforms || 'android,ios' }}
+
+      - name: Display platforms
+        run: |
+          echo ${{ steps.platforms.outputs.is-android }}
+          echo ${{ steps.platforms.outputs.is-ios }}
 
       - name: Set up Node
         uses: actions/setup-node@v2-beta
@@ -60,12 +68,6 @@ jobs:
       - name: Display version
         run: echo ${{ steps.get-version.outputs.version }}
 
-      - name: Display platforms
-        run: |
-          echo ${{ github.event.client_payload.platforms }}
-          echo ${{ github.event.inputs.platforms }}
-          echo ${{ github.event.client_payload.platforms || github.event.inputs.platforms || 'android,ios' }}
-
       - name: Should deploy
         id: should-deploy
         run: echo ::set-output name=continue::$(node ./scripts/should-deploy.js ${{ steps.get-version.outputs.version }})
@@ -91,15 +93,15 @@ jobs:
         if: "steps.should-deploy.outputs.continue == 'true'"
         run: echo ${{ steps.get-prerelease.outputs.is-prerelease }}
 
-      - name: Decrypt service account json
-        if: "steps.should-deploy.outputs.continue == 'true' && contains(github.event.client_payload.platforms || github.event.inputs.platforms || 'android,ios', 'android')"
+      - name: Decrypt google play service account
+        if: "steps.should-deploy.outputs.continue == 'true' && steps.platforms.outputs.is-android == 'true'"
+        working-directory: ${{ runner.temp }}
         run: |
           echo "$GOOGLE_PLAY_SERVICE_ACCOUNT" | base64 --decode > ./google-play-service-account.json
           chmod 600 ./google-play-service-account.json
         env:
           GOOGLE_PLAY_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT }}
-        working-directory: ${{ runner.temp }}
 
       # - name: Upload latest to Google Play
-      #   if: "steps.should-deploy.outputs.continue == 'true' && contains(github.event.client_payload.platforms || github.event.inputs.platforms || 'android,ios', 'android')"
+      #   if: "steps.should-deploy.outputs.continue == 'true' && steps.platforms.outputs.is-android == 'true'"
       #   run: expo upload:android --latest --key ${{ runner.temp }}/google-play-service-account.json --track ${{ (steps.get-prerelease.outputs.is-prerelease == 'true' && 'alpha') || 'production' }}
