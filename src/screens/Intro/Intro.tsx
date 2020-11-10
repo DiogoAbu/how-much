@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 
 import { Button, Chip, Paragraph, Title } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -54,7 +54,8 @@ const Intro: FC<Props> = ({ navigation }) => {
       <View style={[styles.languageContainer, { paddingTop: insets.top + DEFAULT_PADDING }]}>
         <LanguageItem />
       </View>
-      <View style={styles.contentContainer}>
+
+      <ScrollView contentContainerStyle={styles.contentContainer}>
         <Title style={styles.textCenter}>{t('title.welcome')}</Title>
 
         <Paragraph style={styles.textCenter}>
@@ -83,7 +84,7 @@ const Intro: FC<Props> = ({ navigation }) => {
         <View style={styles.marginView} />
 
         <Paragraph style={styles.textCenter}>{t('dontWorryYouCanChangeItLater')}</Paragraph>
-      </View>
+      </ScrollView>
 
       <Button mode='contained' onPress={handleGoToCurrencies} style={styles.button}>
         {t('label.goPickCurrency')}

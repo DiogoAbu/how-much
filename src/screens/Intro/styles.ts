@@ -5,7 +5,7 @@ import { DEFAULT_PADDING } from '!/constants';
 const styles = StyleSheet.create({
   contentContainer: {
     padding: DEFAULT_PADDING * 2,
-    flex: 1,
+    flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
