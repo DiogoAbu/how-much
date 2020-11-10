@@ -76,4 +76,4 @@ jobs:
           BODY: |
             ## App is ready for review
             Published to https://exp.host/@diogoabu/how-much?release-channel=pr${{ github.event.number }}
-            [![Expo QR](https://api.qrserver.com/v1/create-qr-ode/?size=160x160&data=exp://exp.host/@diogoabu/how-much?release-channel=pr${{ github.event.number }})](https://exp.host/@diogoabu/how-much?release-channel=pr${{ github.event.number }})
+            [![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=exp://exp.host/@diogoabu/how-much?release-channel=pr${{ github.event.number }})](https://exp.host/@diogoabu/how-much?release-channel=pr${{ github.event.number }})
