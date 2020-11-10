@@ -30,8 +30,8 @@ jobs:
       - name: Define platforms
         id: platforms
         run: |
-          echo ::set-output name=is-android::$([[ "$PLATFORMS" == *"android"* ]])
-          echo ::set-output name=is-ios::$([[ "$PLATFORMS" == *"ios"* ]])
+          echo ::set-output name=is-android::$(if [[ "$PLATFORMS" == *"android"* ]]; then echo true; else echo false; fi)
+          echo ::set-output name=is-ios::$(if [[ "$PLATFORMS" == *"ios"* ]]; then echo true; else echo false; fi)
         env:
           PLATFORMS: ${{ github.event.client_payload.platforms || github.event.inputs.platforms || 'android,ios' }}
 
