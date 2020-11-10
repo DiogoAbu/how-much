@@ -37,8 +37,8 @@ jobs:
 
       - name: Display platforms
         run: |
-          echo ${{ steps.platforms.outputs.is-android }}
-          echo ${{ steps.platforms.outputs.is-ios }}
+          echo is-android ${{ steps.platforms.outputs.is-android }}
+          echo is-ios ${{ steps.platforms.outputs.is-ios }}
 
       - name: Set up Node
         uses: actions/setup-node@v2-beta
@@ -68,6 +68,13 @@ jobs:
       - name: Display version
         run: echo ${{ steps.get-version.outputs.version }}
 
+      - name: Get prerelease
+        id: get-prerelease
+        run: echo ::set-output name=is-prerelease::$(node -p "!!require('semver/functions/prerelease')('${{ steps.get-version.outputs.version }}')")
+
+      - name: Display prerelease
+        run: echo ${{ steps.get-prerelease.outputs.is-prerelease }}
+
       - name: Should deploy
         id: should-deploy
         run: echo ::set-output name=continue::$(node ./scripts/should-deploy.js ${{ steps.get-version.outputs.version }})
@@ -83,15 +90,6 @@ jobs:
           expo-version: ${{ env.expo-version }}
           expo-token: ${{ secrets.EXPO_TOKEN }}
           expo-cache: true
-
-      - name: Get prerelease
-        if: "steps.should-deploy.outputs.continue == 'true'"
-        id: get-prerelease
-        run: echo ::set-output name=is-prerelease::$(node -p "!!require('semver/functions/prerelease')('${{ steps.get-version.outputs.version }}')")
-
-      - name: Display prerelease
-        if: "steps.should-deploy.outputs.continue == 'true'"
-        run: echo ${{ steps.get-prerelease.outputs.is-prerelease }}
 
       - name: Decrypt google play service account
         if: "steps.should-deploy.outputs.continue == 'true' && steps.platforms.outputs.is-android == 'true'"
