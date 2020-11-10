@@ -4,6 +4,7 @@ import { format, ignore } from 'mobx-sync';
 import sortArray from 'sort-array';
 
 import { ProductSortBy, ProductSortByOrder } from '!/types';
+import { ProductShareData } from '!/utils/product-share-url';
 
 import { PriceModel } from './models/PriceModel';
 import { ProductModel } from './models/ProductModel';
@@ -148,6 +149,33 @@ export class ProductsStore {
 
   deleteProductById(productId: string): void {
     this.products = this.products.filter((e) => e.id !== productId);
+  }
+
+  importProduct(productData: ProductShareData, importWages: boolean): void {
+    if (importWages) {
+      this.stores.wagesStore.importWages(productData.wages);
+    }
+
+    const product = new ProductModel({
+      id: productData.id,
+      description: productData.description,
+      updatedAt: productData.updatedAt,
+      createdAt: productData.createdAt,
+      prices: productData.prices.map((each) => {
+        return new PriceModel({
+          id: each.id,
+          currencyId: each.currencyId,
+          value: each.value,
+        });
+      }),
+    });
+
+    const index = this.products.findIndex((e) => e.id === product.id);
+    if (index !== -1) {
+      this.products.splice(index, 1, product);
+    } else {
+      this.products.push(product);
+    }
   }
 
   isDraft(): boolean {

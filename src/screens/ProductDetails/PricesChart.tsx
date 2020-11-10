@@ -154,7 +154,7 @@ const PricesChart = observer<Props>(({ product, shouldRender, setSnackBarText })
           ...price,
           currencyInfo,
           hourlyWage,
-          workingHours: parseFloat(calculateWorkingHours({ price, currencyInfo, wage })),
+          workingHours: parseFloat(calculateWorkingHours({ price, currencyInfo, wageValue: wage?.value })),
         };
         return newPrice;
       })

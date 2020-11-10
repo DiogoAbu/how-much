@@ -263,6 +263,7 @@
     "Zimbabwe": "Zimbábue",
     "Åland": "Alanda"
   },
+  "countryWageOverwrite": "Sobrescrever remuneração do país",
   "currency": "Moeda",
   "currencyNotFound": "Moeda não encontrada",
   "dailyWorkHours": "Horas de trabalho por dia",
@@ -275,6 +276,7 @@
   "dontWorryYouCanChangeItLater": "Não se preocupe você pode mudar depois.",
   "draftFound": "Rascunho encontrado",
   "general": "Geral",
+  "getProductWithAmountPrices": "Olhe esse {{description}} com {{amount}} preços.",
   "hourlyWageValue": "Valor de remuneração por hora",
   "howManyDaysYouWorkInAWeek": "Quantos dias você trabalha por semana.",
   "howManyHoursYouWorkDaily": "Quantas horas você trabalha por dia.",
@@ -300,6 +302,8 @@
     "edit": "Editar",
     "goPickCurrency": "Ir escolher moeda",
     "hourlyWage": "Remuneração por hora",
+    "importAll": "Importar tudo",
+    "importWithoutWages": "Importar sem remunerações",
     "monthlyWage": "Remuneração mensal",
     "no": "Não",
     "ok": "Ok",
@@ -308,6 +312,7 @@
       "desc": "Mais caro"
     },
     "return": "Retornar",
+    "share": "Compartilhar",
     "sort": "Ordernar",
     "weeklyWage": "Remuneração semanal",
     "yes": "Sim"
@@ -324,20 +329,27 @@
   "pickPreferredCurrencyBelow": "Escolher sua moeda preferida",
   "price": "Preço",
   "prices": "Preços",
+  "pricesWithCustomWages": "Preços com remunerações",
   "saveInGallery": "Salvar na galeria?",
   "sharingUnavailable": "Compartilhamento indisponível nesse dispositivo.",
   "somethingWentWrong": "Algo deu errado!",
   "tapTheCalculatorToFindOutTheHourlyWage": "Use a calculadora para descobrir sua remuneração por hora",
+  "theFollowingInformationWillBeAvailableToAnyoneThatImportsThisProductUsingTheAboveLink": "As seguintes informações estarão disponíveis para quem importar este produto usando o link acima.",
+  "theInformationBellowWillBeImportedIntoTheApp": "As informações abaixo serão importadas no app.",
+  "thisCountryWageIsDifferentFromTheOneYouHave": "A remuneração deste país é diferente da que você possui atualmente.",
+  "thisProductAlreadyExistsImportItAgainToOverwriteIt": "Esse produto já existe, importe de novo para sobrescrevê-lo.",
   "title": {
     "countriesWages": "Remuneração de países",
     "editingProduct": "Editar produto",
     "editingWage": "Editar remuneração",
     "home": "{{name}}?",
+    "importProduct": "Importar produto",
     "newProduct": "Novo produto",
     "oops": "Oops",
     "pickACurrency": "Escolha uma moeda",
     "preferences": "Preferências",
     "preferredCurrency": "Moeda preferida",
+    "shareProduct": "Compartilhar produto",
     "wageCalculator": "Calculadora de remuneração",
     "welcome": "Bem-vindo"
   },
@@ -347,5 +359,6 @@
   "weHaveLotsToChooseFrom": "Nós temos várias disponíveis:",
   "weeklyWorkHours": "Horas de trabalho por semana",
   "weeksInAYear": "Semanas no ano",
-  "workDaysInAWeek": "Dias de trabalho por semana"
+  "workDaysInAWeek": "Dias de trabalho por semana",
+  "youCanChooseToImportWithoutCountryWages": "Você têm a opção de importar sem as remunerações dos países."
 }

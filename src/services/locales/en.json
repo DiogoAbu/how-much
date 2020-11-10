@@ -263,6 +263,7 @@
     "Zimbabwe": "Zimbabwe",
     "Åland": "Åland"
   },
+  "countryWageOverwrite": "Country wage overwrite",
   "currency": "Currency",
   "currencyNotFound": "Currency not found",
   "dailyWorkHours": "Daily work hours",
@@ -275,6 +276,7 @@
   "dontWorryYouCanChangeItLater": "Don't worry you can change it later.",
   "draftFound": "Draft found",
   "general": "General",
+  "getProductWithAmountPrices": "Check out this {{description}} with {{amount}} prices.",
   "hourlyWageValue": "Hourly wage value",
   "howManyDaysYouWorkInAWeek": "How many days you work in a week.",
   "howManyHoursYouWorkDaily": "How many hours you work daily.",
@@ -300,6 +302,8 @@
     "edit": "Edit",
     "goPickCurrency": "Go pick currency",
     "hourlyWage": "Hourly wage",
+    "importAll": "Import all",
+    "importWithoutWages": "Import without wages",
     "monthlyWage": "Monthly wage",
     "no": "No",
     "ok": "Ok",
@@ -308,6 +312,7 @@
       "desc": "Most expensive"
     },
     "return": "Return",
+    "share": "Share",
     "sort": "Sort",
     "weeklyWage": "Weekly wage",
     "yes": "Yes"
@@ -324,20 +329,27 @@
   "pickPreferredCurrencyBelow": "Pick preferred currency below",
   "price": "Price",
   "prices": "Prices",
+  "pricesWithCustomWages": "Prices with custom wages",
   "saveInGallery": "Save in gallery?",
   "sharingUnavailable": "Sharing unavailable on this device.",
   "somethingWentWrong": "Something went wrong!",
   "tapTheCalculatorToFindOutTheHourlyWage": "Use the calculator to find out the hourly wage",
+  "theFollowingInformationWillBeAvailableToAnyoneThatImportsThisProductUsingTheAboveLink": "The following information will be available to anyone that imports this product using the above link.",
+  "theInformationBellowWillBeImportedIntoTheApp": "The information bellow will be imported into the app.",
+  "thisCountryWageIsDifferentFromTheOneYouHave": "This country wage is different from the one you currently have.",
+  "thisProductAlreadyExistsImportItAgainToOverwriteIt": "This product already exists import it again to overwrite it.",
   "title": {
     "countriesWages": "Countries wages",
     "editingProduct": "Editing product",
     "editingWage": "Editing wage",
     "home": "{{name}}?",
+    "importProduct": "Import product",
     "newProduct": "New product",
     "oops": "Oops",
     "pickACurrency": "Pick a currency",
     "preferences": "Preferences",
     "preferredCurrency": "Preferred currency",
+    "shareProduct": "Share product",
     "wageCalculator": "Wage calculator",
     "welcome": "Welcome"
   },
@@ -347,5 +359,6 @@
   "weHaveLotsToChooseFrom": "We have lots to choose from:",
   "weeklyWorkHours": "Weekly work hours",
   "weeksInAYear": "Weeks in a year",
-  "workDaysInAWeek": "Work days in a week"
+  "workDaysInAWeek": "Work days in a week",
+  "youCanChooseToImportWithoutCountryWages": "You can choose to import without country wages."
 }

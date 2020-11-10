@@ -9,11 +9,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import { observer } from 'mobx-react-lite';
 
 import Fab from './components/Fab';
+import LinkingHandler from './components/LinkingHandler';
 import useAutorun from './hooks/use-autorun';
 import useMethod from './hooks/use-method';
 import MainStack from './navigators/MainStack';
 import { darkTheme, lightTheme } from './services/theme';
 import { Stores } from './stores/Stores';
+import { navigationRef } from './utils/navigation-ref';
 import { StoresProvider, useStores } from './stores';
 
 const AppWithStores: FC = observer(() => {
@@ -43,8 +45,13 @@ const AppWithStores: FC = observer(() => {
 
   return (
     <PaperProvider theme={themeStore.colorSchemeCurrent === 'dark' ? darkTheme : lightTheme}>
-      <NavigationContainer theme={themeStore.colorSchemeCurrent === 'dark' ? darkTheme : lightTheme}>
+      <NavigationContainer
+        ref={navigationRef}
+        theme={themeStore.colorSchemeCurrent === 'dark' ? darkTheme : lightTheme}
+      >
         <MainStack />
+
+        <LinkingHandler />
 
         <Portal>
           <Fab />
