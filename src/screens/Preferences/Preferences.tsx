@@ -97,7 +97,7 @@ const Preferences: FC<Props> = ({ navigation }) => {
 
       <ColorSchemeItem />
 
-      <Caption style={styles.version}>v{Constants.nativeAppVersion}</Caption>
+      <Caption style={styles.version}>v{Constants.manifest.version}</Caption>
     </ScrollView>
   );
 };
