@@ -3,6 +3,7 @@ import { format, ignore } from 'mobx-sync';
 
 import { Unarray } from '!/types';
 import { CurrencyInfo } from '!/utils/currency-list';
+import { ProductShareData } from '!/utils/product-share-url';
 
 import { CountryWageModel } from './models/CountryWageModel';
 import { Stores } from './Stores';
@@ -44,12 +45,11 @@ export class WagesStore {
     }
 
     const wage = new CountryWageModel({
-      id: this.wageForm.id,
       currencyId: this.wageForm.currencyId,
       value: this.wageForm.value,
     });
 
-    const index = this.countriesWages.findIndex((e) => e.id === wage.id);
+    const index = this.countriesWages.findIndex((e) => e.currencyId === wage.currencyId);
     if (index !== -1) {
       this.countriesWages.splice(index, 1, wage);
     } else {
@@ -63,7 +63,6 @@ export class WagesStore {
     const wageFound = this.countriesWages.find((e) => e.currencyId === currencyInfo.id);
 
     this.wageForm = new CountryWageModel({
-      id: wageFound?.id ?? undefined,
       currencyId: currencyInfo.id,
       value: wageFound?.value || currencyInfo.hourlyWage,
     });
@@ -71,5 +70,21 @@ export class WagesStore {
 
   findWage(currencyId?: CountryWageModel['currencyId']): Unarray<WagesStore['countriesWages']> | undefined {
     return this.countriesWages.find((e) => (currencyId ? e.currencyId === currencyId : false));
+  }
+
+  importWages(wages: ProductShareData['wages']): void {
+    wages.map((wageData) => {
+      const wage = new CountryWageModel({
+        currencyId: wageData.currencyId,
+        value: wageData.value,
+      });
+
+      const index = this.countriesWages.findIndex((e) => e.currencyId === wage.currencyId);
+      if (index !== -1) {
+        this.countriesWages.splice(index, 1, wage);
+      } else {
+        this.countriesWages.push(wage);
+      }
+    });
   }
 }

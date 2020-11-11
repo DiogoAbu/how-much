@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Alert, ScrollView, TextInput as NativeTextInput } from 'react-native';
 
 import { Colors, IconButton, List, TextInput } from 'react-native-paper';
@@ -55,9 +55,57 @@ const PriceInput = observer<Props, NativeTextInput>(
       );
     });
 
-    const handlePriceChange = (text: string) => {
-      price.setValue(toNumber(text, currencyInfo!.currency));
-    };
+    const handlePriceChange = useCallback(
+      (text: string) => {
+        price.setValue(toNumber(text, currencyInfo!.currency));
+      },
+      [currencyInfo, price],
+    );
+
+    const renderRight = useCallback(
+      () => (
+        <>
+          <TextInput
+            autoCompleteType='off'
+            autoCorrect={false}
+            blurOnSubmit={!nextIndex}
+            keyboardAppearance={dark ? 'dark' : 'light'}
+            keyboardType='decimal-pad'
+            label={t('price')}
+            maxLength={14}
+            mode='outlined'
+            onChangeText={handlePriceChange}
+            onSubmitEditing={
+              nextIndex ? focusNextPrice(pricesRef, nextIndex, scrollRef, true, LIST_ITEM_HEIGHT) : undefined
+            }
+            ref={ref}
+            render={(props) => <NativeTextInput {...props} style={[props.style, styles.input]} />}
+            returnKeyType={nextIndex ? 'next' : 'done'}
+            style={styles.inputContainer}
+            value={toCurrency(price.value, currencyInfo?.currency)}
+          />
+
+          <IconButton
+            color={Colors.red300}
+            icon='delete'
+            onPress={handlePressDelete}
+            style={styles.buttonDelete}
+          />
+        </>
+      ),
+      [
+        currencyInfo?.currency,
+        dark,
+        handlePressDelete,
+        handlePriceChange,
+        nextIndex,
+        price.value,
+        pricesRef,
+        ref,
+        scrollRef,
+        t,
+      ],
+    );
 
     if (!currencyInfo) {
       return null;
@@ -67,38 +115,7 @@ const PriceInput = observer<Props, NativeTextInput>(
       <List.Item
         description={t(`countryName.${stripCountryName(currencyInfo.countryName)}`)}
         descriptionNumberOfLines={4}
-        right={() => (
-          <>
-            <TextInput
-              autoCompleteType='off'
-              autoCorrect={false}
-              blurOnSubmit={!nextIndex}
-              keyboardAppearance={dark ? 'dark' : 'light'}
-              keyboardType='decimal-pad'
-              label={t('price')}
-              maxLength={14}
-              mode='outlined'
-              onChangeText={handlePriceChange}
-              onSubmitEditing={
-                nextIndex
-                  ? focusNextPrice(pricesRef, nextIndex, scrollRef, true, LIST_ITEM_HEIGHT)
-                  : undefined
-              }
-              ref={ref}
-              render={(props) => <NativeTextInput {...props} style={[props.style, styles.input]} />}
-              returnKeyType={nextIndex ? 'next' : 'done'}
-              style={styles.inputContainer}
-              value={toCurrency(price.value, currencyInfo.currency)}
-            />
-
-            <IconButton
-              color={Colors.red300}
-              icon='delete'
-              onPress={handlePressDelete}
-              style={styles.buttonDelete}
-            />
-          </>
-        )}
+        right={renderRight}
         title={currencyInfo.currency}
       />
     );

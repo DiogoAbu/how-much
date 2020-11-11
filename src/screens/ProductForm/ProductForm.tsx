@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { Fragment, useCallback, useRef, useState } from 'react';
 import { ScrollView, TextInput as NativeTextInput, View } from 'react-native';
 
 import { Divider, IconButton, Text } from 'react-native-paper';
@@ -102,13 +102,14 @@ const ProductForm = observer(() => {
       />
 
       <Divider />
+
       <View style={styles.pricesHeader}>
         <Text>{t('prices')}</Text>
         <IconButton icon='plus' onPress={handleAddCurrency} />
       </View>
 
       {productsStore.productForm?.prices.map((price, index, arr) => (
-        <>
+        <Fragment key={`priceInputFragment${price.id}`}>
           <SlideIn key={`priceInput${price.id}`}>
             <PriceInput
               nextIndex={index === arr.length - 1 ? undefined : index + 1}
@@ -119,7 +120,7 @@ const ProductForm = observer(() => {
             />
           </SlideIn>
           {index < arr.length - 1 ? <Divider key={`priceInputDivider${price.id}`} /> : null}
-        </>
+        </Fragment>
       ))}
     </ScrollView>
   );

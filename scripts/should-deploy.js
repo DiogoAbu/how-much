@@ -1,5 +1,6 @@
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
+const semverMajor = require('semver/functions/major');
 
 const [currentTag] = process.argv.slice(2);
 
@@ -29,6 +30,12 @@ const [currentTag] = process.argv.slice(2);
   if (!previousTag) {
     console.error('No previous tag found');
     process.exit(5);
+  }
+
+  // Will deploy if previous has major change, eg: sdk upgrade
+  if (semverMajor(previousTag) > semverMajor(currentTag)) {
+    process.stdout.write('true');
+    process.exit(0);
   }
 
   let files = [];

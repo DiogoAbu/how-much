@@ -6,6 +6,7 @@ import { countries } from 'countries-list';
 
 import { ProductModel } from './stores/models/ProductModel';
 import { CurrencyInfo } from './utils/currency-list';
+import { ProductShareData } from './utils/product-share-url';
 
 export type Unarray<T> = T extends Array<infer U> ? U : T;
 
@@ -21,6 +22,12 @@ export type MainStackParams = {
   };
   ProductDetails: {
     productId: ProductModel['id'];
+  };
+  ProductShare: {
+    productId: ProductModel['id'];
+  };
+  ProductShareImport: {
+    productData: ProductShareData;
   };
 
   Currencies: {

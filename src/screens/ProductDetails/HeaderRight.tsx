@@ -51,6 +51,14 @@ const HeaderRight: FC<Props> = ({ navigation, route }) => {
     });
   });
 
+  const handleShareProduct = usePress(() => {
+    setIsMenuVisible(() => false);
+
+    requestAnimationFrame(() => {
+      navigation.navigate('ProductShare', { productId: params.productId });
+    });
+  });
+
   const handleDelete = usePress(() => {
     setIsMenuVisible(() => false);
 
@@ -91,6 +99,7 @@ const HeaderRight: FC<Props> = ({ navigation, route }) => {
     <Menu anchor={dotsIcon} onDismiss={handleHideMenu} visible={isMenuVisible}>
       <Menu.Item icon='pencil' onPress={handleEdit} title={t('label.edit')} />
       <Menu.Item icon='content-copy' onPress={handleDuplicate} title={t('label.duplicate')} />
+      <Menu.Item icon='share' onPress={handleShareProduct} title={t('label.share')} />
       <Menu.Item icon='delete' onPress={handleDelete} title={t('label.delete')} />
     </Menu>
   );

@@ -14,6 +14,8 @@ import Intro from '!/screens/Intro/Intro';
 import Preferences from '!/screens/Preferences/Preferences';
 import ProductDetails from '!/screens/ProductDetails/ProductDetails';
 import ProductForm from '!/screens/ProductForm/ProductForm';
+import ProductShare from '!/screens/ProductShare/ProductShare';
+import ProductShareImport from '!/screens/ProductShareImport/ProductShareImport';
 import WageCalculator from '!/screens/WageCalculator/WageCalculator';
 import { MainStackParams } from '!/types';
 
@@ -38,6 +40,8 @@ const MainStack: FC = () => {
 
         <Stack.Screen component={ProductForm} name='ProductForm' />
         <Stack.Screen component={ProductDetails} name='ProductDetails' />
+        <Stack.Screen component={ProductShare} name='ProductShare' />
+        <Stack.Screen component={ProductShareImport} name='ProductShareImport' />
 
         <Stack.Screen component={Currencies} name='Currencies' />
 
