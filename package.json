@@ -13,6 +13,7 @@
     "eject": "expo eject",
     "doctor": "expo doctor",
     "reactotron": "adb reverse tcp:9090 tcp:9090",
+    "prune-branches": "npx git-removed-branches --prune",
     "typecheck": "tsc --noEmit",
     "test": "echo \"No test specified\" && exit 0",
     "eslint": "eslint . --ext .ts,.tsx,.js --max-warnings 0 --config ./.eslintrc",
