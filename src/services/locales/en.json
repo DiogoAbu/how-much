@@ -321,6 +321,7 @@
   "languageName": "English (US)",
   "lookForAcurrency": "Look for a currency",
   "needsAtLeastOnePrice": "Needs at least one price",
+  "newUpdateAvailableTapToReload": "New update available, tap to reload",
   "noActiveCurrency": "No active currency",
   "noPriceForPreferredCurrency": "No price for preferred currency",
   "noResults": "No results",

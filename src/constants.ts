@@ -10,6 +10,8 @@ export const DEFAULT_ICON_SIZE = 24;
 
 export const LIST_ITEM_HEIGHT = 73;
 
+export const BADGE_SMALL_SIZE = 10;
+
 ///////////
 // Admob //
 ///////////

@@ -32,6 +32,7 @@ export default {
   },
   updates: {
     enabled: true,
+    checkAutomatically: 'ON_ERROR_RECOVERY',
     fallbackToCacheTimeout: 0,
   },
   assetBundlePatterns: ['assets/**/*'],

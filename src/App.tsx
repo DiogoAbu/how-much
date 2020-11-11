@@ -10,6 +10,7 @@ import { observer } from 'mobx-react-lite';
 
 import Fab from './components/Fab';
 import LinkingHandler from './components/LinkingHandler';
+import UpdateHandler from './components/UpdateHandler';
 import useAutorun from './hooks/use-autorun';
 import useMethod from './hooks/use-method';
 import MainStack from './navigators/MainStack';
@@ -28,6 +29,7 @@ const AppWithStores: FC = observer(() => {
 
   useEffect(() => {
     Appearance.addChangeListener(handleSchemeChange);
+
     return () => {
       Appearance.removeChangeListener(handleSchemeChange);
     };
@@ -52,6 +54,8 @@ const AppWithStores: FC = observer(() => {
         <MainStack />
 
         <LinkingHandler />
+
+        <UpdateHandler />
 
         <Portal>
           <Fab />
