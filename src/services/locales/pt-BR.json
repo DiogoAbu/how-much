@@ -321,6 +321,7 @@
   "languageName": "Português (BR)",
   "lookForAcurrency": "Procurar moeda",
   "needsAtLeastOnePrice": "Precisa de ao menos um preço",
+  "newUpdateAvailableTapToReload": "Nova atualização, toque para recarregar",
   "noActiveCurrency": "Sem moeda ativa",
   "noPriceForPreferredCurrency": "Sem preço para moeda ativa",
   "noResults": "Sem resultados",

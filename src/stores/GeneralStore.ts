@@ -23,6 +23,9 @@ export class GeneralStore {
   @ignore
   handleFabPress?: () => void = () => null;
 
+  @ignore
+  updateAvailable = false;
+
   language?: string = '';
 
   activeCurrencyId?: CurrencyInfo['id'] = '';
@@ -35,9 +38,11 @@ export class GeneralStore {
       fabStyle: observable,
       fabVisible: observable,
       handleFabPress: observable,
+      updateAvailable: observable,
       language: observable,
       activeCurrencyId: observable,
       setFab: action,
+      setUpdateAvailable: action,
       setLanguage: action,
       setActiveCurrencyId: action,
     });
@@ -53,6 +58,10 @@ export class GeneralStore {
     this.fabVisible = fabVisible ?? this.fabVisible;
     this.fabStyle = fabStyle ?? this.fabStyle;
     this.handleFabPress = handleFabPress ?? this.handleFabPress;
+  }
+
+  setUpdateAvailable(updateAvailable: boolean): void {
+    this.updateAvailable = updateAvailable;
   }
 
   setLanguage(language: string): void {

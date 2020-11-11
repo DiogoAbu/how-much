@@ -1,9 +1,10 @@
 import React, { FC } from 'react';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 
-import { Appbar, Button } from 'react-native-paper';
+import { Appbar, Badge, Button } from 'react-native-paper';
 import { Observer } from 'mobx-react-lite';
 
+import { BADGE_SMALL_SIZE } from '!/constants';
 import usePress from '!/hooks/use-press';
 import useTheme from '!/hooks/use-theme';
 import useTranslation from '!/hooks/use-translation';
@@ -12,7 +13,7 @@ import { MainNavigationProp } from '!/types';
 import findCurrency from '!/utils/find-currency';
 import toCurrency from '!/utils/to-currency';
 
-import styles from '../CountriesWages/styles';
+import styles from './styles';
 
 interface Props {
   navigation: MainNavigationProp<'Home'>;
@@ -64,11 +65,20 @@ const HeaderRight: FC<Props> = ({ navigation }) => {
         }}
       </Observer>
 
-      <Appbar.Action
-        color={dark ? colors.text : colors.textOnPrimary}
-        icon='tune'
-        onPress={handlePreferencesPress}
-      />
+      <View style={styles.actionContainer}>
+        <Appbar.Action
+          color={dark ? colors.text : colors.textOnPrimary}
+          icon='tune'
+          onPress={handlePreferencesPress}
+        />
+        <Observer>
+          {() =>
+            generalStore.updateAvailable ? (
+              <Badge size={BADGE_SMALL_SIZE} style={styles.actionBadge} visible />
+            ) : null
+          }
+        </Observer>
+      </View>
     </>
   );
 };

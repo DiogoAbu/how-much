@@ -19,7 +19,18 @@ const styles = StyleSheet.create({
 
   version: {
     textAlign: 'center',
-    padding: DEFAULT_PADDING,
+    paddingTop: DEFAULT_PADDING,
+    paddingHorizontal: DEFAULT_PADDING,
+  },
+
+  newUpdateContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  newUpdateBadge: {
+    alignSelf: 'center',
+    marginRight: DEFAULT_PADDING,
   },
 });
 

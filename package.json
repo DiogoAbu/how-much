@@ -50,6 +50,7 @@
     "expo-media-library": "~8.2.1",
     "expo-sharing": "~8.2.1",
     "expo-status-bar": "^1.0.2",
+    "expo-updates": "~0.2.8",
     "i18next": "^19.8.2",
     "intl": "^1.2.5",
     "js-base64": "^3.6.0",

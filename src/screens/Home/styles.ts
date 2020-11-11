@@ -21,6 +21,20 @@ const styles = StyleSheet.create({
     flexWrap: 'nowrap',
     margin: DEFAULT_PADDING,
   },
+
+  hourlyWageUnit: {
+    fontSize: 11,
+    textTransform: 'lowercase',
+  },
+
+  actionContainer: {
+    position: 'relative',
+  },
+  actionBadge: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+  },
 });
 
 export default styles;
