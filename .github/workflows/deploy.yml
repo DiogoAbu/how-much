@@ -102,4 +102,4 @@ jobs:
 
       # - name: Upload latest to Google Play
       #   if: "steps.should-deploy.outputs.continue == 'true' && steps.platforms.outputs.is-android == 'true'"
-      #   run: expo upload:android --latest --key ${{ runner.temp }}/google-play-service-account.json --track ${{ (steps.get-prerelease.outputs.is-prerelease == 'true' && 'alpha') || 'production' }}
+      #   run: expo upload:android --latest --type aab --key ${{ runner.temp }}/google-play-service-account.json --track ${{ (steps.get-prerelease.outputs.is-prerelease == 'true' && 'alpha') || 'production' }}
