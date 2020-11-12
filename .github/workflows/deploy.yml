@@ -100,6 +100,19 @@ jobs:
         env:
           GOOGLE_PLAY_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT }}
 
-      # - name: Upload latest to Google Play
-      #   if: "steps.should-deploy.outputs.continue == 'true' && steps.platforms.outputs.is-android == 'true'"
-      #   run: expo upload:android --latest --type aab --key ${{ runner.temp }}/google-play-service-account.json --track ${{ (steps.get-prerelease.outputs.is-prerelease == 'true' && 'alpha') || 'production' }}
+      - name: Build android
+        if: "steps.should-deploy.outputs.continue == 'true' && steps.platforms.outputs.is-android == 'true'"
+        run: expo build:android -t app-bundle --release-channel ${{ (steps.get-prerelease.outputs.is-prerelease == 'true' && 'beta') || 'main' }} --no-publish | tee ${{ runner.temp }}/build-android.txt
+
+      - name: Get android build id
+        if: "steps.should-deploy.outputs.continue == 'true' && steps.platforms.outputs.is-android == 'true'"
+        id: android-build
+        run: echo "::set-output name=id::$(cat ${{ runner.temp }}/build-android.txt | grep expo.io/.*/builds | cut -d'/' -f 7)"
+
+      - name: Display android build id
+        if: "steps.should-deploy.outputs.continue == 'true' && steps.platforms.outputs.is-android == 'true'"
+        run: echo ${{ steps.android-build.outputs.id }}
+
+      - name: Upload build to Google Play
+        if: "steps.should-deploy.outputs.continue == 'true' && steps.platforms.outputs.is-android == 'true' && steps.android-build.outputs.id"
+        run: expo upload:android --id ${{ steps.android-build.outputs.id }} --key ${{ runner.temp }}/google-play-service-account.json --track alpha
