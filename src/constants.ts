@@ -12,6 +12,8 @@ export const LIST_ITEM_HEIGHT = 73;
 
 export const BADGE_SMALL_SIZE = 10;
 
+export const UNIVERSAL_LINK = 'https://diogoabu.github.io/how-much-docs/';
+
 ///////////
 // Admob //
 ///////////

@@ -1,6 +1,7 @@
 import * as Linking from 'expo-linking';
 import { decode, encode } from 'js-base64';
 
+import { UNIVERSAL_LINK } from '!/constants';
 import { CountryWageModel } from '!/stores/models/CountryWageModel';
 import { PriceModel } from '!/stores/models/PriceModel';
 import { ProductModel } from '!/stores/models/ProductModel';
@@ -49,20 +50,20 @@ export function buildProductShareUrl(data: ProductShareData): string {
   }
 
   const encodedString = encode(JSON.stringify(minified), true);
-  const url = Linking.makeUrl('product/share', { data: encodedString });
+  const url = `${UNIVERSAL_LINK}?product=${encodedString}`;
 
   return url;
 }
 
 export function parseProductShareUrl(url: string): ProductShareData | null {
-  const { path, queryParams } = Linking.parse(url);
+  const { queryParams } = Linking.parse(url);
 
-  if (path !== 'product/share' || !queryParams?.data) {
+  if (!queryParams?.product) {
     return null;
   }
 
   try {
-    const minified = JSON.parse(decode(queryParams!.data!)) as DataMinified;
+    const minified = JSON.parse(decode(queryParams.product)) as DataMinified;
     return {
       id: minified.i,
       description: minified.d,
