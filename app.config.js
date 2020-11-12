@@ -57,6 +57,18 @@ export default {
       googleMobileAdsAppId: process.env.GOOGLE_MOBILE_ADS_APP_ID_ANDROID,
     },
     permissions: ['READ_EXTERNAL_STORAGE', 'WRITE_EXTERNAL_STORAGE'],
+    intentFilters: [
+      {
+        action: 'VIEW',
+        autoVerify: true,
+        data: [
+          {
+            scheme: 'how-much',
+          },
+        ],
+        category: ['BROWSABLE', 'DEFAULT'],
+      },
+    ],
   },
   ios: {
     bundleIdentifier: 'com.diogoabu.howmuch',
