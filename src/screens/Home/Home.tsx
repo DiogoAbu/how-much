@@ -9,10 +9,12 @@ import {
 } from 'react-native';
 
 import { Divider, Text } from 'react-native-paper';
-import { useCollapsibleStack } from 'react-navigation-collapsible';
+import { setSafeBounceHeight, useCollapsibleHeader } from 'react-navigation-collapsible';
 import { useNavigation } from '@react-navigation/native';
+import { StackHeaderProps } from '@react-navigation/stack';
 import { Observer, observer } from 'mobx-react-lite';
 
+import Header from '!/components/Header';
 import SlideIn from '!/components/SlideIn';
 import { LIST_ITEM_HEIGHT } from '!/constants';
 import useAutorunOnFocus from '!/hooks/use-autorun-on-focus';
@@ -41,7 +43,10 @@ const Home = observer(() => {
   const { colors, dark, fonts } = useTheme();
   const { t } = useTranslation();
 
-  const { onScrollWithListener, containerPaddingTop, scrollIndicatorInsetTop } = useCollapsibleStack();
+  const { onScrollWithListener, containerPaddingTop, scrollIndicatorInsetTop } = useCollapsibleHeader({
+    navigationOptions: { header: (props: StackHeaderProps) => <Header {...props} /> },
+  });
+
   const onScroll = onScrollWithListener(({ nativeEvent }: NativeSyntheticEvent<NativeScrollEvent>) => {
     const { contentOffset, contentSize, layoutMeasurement } = nativeEvent;
 
@@ -53,7 +58,9 @@ const Home = observer(() => {
 
   const handleFabPress = usePress(() => {
     if (!stores.generalStore.activeCurrencyId) {
-      navigation.reset({ routes: [{ name: 'Currencies', params: { action: 'activeCurrency' } }] });
+      requestAnimationFrame(() => {
+        navigation.reset({ routes: [{ name: 'Intro' }] });
+      });
       return;
     }
 
@@ -121,7 +128,9 @@ const Home = observer(() => {
         return;
       }
       if (!stores.generalStore.activeCurrencyId) {
-        navigation.reset({ routes: [{ name: 'Currencies', params: { action: 'activeCurrency' } }] });
+        requestAnimationFrame(() => {
+          navigation.reset({ routes: [{ name: 'Intro' }] });
+        });
         return;
       }
       stores.generalStore.setFab({ fabVisible: true });
@@ -131,10 +140,14 @@ const Home = observer(() => {
   );
 
   useFocusEffect(() => {
+    if (Platform.OS === 'android') {
+      setSafeBounceHeight(0);
+    }
+
     stores.generalStore.setFab({ fabIcon: 'plus', handleFabPress });
 
     navigation.setOptions({
-      title: Platform.OS === 'ios' ? '' : t('howMuch'),
+      title: Platform.OS === 'ios' ? '' : t('title.home', { name: t('howMuch') }),
       headerLeft: () =>
         Platform.OS === 'ios' ? (
           <Text
@@ -146,7 +159,7 @@ const Home = observer(() => {
               { color: dark ? colors.text : colors.textOnPrimary },
             ]}
           >
-            {t('howMuch')}
+            {t('title.home', { name: t('howMuch') })}
           </Text>
         ) : undefined,
       headerRight: () => <HeaderRight navigation={navigation} />,

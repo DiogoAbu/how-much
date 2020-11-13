@@ -1,0 +1,118 @@
+name: Deploy to Stores
+
+on:
+  workflow_dispatch:
+    inputs:
+      checkoutRef:
+        description: "Tag or SHA ref to checkout"
+        required: false
+        default: ""
+      platforms:
+        description: "Platforms to deploy as comma separated string. Default: android,ios"
+        required: false
+  repository_dispatch:
+    types: [deploy]
+
+env:
+  node-version: "12"
+  expo-version: "3.x"
+
+jobs:
+  release:
+    name: Deploy
+    runs-on: macos-latest
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.inputs.checkoutRef || github.event.client_payload.checkoutRef }}
+
+      - name: Define platforms
+        id: platforms
+        run: |
+          echo ::set-output name=is-android::$(if [[ "$PLATFORMS" == *"android"* ]]; then echo true; else echo false; fi)
+          echo ::set-output name=is-ios::$(if [[ "$PLATFORMS" == *"ios"* ]]; then echo true; else echo false; fi)
+        env:
+          PLATFORMS: ${{ github.event.client_payload.platforms || github.event.inputs.platforms || 'android,ios' }}
+
+      - name: Display platforms
+        run: |
+          echo is-android ${{ steps.platforms.outputs.is-android }}
+          echo is-ios ${{ steps.platforms.outputs.is-ios }}
+
+      - name: Set up Node
+        uses: actions/setup-node@v2-beta
+        with:
+          node-version: ${{ env.node-version }}
+
+      - name: Get Yarn cache dir
+        id: yarn-cache
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Cache Yarn dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ${{ steps.yarn-cache.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install dependencies
+        run: yarn install --prefer-offline --frozen-lockfile --silent
+
+      - name: Get version
+        id: get-version
+        run: echo ::set-output name=version::$(node -p "'v'+require('./package.json').version")
+
+      - name: Display version
+        run: echo ${{ steps.get-version.outputs.version }}
+
+      - name: Get prerelease
+        id: get-prerelease
+        run: echo ::set-output name=is-prerelease::$(node -p "!!require('semver/functions/prerelease')('${{ steps.get-version.outputs.version }}')")
+
+      - name: Display prerelease
+        run: echo ${{ steps.get-prerelease.outputs.is-prerelease }}
+
+      - name: Should deploy
+        id: should-deploy
+        run: echo ::set-output name=continue::$(node ./scripts/should-deploy.js ${{ steps.get-version.outputs.version }})
+
+      - name: Display should deploy
+        run: echo ${{ steps.should-deploy.outputs.continue }}
+
+      - name: Install Expo
+        if: "steps.should-deploy.outputs.continue == 'true'"
+        uses: expo/expo-github-action@v5
+        with:
+          expo-packager: yarn
+          expo-version: ${{ env.expo-version }}
+          expo-token: ${{ secrets.EXPO_TOKEN }}
+          expo-cache: true
+
+      - name: Decrypt google play service account
+        if: "steps.should-deploy.outputs.continue == 'true' && steps.platforms.outputs.is-android == 'true'"
+        working-directory: ${{ runner.temp }}
+        run: |
+          echo "$GOOGLE_PLAY_SERVICE_ACCOUNT" | base64 --decode > ./google-play-service-account.json
+          chmod 600 ./google-play-service-account.json
+        env:
+          GOOGLE_PLAY_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT }}
+
+      - name: Build android
+        if: "steps.should-deploy.outputs.continue == 'true' && steps.platforms.outputs.is-android == 'true'"
+        run: expo build:android -t app-bundle --release-channel ${{ (steps.get-prerelease.outputs.is-prerelease == 'true' && 'beta') || 'main' }} --no-publish | tee ${{ runner.temp }}/build-android.txt
+
+      - name: Get android build id
+        if: "steps.should-deploy.outputs.continue == 'true' && steps.platforms.outputs.is-android == 'true'"
+        id: android-build
+        run: echo "::set-output name=id::$(cat ${{ runner.temp }}/build-android.txt | grep expo.io/.*/builds | cut -d'/' -f 7)"
+
+      - name: Display android build id
+        if: "steps.should-deploy.outputs.continue == 'true' && steps.platforms.outputs.is-android == 'true'"
+        run: echo ${{ steps.android-build.outputs.id }}
+
+      - name: Upload build to Google Play
+        if: "steps.should-deploy.outputs.continue == 'true' && steps.platforms.outputs.is-android == 'true' && steps.android-build.outputs.id"
+        run: expo upload:android --id ${{ steps.android-build.outputs.id }} --key ${{ runner.temp }}/google-play-service-account.json --track ${{ (steps.get-prerelease.outputs.is-prerelease == 'true' && 'alpha') || 'production' }}

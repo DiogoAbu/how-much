@@ -37,7 +37,7 @@ const ProductItem = observer<ListRenderItemInfo<ProductModel> & Props>(
     const renderRight = ({ color, style }: ListItemRightProps) =>
       activePrice?.value && currencyInfo && (wage?.value || currencyInfo.hourlyWage) ? (
         <Text style={[style, { color }, styles.hourNumber]}>
-          {calculateWorkingHours({ price: activePrice, currencyInfo, wage })}
+          {calculateWorkingHours({ price: activePrice, currencyInfo, wageValue: wage?.value })}
           <Text style={[{ color }, styles.hourText]}>{t('hr')}</Text>
         </Text>
       ) : (

@@ -4,14 +4,15 @@ import { findNodeHandle, ScrollView } from 'react-native';
  * Use SrollView method to scroll component into view
  */
 export default function scrollIntoView(
-  ref: React.RefObject<any>,
+  ref: React.RefObject<any> | any,
   scrollRef: React.RefObject<ScrollView>,
   animated = true,
   offsetY = 0,
 ): void {
   if (scrollRef && scrollRef.current) {
     requestAnimationFrame(() => {
-      ref.current?.measureLayout?.(
+      const measureLayout = ref.current?.measureLayout ?? ref.measureLayout;
+      measureLayout?.(
         findNodeHandle(scrollRef.current)!,
         (_: number, y: number) => {
           scrollRef.current!.scrollTo({
@@ -42,6 +43,21 @@ export function focusNext(
     if (ref?.current) {
       scrollIntoView(ref, scrollRef, animated, offsetY);
       ref.current?.focus?.();
+    }
+  };
+}
+
+export function focusNextPrice(
+  ref: React.RefObject<any[]>,
+  index: number | null | undefined,
+  scrollRef: React.RefObject<ScrollView>,
+  animated?: boolean,
+  offsetY?: number,
+): () => void {
+  return () => {
+    if (index && ref?.current?.[index]) {
+      scrollIntoView(ref?.current?.[index], scrollRef, animated, offsetY);
+      ref.current?.[index]?.focus?.();
     }
   };
 }

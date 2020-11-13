@@ -1,0 +1,93 @@
+name: Publish on Expo
+
+on:
+  workflow_dispatch:
+    inputs:
+      checkoutRef:
+        description: "Tag or SHA ref to checkout"
+        required: false
+        default: ""
+  release:
+    types:
+      - published
+
+env:
+  node-version: "12"
+  expo-version: "3.x"
+
+jobs:
+  release:
+    name: Publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          ref: ${{ github.event.inputs.checkoutRef }}
+
+      - name: Increase watchers to fix Docker
+        run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+
+      - name: Set up Node
+        uses: actions/setup-node@v2-beta
+        with:
+          node-version: ${{ env.node-version }}
+
+      - name: Install Expo
+        uses: expo/expo-github-action@v5
+        with:
+          expo-packager: yarn
+          expo-version: ${{ env.expo-version }}
+          expo-token: ${{ secrets.EXPO_TOKEN }}
+          expo-cache: true
+
+      - name: Get Yarn cache dir
+        id: yarn-cache
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Cache Yarn dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ${{ steps.yarn-cache.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install dependencies
+        run: yarn install --prefer-offline --frozen-lockfile --silent
+
+      - name: Get version
+        id: get-version
+        run: echo ::set-output name=version::$(node -p "'v'+require('./package.json').version")
+
+      - name: Display version
+        run: echo ${{ steps.get-version.outputs.version }}
+
+      - name: Get prerelease
+        id: get-prerelease
+        run: echo ::set-output name=is-prerelease::$(node -p "!!require('semver/functions/prerelease')('${{ steps.get-version.outputs.version }}')")
+
+      - name: Display prerelease
+        run: echo ${{ steps.get-prerelease.outputs.is-prerelease }}
+
+      - name: Decrypt dotenv
+        run: |
+          echo "$DOTENV" | base64 --decode > ./.env
+          chmod 600 ./.env
+        env:
+          DOTENV: ${{ (steps.get-prerelease.outputs.is-prerelease == 'true' && secrets.DOTENV_BETA) || secrets.DOTENV_MAIN }}
+
+      - name: Publish to expo
+        run: expo publish --non-interactive --release-channel ${{ (steps.get-prerelease.outputs.is-prerelease == 'true' && 'beta') || 'main' }}
+
+      - name: Dispatch Deploy to Stores
+        run: |
+          curl --request POST \
+            -H "Accept: application/vnd.github.everest-preview+json" \
+            -H "Authorization: token $TOKEN" \
+            --data '{ "event_type":"deploy", "client_payload":{ "checkoutRef": "${{ steps.get-version.outputs.version }}" } }' \
+            https://api.github.com/repos/${{ github.repository }}/dispatches \
+        env:
+          TOKEN: ${{ secrets.PERSONAL_TOKEN }}

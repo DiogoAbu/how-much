@@ -1,0 +1,79 @@
+name: Test and publish Pull Request
+
+on:
+  pull_request:
+    branches:
+      - main
+      - beta
+
+env:
+  node-version: "12"
+  expo-version: "3.x"
+
+jobs:
+  publish:
+    name: Test and publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v2
+
+      - name: Increase watchers to fix Docker
+        run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+
+      - name: Set up Node
+        uses: actions/setup-node@v2-beta
+        with:
+          node-version: ${{ env.node-version }}
+
+      - name: Get Yarn cache dir
+        id: yarn-cache
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Cache Yarn dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ${{ steps.yarn-cache.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install dependencies
+        run: yarn install --prefer-offline --frozen-lockfile --silent
+
+      - name: Start linter
+        run: yarn lint
+
+      - name: Start typescript check
+        run: yarn typecheck
+
+      - name: Start test
+        run: yarn test --forceExit --silent --onlyChanged
+
+      - name: Install Expo
+        uses: expo/expo-github-action@v5
+        with:
+          expo-packager: yarn
+          expo-version: ${{ env.expo-version }}
+          expo-token: ${{ secrets.EXPO_TOKEN }}
+          expo-cache: true
+
+      - name: Start expo doctor check
+        run: yarn doctor
+
+      - name: Expo publish PR at own channel
+        run: expo publish --non-interactive --release-channel pr${{ github.event.number }}
+
+      - name: Comment PR
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { issue: { number: issue_number }, repo: { owner, repo }  } = context;
+            github.issues.createComment({ issue_number, owner, repo, body: `${{ env.BODY }}` });
+        env:
+          BODY: |
+            ## App is ready for review
+            Published to https://exp.host/@diogoabu/how-much?release-channel=pr${{ github.event.number }}
+            [![Expo QR](https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=exp://exp.host/@diogoabu/how-much?release-channel=pr${{ github.event.number }})](https://exp.host/@diogoabu/how-much?release-channel=pr${{ github.event.number }})

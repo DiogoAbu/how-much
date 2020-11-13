@@ -26,8 +26,8 @@ const ProductDetails = observer(() => {
   const route = useRoute<MainRouteProp<'ProductDetails'>>();
   const { productsStore, generalStore } = useStores();
   const { colors } = useTheme();
-  const insets = useSafeAreaInsets();
   const { t } = useTranslation();
+  const insets = useSafeAreaInsets();
 
   const { params } = route;
   const product = productsStore.findProductById(params.productId)!;

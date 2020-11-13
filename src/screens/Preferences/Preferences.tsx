@@ -1,11 +1,14 @@
 import React, { FC } from 'react';
 import { Platform, ScrollView } from 'react-native';
 
-import { Caption, Divider, List } from 'react-native-paper';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Badge, Caption, Divider, List } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Constants from 'expo-constants';
+import * as Updates from 'expo-updates';
+import { Observer } from 'mobx-react-lite';
 
-import { DEFAULT_APPBAR_HEIGHT, DEFAULT_PADDING } from '!/constants';
+import { BADGE_SMALL_SIZE, DEFAULT_APPBAR_HEIGHT, DEFAULT_PADDING } from '!/constants';
 import useFocusEffect from '!/hooks/use-focus-effect';
 import usePress from '!/hooks/use-press';
 import useTheme from '!/hooks/use-theme';
@@ -42,11 +45,17 @@ const Preferences: FC<Props> = ({ navigation }) => {
     });
   });
 
+  const handleNewUpdateReload = usePress(() => {
+    requestAnimationFrame(() => {
+      void Updates.reloadAsync();
+    });
+  });
+
   useFocusEffect(() => {
     generalStore.setFab({ fabVisible: false });
 
     navigation.setOptions({
-      title: t('preferences'),
+      title: t('title.preferences'),
     });
   }, [generalStore, navigation, t]);
 
@@ -75,7 +84,7 @@ const Preferences: FC<Props> = ({ navigation }) => {
         )}
         onPress={handleCountriesWagesPress}
         right={(props) => <List.Icon {...props} icon='chevron-right' />}
-        title={t('countriesWages')}
+        title={t('title.countriesWages')}
       />
 
       <Divider />
@@ -86,7 +95,7 @@ const Preferences: FC<Props> = ({ navigation }) => {
         )}
         onPress={handleGoToWageCalculator}
         right={(props) => <List.Icon {...props} icon='chevron-right' />}
-        title={t('wageCalculator')}
+        title={t('title.wageCalculator')}
       />
 
       <Divider />
@@ -97,7 +106,29 @@ const Preferences: FC<Props> = ({ navigation }) => {
 
       <ColorSchemeItem />
 
-      <Caption style={styles.version}>v{Constants.nativeAppVersion}</Caption>
+      <Divider />
+
+      <Caption style={styles.version}>
+        v{Constants.manifest.version}
+        {Constants.manifest.releaseChannel ? ` (${Constants.manifest.releaseChannel})` : null}
+      </Caption>
+
+      <Observer>
+        {() =>
+          generalStore.updateAvailable ? (
+            <TouchableOpacity
+              activeOpacity={0.4}
+              onPress={handleNewUpdateReload}
+              style={styles.newUpdateContainer}
+            >
+              <>
+                <Badge size={BADGE_SMALL_SIZE} style={styles.newUpdateBadge} visible />
+                <Caption>{t('newUpdateAvailableTapToReload')}</Caption>
+              </>
+            </TouchableOpacity>
+          ) : null
+        }
+      </Observer>
     </ScrollView>
   );
 };

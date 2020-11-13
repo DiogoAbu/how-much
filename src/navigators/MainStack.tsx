@@ -1,7 +1,6 @@
 import React, { FC } from 'react';
 import { Platform } from 'react-native';
 
-import { createCollapsibleStack } from 'react-navigation-collapsible';
 import { CardStyleInterpolators, createStackNavigator } from '@react-navigation/stack';
 
 import Header from '!/components/Header';
@@ -10,9 +9,12 @@ import CountriesWages from '!/screens/CountriesWages/CountriesWages';
 import CountryWageForm from '!/screens/CountryWageForm/CountryWageForm';
 import Currencies from '!/screens/Currencies/Currencies';
 import Home from '!/screens/Home/Home';
+import Intro from '!/screens/Intro/Intro';
 import Preferences from '!/screens/Preferences/Preferences';
 import ProductDetails from '!/screens/ProductDetails/ProductDetails';
 import ProductForm from '!/screens/ProductForm/ProductForm';
+import ProductShare from '!/screens/ProductShare/ProductShare';
+import ProductShareImport from '!/screens/ProductShareImport/ProductShareImport';
 import WageCalculator from '!/screens/WageCalculator/WageCalculator';
 import { MainStackParams } from '!/types';
 
@@ -30,24 +32,22 @@ const MainStack: FC = () => {
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
         }}
       >
-        {createCollapsibleStack(<Stack.Screen component={Home} name='Home' />, {
-          header: (props) => <Header {...props} />,
-          useNativeDriver: true,
-        })}
+        <Stack.Screen component={Home} name='Home' />
 
         <Stack.Screen component={ProductForm} name='ProductForm' />
         <Stack.Screen component={ProductDetails} name='ProductDetails' />
+        <Stack.Screen component={ProductShare} name='ProductShare' />
+        <Stack.Screen component={ProductShareImport} name='ProductShareImport' />
 
         <Stack.Screen component={Currencies} name='Currencies' />
 
-        {createCollapsibleStack(<Stack.Screen component={CountriesWages} name='CountriesWages' />, {
-          header: (props) => <Header {...props} />,
-          useNativeDriver: true,
-        })}
+        <Stack.Screen component={CountriesWages} name='CountriesWages' />
         <Stack.Screen component={CountryWageForm} name='CountryWageForm' />
         <Stack.Screen component={WageCalculator} name='WageCalculator' />
 
         <Stack.Screen component={Preferences} name='Preferences' />
+
+        <Stack.Screen component={Intro} name='Intro' options={{ headerShown: false }} />
       </Stack.Navigator>
 
       {Platform.OS === 'ios' ? <StatusBarBackgroundIos /> : null}

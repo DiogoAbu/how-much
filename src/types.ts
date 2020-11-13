@@ -6,6 +6,7 @@ import { countries } from 'countries-list';
 
 import { ProductModel } from './stores/models/ProductModel';
 import { CurrencyInfo } from './utils/currency-list';
+import { ProductShareData } from './utils/product-share-url';
 
 export type Unarray<T> = T extends Array<infer U> ? U : T;
 
@@ -14,12 +15,19 @@ export type ColorSchemeCurrent = 'light' | 'dark';
 
 // Main Stack Screens with Parameters
 export type MainStackParams = {
+  Intro: undefined;
   Home: undefined;
   ProductForm?: {
     isEditing: boolean;
   };
   ProductDetails: {
     productId: ProductModel['id'];
+  };
+  ProductShare: {
+    productId: ProductModel['id'];
+  };
+  ProductShareImport: {
+    productData: ProductShareData;
   };
 
   Currencies: {

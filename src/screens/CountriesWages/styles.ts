@@ -7,10 +7,6 @@ const styles = StyleSheet.create({
   itemTitleEmpty: {
     fontStyle: 'italic',
   },
-  hourlyWageUnit: {
-    fontSize: 11,
-    textTransform: 'lowercase',
-  },
 });
 
 export default styles;

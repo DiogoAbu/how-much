@@ -1,4 +1,3 @@
-import { CountryWageModel } from '!/stores/models/CountryWageModel';
 import { PriceModel } from '!/stores/models/PriceModel';
 
 import { CurrencyInfo } from './currency-list';
@@ -6,13 +5,13 @@ import { CurrencyInfo } from './currency-list';
 export default function calculateWorkingHours({
   price,
   currencyInfo,
-  wage,
+  wageValue,
 }: {
   price: PriceModel;
   currencyInfo: CurrencyInfo;
-  wage?: CountryWageModel;
+  wageValue?: number;
 }): string {
-  const hourlyWage = wage?.value || currencyInfo?.hourlyWage;
+  const hourlyWage = wageValue || currencyInfo?.hourlyWage;
 
   return (price.value / hourlyWage).toFixed(1);
 }

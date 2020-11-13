@@ -102,7 +102,7 @@ const PricesChart = observer<Props>(({ product, shouldRender, setSnackBarText })
               }
 
               const imageAsset = await MediaLibrary.createAssetAsync(imageUri);
-              await MediaLibrary.createAlbumAsync('How Much', imageAsset, false);
+              await MediaLibrary.createAlbumAsync(t('howMuch'), imageAsset, false);
 
               setSnackBarText(t('chartImageSavedInGallery'));
             } catch (err) {
@@ -125,6 +125,7 @@ const PricesChart = observer<Props>(({ product, shouldRender, setSnackBarText })
         ...(theme.axis?.style ?? {}),
         tickLabels: {
           ...(theme.axis?.style?.tickLabels ?? {}),
+          // @ts-ignore
           fill: colors.text,
         },
       },
@@ -154,7 +155,7 @@ const PricesChart = observer<Props>(({ product, shouldRender, setSnackBarText })
           ...price,
           currencyInfo,
           hourlyWage,
-          workingHours: parseFloat(calculateWorkingHours({ price, currencyInfo, wage })),
+          workingHours: parseFloat(calculateWorkingHours({ price, currencyInfo, wageValue: wage?.value })),
         };
         return newPrice;
       })
@@ -213,7 +214,9 @@ const PricesChart = observer<Props>(({ product, shouldRender, setSnackBarText })
               sortKey='workingHours'
               sortOrder='ascending'
               style={{
+                // @ts-ignore
                 labels: {
+                  // @ts-ignore
                   fill: ({ datum, index }) =>
                     toMaterialStyle(String(datum.id) + String(index), dark ? 700 : 600).color,
                 },
@@ -230,7 +233,7 @@ const PricesChart = observer<Props>(({ product, shouldRender, setSnackBarText })
         </View>
 
         <View style={styles.footerContainer}>
-          <Caption>{t('byHowMuch')}</Caption>
+          <Caption>{t('byAppName', { name: t('howMuch') })}</Caption>
           <Caption style={styles.dateText}>{formatDate(new Date())}</Caption>
         </View>
 
