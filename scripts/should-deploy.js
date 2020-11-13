@@ -10,6 +10,7 @@ const [currentTag] = process.argv.slice(2);
     await exec('git fetch --depth=1 origin +refs/tags/*:refs/tags/*');
   } catch (err) {
     console.error('Could not fetch all tags');
+    console.error(err);
     process.exit(5);
   }
 
@@ -21,9 +22,13 @@ const [currentTag] = process.argv.slice(2);
 
     // Get previous tag
     const previousIndex = tags.findIndex((e) => e.includes(currentTag)) - 1;
+    if (previousIndex <= -1) {
+      throw new Error(`Current tag ${currentTag} not found`);
+    }
     previousTag = tags[previousIndex].replace(/'/g, '');
   } catch (err) {
     console.error('Could not get previous tag');
+    console.error(err);
     process.exit(5);
   }
 
@@ -32,8 +37,8 @@ const [currentTag] = process.argv.slice(2);
     process.exit(5);
   }
 
-  // Will deploy if previous has major change, eg: sdk upgrade
-  if (semverMajor(previousTag) > semverMajor(currentTag)) {
+  // Will deploy if current tag has major change compared to previous, eg: sdk upgrade
+  if (semverMajor(currentTag) > semverMajor(previousTag)) {
     process.stdout.write('true');
     process.exit(0);
   }
@@ -45,6 +50,7 @@ const [currentTag] = process.argv.slice(2);
     files = stdout.split('\n');
   } catch (err) {
     console.error('Could not get changes');
+    console.error(err);
     process.exit(5);
   }
 
