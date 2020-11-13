@@ -125,6 +125,7 @@ const PricesChart = observer<Props>(({ product, shouldRender, setSnackBarText })
         ...(theme.axis?.style ?? {}),
         tickLabels: {
           ...(theme.axis?.style?.tickLabels ?? {}),
+          // @ts-ignore
           fill: colors.text,
         },
       },
@@ -213,7 +214,9 @@ const PricesChart = observer<Props>(({ product, shouldRender, setSnackBarText })
               sortKey='workingHours'
               sortOrder='ascending'
               style={{
+                // @ts-ignore
                 labels: {
+                  // @ts-ignore
                   fill: ({ datum, index }) =>
                     toMaterialStyle(String(datum.id) + String(index), dark ? 700 : 600).color,
                 },

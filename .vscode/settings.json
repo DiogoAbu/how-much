@@ -292,5 +292,6 @@
   "i18n-ally.sortKeys": true,
   "tslint.enable": false,
   "xmlTools.enforcePrettySelfClosingTagOnFormat": true,
-  "xmlTools.splitAttributesOnFormat": true
+  "xmlTools.splitAttributesOnFormat": true,
+  "typescript.tsdk": "node_modules\\typescript\\lib"
 }

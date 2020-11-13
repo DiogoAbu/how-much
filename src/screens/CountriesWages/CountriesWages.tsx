@@ -1,11 +1,13 @@
 import React, { FC } from 'react';
-import { ListRenderItem, View } from 'react-native';
+import { ListRenderItem, Platform, View } from 'react-native';
 
 import { Caption, Divider } from 'react-native-paper';
-import { useCollapsibleStack } from 'react-navigation-collapsible';
+import { setSafeBounceHeight, useCollapsibleHeader } from 'react-navigation-collapsible';
 import { useNavigation } from '@react-navigation/native';
+import { StackHeaderProps } from '@react-navigation/stack';
 
 import CurrencyList from '!/components/CurrencyList';
+import Header from '!/components/Header';
 import { DEFAULT_PADDING } from '!/constants';
 import useFocusEffect from '!/hooks/use-focus-effect';
 import useTranslation from '!/hooks/use-translation';
@@ -18,12 +20,18 @@ import CountryWageItem from './CountryWageItem';
 
 const CountriesWages: FC = () => {
   const navigation = useNavigation<MainNavigationProp<'CountriesWages'>>();
-  const { onScroll, containerPaddingTop, scrollIndicatorInsetTop } = useCollapsibleStack();
+  const { generalStore } = useStores();
   const { t } = useTranslation();
 
-  const { generalStore } = useStores();
+  const { onScroll, containerPaddingTop, scrollIndicatorInsetTop } = useCollapsibleHeader({
+    navigationOptions: { header: (props: StackHeaderProps) => <Header {...props} /> },
+  });
 
   useFocusEffect(() => {
+    if (Platform.OS === 'android') {
+      setSafeBounceHeight(0);
+    }
+
     generalStore.setFab({ fabVisible: false });
 
     navigation.setOptions({
