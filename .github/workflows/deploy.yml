@@ -115,4 +115,4 @@ jobs:
 
       - name: Upload build to Google Play
         if: "steps.should-deploy.outputs.continue == 'true' && steps.platforms.outputs.is-android == 'true' && steps.android-build.outputs.id"
-        run: expo upload:android --id ${{ steps.android-build.outputs.id }} --key ${{ runner.temp }}/google-play-service-account.json --track alpha
+        run: expo upload:android --id ${{ steps.android-build.outputs.id }} --key ${{ runner.temp }}/google-play-service-account.json --track ${{ (steps.get-prerelease.outputs.is-prerelease == 'true' && 'alpha') || 'production' }}
