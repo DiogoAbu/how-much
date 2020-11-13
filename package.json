@@ -13,7 +13,7 @@
     "eject": "expo eject",
     "doctor": "expo doctor",
     "reactotron": "adb reverse tcp:9090 tcp:9090",
-    "prune-branches": "npx git-removed-branches --prune",
+    "prune-branches": "git fetch -p && npx git-removed-branches --prune",
     "typecheck": "tsc --noEmit",
     "test": "echo \"No test specified\" && exit 0",
     "eslint": "eslint . --ext .ts,.tsx,.js --max-warnings 0 --config ./.eslintrc",
@@ -36,7 +36,7 @@
     "*.json": "prettier --config ./.prettierrc --write"
   },
   "dependencies": {
-    "@react-native-community/async-storage": "~1.12.0",
+    "@react-native-community/async-storage": "~1.11.0",
     "@react-native-community/masked-view": "0.1.10",
     "@react-navigation/native": "^5.8.9",
     "@react-navigation/stack": "^5.12.6",
@@ -50,7 +50,7 @@
     "expo-media-library": "~8.2.1",
     "expo-sharing": "~8.2.1",
     "expo-status-bar": "^1.0.2",
-    "expo-updates": "~0.2.14",
+    "expo-updates": "~0.2.8",
     "i18next": "^19.8.3",
     "intl": "^1.2.5",
     "js-base64": "^3.6.0",
