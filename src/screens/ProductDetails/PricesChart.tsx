@@ -179,7 +179,12 @@ const PricesChart = observer<Props>(({ product, shouldRender, setSnackBarText })
         </Text>
 
         <View style={styles.chartContainer}>
-          <VictoryChart domainPadding={{ x: 16 }} theme={theme} width={dimensions.width}>
+          <VictoryChart
+            domainPadding={{ x: 16 }}
+            height={150 + data.length * 25 + data.length * 10}
+            theme={theme}
+            width={dimensions.width}
+          >
             <VictoryAxis
               style={{ grid: { strokeWidth: 0 } }}
               tickFormat={(tick: string) => data.find((e) => e.id === tick)!.currencyInfo.currency}
