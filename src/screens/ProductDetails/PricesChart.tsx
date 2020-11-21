@@ -170,7 +170,7 @@ const PricesChart = observer<Props>(({ product, shouldRender, setSnackBarText })
   return (
     <View style={[styles.chartOuterContainer, { backgroundColor: colors.background }]}>
       <ViewShot
-        options={{ format: 'jpg', quality: 0.8, result: 'tmpfile' }}
+        options={{ format: 'png', result: 'tmpfile' }}
         ref={viewShotRef}
         style={{ backgroundColor: colors.background }}
       >
