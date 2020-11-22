@@ -3,6 +3,7 @@ import 'dotenv/config';
 import semverMajor from 'semver/functions/major';
 import semverMinor from 'semver/functions/minor';
 import semverPatch from 'semver/functions/patch';
+import semverPrerelease from 'semver/functions/prerelease';
 
 import * as pkg from './package.json';
 
@@ -12,7 +13,17 @@ const major = semverMajor(version);
 const minor = semverMinor(version);
 const patch = semverPatch(version);
 
+// Android
 const versionCode = major * 10000 + minor * 100 + patch;
+
+// iOS
+let buildNumber = version;
+try {
+  const [preIdentifier, preNumber] = semverPrerelease(version);
+  buildNumber = `${major}.${minor}.${patch}${preIdentifier[0]}${preNumber}`;
+} catch {
+  //
+}
 
 export default {
   name: 'Quanto Custa',
@@ -72,7 +83,7 @@ export default {
   },
   ios: {
     bundleIdentifier: 'com.diogoabu.howmuch',
-    buildNumber: version,
+    buildNumber,
     icon: './assets/icon-ios.png',
     supportsTablet: true,
     config: {
