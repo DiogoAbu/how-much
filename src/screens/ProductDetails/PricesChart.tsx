@@ -2,7 +2,7 @@ import React, { useCallback, useRef } from 'react';
 import { Alert, useWindowDimensions, View } from 'react-native';
 
 import { ActivityIndicator, Caption, Chip, Colors, FAB, Text } from 'react-native-paper';
-import ViewShot from 'react-native-view-shot';
+import ViewShot, { CaptureOptions } from 'react-native-view-shot';
 import * as MediaLibrary from 'expo-media-library';
 import * as Sharing from 'expo-sharing';
 import toMaterialStyle from 'material-color-hash';
@@ -39,6 +39,11 @@ type ChartData = {
   currencyInfo: CurrencyInfo;
   hourlyWage: number;
   workingHours: number;
+};
+
+const viewShotOptions: CaptureOptions = {
+  format: 'png',
+  result: 'tmpfile',
 };
 
 const PricesChart = observer<Props>(({ product, shouldRender, setSnackBarText }) => {
@@ -169,11 +174,7 @@ const PricesChart = observer<Props>(({ product, shouldRender, setSnackBarText })
 
   return (
     <View style={[styles.chartOuterContainer, { backgroundColor: colors.background }]}>
-      <ViewShot
-        options={{ format: 'png', result: 'tmpfile' }}
-        ref={viewShotRef}
-        style={{ backgroundColor: colors.background }}
-      >
+      <ViewShot options={viewShotOptions} ref={viewShotRef} style={{ backgroundColor: colors.background }}>
         <Text style={styles.chartTitle}>
           {t('costOfProductByWorkingHours', { description: product.description })}
         </Text>
