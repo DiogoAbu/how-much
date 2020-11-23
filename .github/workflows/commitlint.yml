@@ -13,3 +13,5 @@ jobs:
 
       - name: Lints commits
         uses: wagoid/commitlint-github-action@v2
+        with:
+          configFile: .commitlintrc.js
