@@ -7,9 +7,9 @@ import semverPrerelease from 'semver/functions/prerelease';
 
 import * as pkg from './package.json';
 
-const { version } = pkg;
-
 const prereleaseOrder = ['alpha', 'beta', 'rc'];
+
+const { version } = pkg;
 
 const major = semverMajor(version);
 const minor = semverMinor(version);
