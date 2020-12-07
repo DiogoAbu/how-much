@@ -7,20 +7,30 @@ import semverPrerelease from 'semver/functions/prerelease';
 
 import * as pkg from './package.json';
 
+const prereleaseOrder = ['alpha', 'beta', 'rc'];
+
 const { version } = pkg;
 
 const major = semverMajor(version);
 const minor = semverMinor(version);
 const patch = semverPatch(version);
 
-// Android
-const versionCode = major * 10000 + minor * 100 + patch;
+// Android: 1.2.3 => 10203000
+let versionCode = major * 10000000 + minor * 100000 + patch * 1000;
 
 // iOS
 let buildNumber = version;
+
 try {
   const [preIdentifier, preNumber] = semverPrerelease(version);
-  buildNumber = `${major}.${minor}.${patch}${preIdentifier[0]}${preNumber}`;
+
+  if (preIdentifier && preNumber) {
+    // Android: 1.2.3-beta.1 => 10203021
+    versionCode += (prereleaseOrder.indexOf(preIdentifier) + 1) * 10 + preNumber;
+
+    // iOS: 1.2.3-beta.1 => 1.2.3b1
+    buildNumber = `${major}.${minor}.${patch}${preIdentifier[0]}${preNumber}`;
+  }
 } catch {
   //
 }
