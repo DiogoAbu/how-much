@@ -96,7 +96,7 @@ const ProductDetails = observer(() => {
 
 const keyExtractor = (item: PriceModel) => `priceDetails${item.id}`;
 
-const getItemLayout = (_: any, index: number) => ({
+const getItemLayout = (_: PriceModel[] | null | undefined, index: number) => ({
   length: LIST_ITEM_HEIGHT,
   offset: LIST_ITEM_HEIGHT * index,
   index,

@@ -123,7 +123,7 @@ const ProductShareImport: FC = observer(() => {
 
 const keyExtractor = (item: Unarray<ProductShareData['prices']>) => `priceDetails${item.id}`;
 
-const getItemLayout = (_: any, index: number) => ({
+const getItemLayout = (_: ProductShareData['prices'] | null | undefined, index: number) => ({
   length: LIST_ITEM_HEIGHT,
   offset: LIST_ITEM_HEIGHT * index,
   index,

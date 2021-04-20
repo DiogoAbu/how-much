@@ -24,7 +24,10 @@ const CountriesWages: FC = () => {
   const { t } = useTranslation();
 
   const { onScroll, containerPaddingTop, scrollIndicatorInsetTop } = useCollapsibleHeader({
-    navigationOptions: { header: (props: StackHeaderProps) => <Header {...props} /> },
+    navigationOptions: {
+      // eslint-disable-next-line react/no-unstable-nested-components
+      header: (props: StackHeaderProps) => <Header {...props} />,
+    },
   });
 
   useFocusEffect(() => {
@@ -65,7 +68,7 @@ const CountriesWages: FC = () => {
       contentContainerStyle={{ paddingTop: containerPaddingTop + DEFAULT_PADDING }}
       isAnimated
       ListHeaderComponent={ListHeader}
-      onScroll={onScroll as any}
+      onScroll={onScroll}
       renderItem={renderCountryWage}
       scrollIndicatorInsets={{ top: scrollIndicatorInsetTop }}
     />

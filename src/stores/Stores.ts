@@ -59,7 +59,7 @@ export class Stores {
     });
   };
 
-  protected hydrateStore = async (tuple: [string, any]): Promise<void> => {
+  protected hydrateStore = async (tuple: [string, unknown]): Promise<void> => {
     try {
       const trunk = new AsyncTrunk(tuple[1], {
         storage: AsyncStorage,

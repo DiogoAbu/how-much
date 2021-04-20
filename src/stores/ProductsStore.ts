@@ -40,7 +40,7 @@ export class ProductsStore {
   get productsSorted(): ProductModel[] {
     let by = ['description', 'updatedAt'];
     let order = [this.sortByOrder, 'desc'];
-    let computed: Record<string, (item: ProductModel) => any> = {};
+    let computed: Record<string, (item: ProductModel) => unknown> = {};
 
     if (this.sortBy === 'date') {
       by = ['updatedAt', 'description'];

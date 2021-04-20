@@ -1,6 +1,5 @@
 <p align="center">
   <img
-    alt="Logo by Nikita Ivanov"
     src="assets/icon.png"
     width="256"
   />

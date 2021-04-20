@@ -207,9 +207,10 @@ const PricesChart = observer<Props>(({ product, shouldRender, setSnackBarText })
                   backgroundStyle={
                     {
                       fillOpacity: 0.6,
-                      fill: ({ datum, index }: any) =>
+                      // @ts-ignore
+                      fill: ({ datum, index }) =>
                         toMaterialStyle(String(datum.id) + String(index), dark ? 700 : 600).backgroundColor,
-                    } as any
+                    } as never
                   }
                   dy={-2}
                   textAnchor='start'

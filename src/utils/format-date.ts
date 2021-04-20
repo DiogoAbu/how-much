@@ -1,6 +1,6 @@
 import i18n from '!/services/localize';
 
-const options = {
+const options: Intl.DateTimeFormatOptions = {
   year: 'numeric',
   month: 'short',
   day: 'numeric',

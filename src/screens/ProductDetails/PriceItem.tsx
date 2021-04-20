@@ -46,29 +46,25 @@ const PriceItem = observer<ListRenderItemInfo<PriceModel> & Props>(
     });
 
     const renderRight = alertIfWageExists
-      ? ({ style }: ListItemRightProps) => {
-          return customWage?.value && customWage.value !== (wage?.value ?? -1) ? (
+      ? ({ style }: ListItemRightProps) =>
+          customWage?.value && customWage.value !== (wage?.value ?? -1) ? (
             <IconButton
               color={colors.primary}
               icon='alert'
               onPress={handleAlertWage}
               style={[style, styles.hourNumber]}
             />
-          ) : null;
-        }
+          ) : null
       : !hideHours
-      ? ({ color, style }: ListItemRightProps) => {
-          return price.value &&
-            currencyInfo &&
-            (customWage?.value || wage?.value || currencyInfo.hourlyWage) ? (
+      ? ({ color, style }: ListItemRightProps) =>
+          price.value && currencyInfo && (customWage?.value || wage?.value || currencyInfo.hourlyWage) ? (
             <Text style={[style, { color }, styles.hourNumber]}>
               {calculateWorkingHours({ price, currencyInfo, wageValue: customWage?.value || wage?.value })}
               <Text style={[{ color }, styles.hourText]}>{t('hr')}</Text>
             </Text>
           ) : (
             <Text style={[style, { color }, styles.hourNumber]}>---</Text>
-          );
-        }
+          )
       : undefined;
 
     return (

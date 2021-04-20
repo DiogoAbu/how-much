@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
 
 const keyExtractor = (item: CurrencyInfo) => `currency-${item.id}`;
 
-const getItemLayout = (_: any, index: number) => ({
+const getItemLayout = (_: CurrencyInfo[] | null | undefined, index: number) => ({
   length: LIST_ITEM_HEIGHT,
   offset: LIST_ITEM_HEIGHT * index,
   index,

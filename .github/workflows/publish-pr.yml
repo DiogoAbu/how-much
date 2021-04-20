@@ -7,8 +7,8 @@ on:
       - beta
 
 env:
-  node-version: "12"
-  expo-version: "3.x"
+  node-version: 12
+  expo-version: 3.x
 
 jobs:
   publish:
@@ -22,25 +22,30 @@ jobs:
         run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 
       - name: Set up Node
-        uses: actions/setup-node@v2-beta
+        uses: actions/setup-node@v2
         with:
           node-version: ${{ env.node-version }}
 
-      - name: Get Yarn cache dir
-        id: yarn-cache
+      - name: Get Yarn cache directory path
+        id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
 
       - name: Cache Yarn dependencies
         uses: actions/cache@v2
+        id: yarn-cache
         with:
-          path: |
-            ${{ steps.yarn-cache.outputs.dir }}
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
 
       - name: Install dependencies
-        run: yarn install --prefer-offline --frozen-lockfile --silent
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 10
+          max_attempts: 5
+          retry_on: error
+          command: yarn install --prefer-offline --frozen-lockfile --silent
 
       - name: Start linter
         run: yarn lint
