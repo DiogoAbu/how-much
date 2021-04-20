@@ -1,10 +1,11 @@
 import '!/services/localize';
 
 import React, { FC, useEffect } from 'react';
-import { Appearance } from 'react-native';
+import { Appearance, View } from 'react-native';
 
 import { useTranslation } from 'react-i18next';
 import { Portal, Provider as PaperProvider } from 'react-native-paper';
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { observer } from 'mobx-react-lite';
 
@@ -22,6 +23,15 @@ import { StoresProvider, useStores } from './stores';
 const AppWithStores: FC = observer(() => {
   const { generalStore, themeStore } = useStores();
   const { i18n } = useTranslation();
+  const insets = useSafeAreaInsets();
+
+  const containerStyle = {
+    flex: 1,
+    marginBottom: insets.bottom,
+    marginTop: insets.top,
+    marginRight: insets.right,
+    marginLeft: insets.left,
+  };
 
   const handleSchemeChange = useMethod(({ colorScheme }: Appearance.AppearancePreferences) => {
     themeStore.setColorSchemeCurrent(colorScheme);
@@ -46,30 +56,34 @@ const AppWithStores: FC = observer(() => {
   );
 
   return (
-    <PaperProvider theme={themeStore.colorSchemeCurrent === 'dark' ? darkTheme : lightTheme}>
-      <NavigationContainer
-        ref={navigationRef}
-        theme={themeStore.colorSchemeCurrent === 'dark' ? darkTheme : lightTheme}
-      >
-        <MainStack />
+    <View style={containerStyle}>
+      <PaperProvider theme={themeStore.colorSchemeCurrent === 'dark' ? darkTheme : lightTheme}>
+        <NavigationContainer
+          ref={navigationRef}
+          theme={themeStore.colorSchemeCurrent === 'dark' ? darkTheme : lightTheme}
+        >
+          <MainStack />
 
-        <LinkingHandler />
+          <LinkingHandler />
 
-        <UpdateHandler />
+          <UpdateHandler />
 
-        <Portal>
-          <Fab />
-        </Portal>
-      </NavigationContainer>
-    </PaperProvider>
+          <Portal>
+            <Fab />
+          </Portal>
+        </NavigationContainer>
+      </PaperProvider>
+    </View>
   );
 });
 
 const App: FC = () => {
   return (
-    <StoresProvider value={new Stores()}>
-      <AppWithStores />
-    </StoresProvider>
+    <SafeAreaProvider>
+      <StoresProvider value={new Stores()}>
+        <AppWithStores />
+      </StoresProvider>
+    </SafeAreaProvider>
   );
 };
 

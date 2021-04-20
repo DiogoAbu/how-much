@@ -1,10 +1,10 @@
-import { v4 } from 'react-native-uuid';
+import uuid from 'react-native-uuid';
 import { makeAutoObservable } from 'mobx';
 
 import { CurrencyInfo } from '!/utils/currency-list';
 
 export class PriceModel {
-  id = v4();
+  id = uuid.v4() as string;
 
   currencyId: CurrencyInfo['id'] = '';
 

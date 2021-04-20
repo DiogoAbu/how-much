@@ -29,5 +29,6 @@
     "useDefineForClassFields": true
   },
   "exclude": ["node_modules"],
-  "include": ["./"]
+  "include": ["./"],
+  "extends": "expo/tsconfig.base"
 }
