@@ -79,7 +79,6 @@ jobs:
 
       - name: Decrypt dotenv for staging or production
         run: |
-          [[ -z "$DOTENV" ]] && exit 0
           echo "$DOTENV" | base64 --decode > ./.env
           chmod 600 ./.env
         env:
@@ -88,7 +87,15 @@ jobs:
       - name: Publish to expo
         run: expo publish --non-interactive --release-channel ${{ (steps.get-prerelease.outputs.is-prerelease == 'true' && 'beta') || 'main' }}
 
-      - name: Dispatch Deploy to Stores
+      - name: Should deploy to stores
+        id: should-deploy
+        run: echo ::set-output name=continue::$(node ./scripts/should-deploy.js ${{ steps.get-version.outputs.version }})
+
+      - name: Display should deploy to stores
+        run: echo ${{ steps.should-deploy.outputs.continue }}
+
+      - name: Dispatch deploy to stores
+        if: "steps.should-deploy.outputs.continue == 'true'"
         run: |
           curl --request POST \
             -H "Accept: application/vnd.github.everest-preview+json" \
