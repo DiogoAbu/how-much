@@ -90,6 +90,14 @@ jobs:
       - name: Display should deploy
         run: echo ${{ steps.should-deploy.outputs.continue }}
 
+      - name: Decrypt dotenv for staging or production
+        if: "steps.should-deploy.outputs.continue == 'true'"
+        run: |
+          echo "$DOTENV" | base64 --decode > ./.env
+          chmod 600 ./.env
+        env:
+          DOTENV: ${{ (steps.get-prerelease.outputs.is-prerelease == 'true' && secrets.DOTENV_BETA) || secrets.DOTENV_MAIN }}
+
       - name: Install Expo
         if: "steps.should-deploy.outputs.continue == 'true'"
         uses: expo/expo-github-action@v5
