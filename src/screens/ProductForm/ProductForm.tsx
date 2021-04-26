@@ -47,7 +47,13 @@ const ProductForm = observer(() => {
   });
 
   const handleFocusPrice = usePress(() => {
-    //
+    pricesRef.current[0]?.focus();
+  });
+
+  const handlePressSearchPrice = usePress((priceId: string) => {
+    requestAnimationFrame(() => {
+      navigation.navigate('SearchPrice', { priceId });
+    });
   });
 
   const handleDone = usePress(() => {
@@ -113,6 +119,7 @@ const ProductForm = observer(() => {
           <SlideIn key={`priceInput${price.id}`}>
             <PriceInput
               nextIndex={index === arr.length - 1 ? undefined : index + 1}
+              onPressSearch={handlePressSearchPrice}
               price={price}
               pricesRef={pricesRef}
               ref={(ref) => (pricesRef.current[index] = ref)}

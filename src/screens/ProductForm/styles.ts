@@ -14,10 +14,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: DEFAULT_PADDING,
   },
 
+  priceInputContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    margin: DEFAULT_PADDING,
+  },
+
   inputContainer: {
     flex: 1,
     alignSelf: 'center',
-    marginLeft: DEFAULT_PADDING,
+    marginRight: DEFAULT_PADDING,
   },
   input: {
     textAlign: 'right',

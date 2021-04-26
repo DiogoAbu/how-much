@@ -290,6 +290,7 @@
       "desc": "Z-A"
     },
     "annualWage": "Remuneração anual",
+    "copy": "Copiar",
     "dailyWage": "Remuneração diária",
     "date": {
       "asc": "Mais antigo",
@@ -312,6 +313,7 @@
       "desc": "Mais caro"
     },
     "return": "Retornar",
+    "saveImage": "Salvar imagem",
     "share": "Compartilhar",
     "sort": "Ordernar",
     "weeklyWage": "Remuneração semanal",
@@ -350,6 +352,7 @@
     "pickACurrency": "Escolha uma moeda",
     "preferences": "Preferências",
     "preferredCurrency": "Moeda preferida",
+    "selectPrice": "Selecione o preço",
     "shareProduct": "Compartilhar produto",
     "wageCalculator": "Calculadora de remuneração",
     "welcome": "Bem-vindo"

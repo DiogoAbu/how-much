@@ -290,6 +290,7 @@
       "desc": "Z-A"
     },
     "annualWage": "Annual wage",
+    "copy": "Copy",
     "dailyWage": "Daily wage",
     "date": {
       "asc": "Least recent",
@@ -312,6 +313,7 @@
       "desc": "Most expensive"
     },
     "return": "Return",
+    "saveImage": "Save image",
     "share": "Share",
     "sort": "Sort",
     "weeklyWage": "Weekly wage",
@@ -350,6 +352,7 @@
     "pickACurrency": "Pick a currency",
     "preferences": "Preferences",
     "preferredCurrency": "Preferred currency",
+    "selectPrice": "Select price",
     "shareProduct": "Share product",
     "wageCalculator": "Wage calculator",
     "welcome": "Welcome"

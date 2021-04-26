@@ -1,7 +1,10 @@
 {
   "compilerOptions": {
+    "allowJs": true,
     "allowSyntheticDefaultImports": true,
+    "alwaysStrict": true,
     "baseUrl": "./",
+    "esModuleInterop": true,
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
     "jsx": "react-native",
@@ -25,10 +28,11 @@
     "strictFunctionTypes": true,
     "strictNullChecks": true,
     "strictPropertyInitialization": false,
+    "suppressImplicitAnyIndexErrors": true,
     "target": "ES6",
     "useDefineForClassFields": true
   },
   "exclude": ["node_modules"],
-  "include": ["./"],
-  "extends": "expo/tsconfig.base"
+  "extends": "expo/tsconfig.base",
+  "include": ["./"]
 }
