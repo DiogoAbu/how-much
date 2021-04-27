@@ -19,6 +19,15 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
   },
 
+  pricesSectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+  },
+  pricesButtonLabel: {
+    fontSize: 12,
+  },
+
   loadingChartContainer: {
     height: 200,
     flex: 1,

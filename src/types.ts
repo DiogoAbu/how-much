@@ -26,6 +26,9 @@ export type MainStackParams = {
   ProductDetails: {
     productId: ProductModel['id'];
   };
+  PriceList: {
+    productId: ProductModel['id'];
+  };
   ProductShare: {
     productId: ProductModel['id'];
   };

@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { FlatList, InteractionManager, ListRenderItem, View } from 'react-native';
 
 import { Button, Caption, Divider, Snackbar } from 'react-native-paper';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useHeaderHeight } from '@react-navigation/stack';
 import { observer } from 'mobx-react-lite';
+// @ts-ignore
+import sortArray from 'sort-array';
 
 import { LIST_ITEM_HEIGHT } from '!/constants';
 import useFocusEffect from '!/hooks/use-focus-effect';
@@ -14,6 +16,8 @@ import useTranslation from '!/hooks/use-translation';
 import { useStores } from '!/stores';
 import { PriceModel } from '!/stores/models/PriceModel';
 import { MainNavigationProp, MainRouteProp } from '!/types';
+import calculateWorkingHours from '!/utils/calculate-working-hours';
+import findCurrency from '!/utils/find-currency';
 
 import AdBanner from './AdBanner';
 import HeaderRight from './HeaderRight';
@@ -26,16 +30,46 @@ const PREVIEW_AMOUNT = 5;
 const ProductDetails = observer(() => {
   const navigation = useNavigation<MainNavigationProp<'ProductDetails'>>();
   const route = useRoute<MainRouteProp<'ProductDetails'>>();
-  const { productsStore, generalStore } = useStores();
+  const { productsStore, generalStore, wagesStore } = useStores();
   const { colors } = useTheme();
   const { t } = useTranslation();
   const headerHeight = useHeaderHeight();
 
   const { params } = route;
-  const product = productsStore.findProductById(params.productId)!;
+  const product = useMemo(() => productsStore.findProductById(params.productId)!, [
+    params.productId,
+    productsStore,
+  ]);
+  const prices = useMemo(() => {
+    return sortArray(product.prices.slice(), {
+      by: ['hours', 'value'],
+      order: ['desc', 'desc'],
+      computed: {
+        hours: (price: PriceModel) => {
+          const currencyInfo = findCurrency(price.currencyId);
+          const wage = wagesStore.findWage(price.currencyId);
+          if (!currencyInfo) {
+            return 0;
+          }
+          const hours = calculateWorkingHours({
+            price,
+            currencyInfo,
+            wageValue: wage?.value,
+          });
+          return parseFloat(hours);
+        },
+      },
+    });
+  }, [product.prices, wagesStore]);
 
   const [shouldRender, setShouldRender] = useState(false);
   const [snackBarText, setSnackBarText] = useState('');
+
+  const handleShowAllPrices = usePress(() => {
+    requestAnimationFrame(() => {
+      navigation.navigate('PriceList', { productId: params.productId });
+    });
+  });
 
   const handleDismissSnackBar = usePress(() => {
     setSnackBarText('');
@@ -76,7 +110,7 @@ const ProductDetails = observer(() => {
     <>
       <FlatList
         contentContainerStyle={[styles.contentContainer, { paddingTop: headerHeight }]}
-        data={product.prices.slice(0, PREVIEW_AMOUNT)}
+        data={prices.slice(0, PREVIEW_AMOUNT)}
         getItemLayout={getItemLayout}
         ItemSeparatorComponent={Divider}
         keyboardDismissMode='interactive'
@@ -85,11 +119,12 @@ const ProductDetails = observer(() => {
         ListFooterComponent={ProductData}
         ListHeaderComponent={
           <>
-            <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+            <View style={styles.pricesSectionHeader}>
               <Caption style={styles.listCaption}>
                 {t('prices')} • Showing {PREVIEW_AMOUNT} out of {product.prices.length}
               </Caption>
-              <Button compact labelStyle={{ fontSize: 12 }}>
+
+              <Button compact labelStyle={styles.pricesButtonLabel} onPress={handleShowAllPrices}>
                 See all
               </Button>
             </View>
