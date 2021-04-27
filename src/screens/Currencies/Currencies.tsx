@@ -25,20 +25,24 @@ const Currencies = observer(() => {
   const { generalStore, productsStore, wagesStore } = useStores();
   const { t } = useTranslation();
 
-  const [selectedId, setSelectedId] = useState<CurrencyInfo['id'] | null>(null);
+  const [selectedIds, setSelectedIds] = useState<CurrencyInfo['id'][]>([]);
+
+  const allowMultiple = params.action === 'productForm';
 
   const handleDone = usePress(() => {
-    if (!selectedId) {
+    if (!selectedIds.length) {
       return;
     }
 
     const hasPreviousCurrency = !!generalStore.activeCurrencyId;
 
     if (params.action === 'productForm') {
-      productsStore.productForm?.addPrice(new PriceModel({ currencyId: selectedId, value: 0.0 }));
+      selectedIds.map((id) => {
+        productsStore.productForm?.addPrice(new PriceModel({ currencyId: id, value: 0.0 }));
+      });
     }
     if (params.action === 'activeCurrency') {
-      generalStore.setActiveCurrencyId(selectedId);
+      generalStore.setActiveCurrencyId(selectedIds[0]);
     }
 
     requestAnimationFrame(() => {
@@ -56,21 +60,22 @@ const Currencies = observer(() => {
     navigation.setOptions({
       title: params.action === 'productForm' ? t('title.pickACurrency') : t('title.preferredCurrency'),
       headerRight: () => (
-        <HeaderButton disabled={!selectedId} icon='check' mode='text' onPress={handleDone}>
+        <HeaderButton disabled={!selectedIds} icon='check' mode='text' onPress={handleDone}>
           {t('label.done')}
         </HeaderButton>
       ),
     });
 
     // Cannot have a blur function
-  }, [generalStore, handleDone, navigation, params.action, selectedId, t]);
+  }, [generalStore, handleDone, navigation, params.action, selectedIds, t]);
 
   const renderCurrency: ListRenderItem<CurrencyInfo> = ({ item }) => {
     return (
       <CurrencyItem
+        allowMultiple={allowMultiple}
         currencyInfo={item}
-        isSelected={selectedId === item.id}
-        setSelectedId={setSelectedId}
+        isSelected={selectedIds.includes(item.id)}
+        setSelectedIds={setSelectedIds}
         wage={wagesStore.findWage(item.id)}
       />
     );
@@ -83,10 +88,11 @@ const Currencies = observer(() => {
       </Caption>
 
       <CurrencyItem
+        allowMultiple={allowMultiple}
         currencyInfo={findCurrency(generalStore.activeCurrencyId)!}
         isActive
-        isSelected={selectedId === generalStore.activeCurrencyId}
-        setSelectedId={setSelectedId}
+        isSelected={selectedIds.includes(generalStore.activeCurrencyId)}
+        setSelectedIds={setSelectedIds}
         wage={wagesStore.findWage(generalStore.activeCurrencyId)}
       />
       <Divider />
