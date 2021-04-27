@@ -39,6 +39,13 @@ const PriceInput = observer<Props, NativeTextInput>(
     });
 
     const handlePressDelete = usePress(() => {
+      if (price.value === 0) {
+        requestAnimationFrame(() => {
+          productsStore.deletePriceById(price.id);
+        });
+        return;
+      }
+
       Alert.alert(
         t('areYouSure'),
         t('doYouWantToDeleteThisPrice'),

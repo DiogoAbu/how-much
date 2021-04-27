@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { FlatList, InteractionManager, ListRenderItem } from 'react-native';
+import { FlatList, InteractionManager, ListRenderItem, View } from 'react-native';
 
-import { Caption, Divider, Snackbar } from 'react-native-paper';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Button, Caption, Divider, Snackbar } from 'react-native-paper';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { useHeaderHeight } from '@react-navigation/stack';
 import { observer } from 'mobx-react-lite';
 
-import { DEFAULT_APPBAR_HEIGHT, LIST_ITEM_HEIGHT } from '!/constants';
+import { LIST_ITEM_HEIGHT } from '!/constants';
 import useFocusEffect from '!/hooks/use-focus-effect';
 import usePress from '!/hooks/use-press';
 import useTheme from '!/hooks/use-theme';
@@ -21,13 +21,15 @@ import PriceItem from './PriceItem';
 import PricesChart from './PricesChart';
 import styles from './styles';
 
+const PREVIEW_AMOUNT = 5;
+
 const ProductDetails = observer(() => {
   const navigation = useNavigation<MainNavigationProp<'ProductDetails'>>();
   const route = useRoute<MainRouteProp<'ProductDetails'>>();
   const { productsStore, generalStore } = useStores();
   const { colors } = useTheme();
   const { t } = useTranslation();
-  const insets = useSafeAreaInsets();
+  const headerHeight = useHeaderHeight();
 
   const { params } = route;
   const product = productsStore.findProductById(params.productId)!;
@@ -58,13 +60,11 @@ const ProductDetails = observer(() => {
     };
   }, [generalStore, navigation, product.description, route]);
 
-  const ListHeader = (
+  const ProductData = (
     <>
-      <PricesChart product={product} setSnackBarText={setSnackBarText} shouldRender={shouldRender} />
-
       <AdBanner />
 
-      <Caption style={styles.listCaption}>{t('prices')}</Caption>
+      <PricesChart product={product} setSnackBarText={setSnackBarText} shouldRender={shouldRender} />
     </>
   );
 
@@ -75,14 +75,27 @@ const ProductDetails = observer(() => {
   return (
     <>
       <FlatList
-        contentContainerStyle={[styles.contentContainer, { paddingTop: insets.top + DEFAULT_APPBAR_HEIGHT }]}
-        data={product.prices}
+        contentContainerStyle={[styles.contentContainer, { paddingTop: headerHeight }]}
+        data={product.prices.slice(0, PREVIEW_AMOUNT)}
         getItemLayout={getItemLayout}
         ItemSeparatorComponent={Divider}
         keyboardDismissMode='interactive'
         keyboardShouldPersistTaps='handled'
         keyExtractor={keyExtractor}
-        ListHeaderComponent={ListHeader}
+        ListFooterComponent={ProductData}
+        ListHeaderComponent={
+          <>
+            <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+              <Caption style={styles.listCaption}>
+                {t('prices')} • Showing {PREVIEW_AMOUNT} out of {product.prices.length}
+              </Caption>
+              <Button compact labelStyle={{ fontSize: 12 }}>
+                See all
+              </Button>
+            </View>
+            <Divider />
+          </>
+        }
         renderItem={renderPrice}
         style={{ backgroundColor: colors.background }}
       />
