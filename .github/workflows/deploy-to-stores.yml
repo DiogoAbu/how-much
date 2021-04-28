@@ -11,11 +11,11 @@ on:
         description: "Platforms to deploy as comma separated string. Default: android,ios"
         required: false
       forceDeploy:
-        description: "Skip deploy check and force a deploy"
+        description: "Set to 'true' to skip deploy check and force a deploy"
         required: false
-        default: "false"
+        default: ""
   repository_dispatch:
-    types: [deploy]
+    types: [deploy-to-stores]
 
 env:
   node-version: 12

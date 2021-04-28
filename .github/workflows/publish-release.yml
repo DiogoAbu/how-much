@@ -7,6 +7,10 @@ on:
         description: "Tag or SHA ref to checkout"
         required: false
         default: ""
+      forceDeploy:
+        description: "Set to 'true' to skip deploy check and force a deploy"
+        required: false
+        default: ""
   release:
     types:
       - published
@@ -87,9 +91,11 @@ jobs:
       - name: Publish to expo
         run: expo publish --non-interactive --release-channel ${{ (steps.get-prerelease.outputs.is-prerelease == 'true' && 'beta') || 'main' }}
 
-      - name: Should deploy to stores
+      - name: Should deploy
         id: should-deploy
-        run: echo ::set-output name=continue::$(node ./scripts/should-deploy.js ${{ steps.get-version.outputs.version }})
+        run: echo ::set-output name=continue::$(if [[ "$SHOULD_DEPLOY" == "true" ]]; then echo true; else node ./scripts/should-deploy.js ${{ steps.get-version.outputs.version }}; fi)
+        env:
+          SHOULD_DEPLOY: ${{ github.event.inputs.forceDeploy || 'false' }}
 
       - name: Display should deploy to stores
         run: echo ${{ steps.should-deploy.outputs.continue }}
@@ -100,7 +106,7 @@ jobs:
           curl --request POST \
             -H "Accept: application/vnd.github.everest-preview+json" \
             -H "Authorization: token $TOKEN" \
-            --data '{ "event_type":"deploy", "client_payload":{ "checkoutRef": "${{ steps.get-version.outputs.version }}" } }' \
+            --data '{ "event_type":"deploy-to-stores", "client_payload":{ "checkoutRef":"${{ steps.get-version.outputs.version }}", "forceDeploy":"${{ steps.should-deploy.outputs.continue }}" } }' \
             https://api.github.com/repos/${{ github.repository }}/dispatches \
         env:
           TOKEN: ${{ secrets.PERSONAL_TOKEN }}
