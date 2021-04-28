@@ -147,6 +147,7 @@ const PricesChart = observer<Props>(({ product, shouldRender, setSnackBarText })
 
   const data: ChartData[] = sortArray(
     product.prices
+      .slice()
       .map((price) => {
         const currencyInfo = findCurrency(price.currencyId);
         const wage = wagesStore.findWage(price.currencyId);
