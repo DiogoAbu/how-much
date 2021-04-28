@@ -121,12 +121,19 @@ const ProductDetails = observer(() => {
           <>
             <View style={styles.pricesSectionHeader}>
               <Caption style={styles.listCaption}>
-                {t('prices')} • Showing {PREVIEW_AMOUNT} out of {product.prices.length}
+                {t('prices')}
+                {' • '}
+                {t('showingMinOutOfMax', {
+                  min: Math.min(PREVIEW_AMOUNT, product.prices.length),
+                  max: product.prices.length,
+                })}
               </Caption>
 
-              <Button compact labelStyle={styles.pricesButtonLabel} onPress={handleShowAllPrices}>
-                See all
-              </Button>
+              {product.prices.length > PREVIEW_AMOUNT ? (
+                <Button compact labelStyle={styles.pricesButtonLabel} onPress={handleShowAllPrices}>
+                  See all
+                </Button>
+              ) : null}
             </View>
             <Divider />
           </>
