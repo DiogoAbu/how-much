@@ -10,6 +10,10 @@ on:
       platforms:
         description: "Platforms to deploy as comma separated string. Default: android,ios"
         required: false
+      forceDeploy:
+        description: "Skip deploy check and force a deploy"
+        required: false
+        default: "false"
   repository_dispatch:
     types: [deploy]
 
@@ -82,7 +86,9 @@ jobs:
 
       - name: Should deploy
         id: should-deploy
-        run: echo ::set-output name=continue::$(node ./scripts/should-deploy.js ${{ steps.get-version.outputs.version }})
+        run: echo ::set-output name=continue::$(if [[ "$SHOULD_DEPLOY" == "true" ]]; then echo true; else node ./scripts/should-deploy.js ${{ steps.get-version.outputs.version }}; fi)
+        env:
+          SHOULD_DEPLOY: ${{ github.event.client_payload.forceDeploy || github.event.inputs.forceDeploy || 'false' }}
 
       - name: Display should deploy
         run: echo ${{ steps.should-deploy.outputs.continue }}
