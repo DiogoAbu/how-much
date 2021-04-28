@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import { ScrollView, View } from 'react-native';
 
 import { Button, Chip, Paragraph, Title } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
 import { useHeaderHeight } from '@react-navigation/stack';
 import toMaterialStyle from 'material-color-hash';
 
@@ -31,11 +32,8 @@ for (let i = 11; i < currencyList.length; i += 10) {
   }
 }
 
-interface Props {
-  navigation: MainNavigationProp<'Intro'>;
-}
-
-const Intro: FC<Props> = ({ navigation }) => {
+const Intro: FC = () => {
+  const navigation = useNavigation<MainNavigationProp<'Intro'>>();
   const { dark } = useTheme();
   const { t } = useTranslation();
   const headerHeight = useHeaderHeight();
@@ -85,7 +83,7 @@ const Intro: FC<Props> = ({ navigation }) => {
         <Paragraph style={styles.textCenter}>{t('dontWorryYouCanChangeItLater')}</Paragraph>
       </ScrollView>
 
-      <Button mode='contained' onPress={handleGoToCurrencies} style={styles.button}>
+      <Button mode='contained' onPress={handleGoToCurrencies} style={styles.button} testID='go-to-currencies'>
         {t('label.goPickCurrency')}
       </Button>
     </>

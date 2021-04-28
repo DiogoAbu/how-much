@@ -32,7 +32,7 @@
     "target": "ES6",
     "useDefineForClassFields": true
   },
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules/**/*"],
   "extends": "expo/tsconfig.base",
-  "include": ["./"]
+  "include": ["./**/*"]
 }

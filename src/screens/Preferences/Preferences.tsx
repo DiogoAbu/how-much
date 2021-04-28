@@ -3,6 +3,7 @@ import { ScrollView } from 'react-native';
 
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Badge, Caption, Divider, List } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
 import { useHeaderHeight } from '@react-navigation/stack';
 import Constants from 'expo-constants';
 import * as Updates from 'expo-updates';
@@ -20,11 +21,8 @@ import ColorSchemeItem from './ColorSchemeItem';
 import LanguageItem from './LanguageItem';
 import styles from './styles';
 
-interface Props {
-  navigation: MainNavigationProp<'Preferences'>;
-}
-
-const Preferences: FC<Props> = ({ navigation }) => {
+const Preferences: FC = () => {
+  const navigation = useNavigation<MainNavigationProp<'Preferences'>>();
   const { colors } = useTheme();
   const { generalStore } = useStores();
   const { t } = useTranslation();
