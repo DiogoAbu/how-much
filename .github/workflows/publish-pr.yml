@@ -8,7 +8,7 @@ on:
 
 env:
   node-version: 12
-  expo-version: 3.x
+  expo-version: 4.x
 
 jobs:
   publish:
