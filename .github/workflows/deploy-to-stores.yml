@@ -27,9 +27,6 @@ jobs:
         with:
           ref: ${{ github.event.inputs.checkoutRef || github.event.client_payload.checkoutRef }}
 
-      - name: Increase watchers to fix Docker
-        run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
-
       - name: Define platforms
         id: platforms
         run: |
