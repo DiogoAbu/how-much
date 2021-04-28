@@ -36,7 +36,7 @@ const DescriptionInput = observer<Props, NativeTextInput>(
     );
 
     return (
-      <View style={{ paddingHorizontal: DEFAULT_PADDING, paddingTop: DEFAULT_PADDING }}>
+      <View style={{ paddingHorizontal: DEFAULT_PADDING, paddingTop: DEFAULT_PADDING * 2 }}>
         <TextInput
           autoCompleteType='off'
           autoCorrect={false}
@@ -54,7 +54,7 @@ const DescriptionInput = observer<Props, NativeTextInput>(
           style={{ marginTop: DEFAULT_PADDING }}
           value={productForm?.description}
         />
-        <HelperText style={{ marginBottom: DEFAULT_PADDING }} type='error' visible>
+        <HelperText style={{ marginBottom: DEFAULT_PADDING / 2 }} type='error' visible>
           {descriptionError}
         </HelperText>
       </View>

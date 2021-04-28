@@ -2,10 +2,10 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Animated, FlatList, FlatListProps, StyleSheet } from 'react-native';
 
 import { Divider, Searchbar } from 'react-native-paper';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useHeaderHeight } from '@react-navigation/stack';
 import { observer } from 'mobx-react-lite';
 
-import { DEFAULT_APPBAR_HEIGHT, DEFAULT_PADDING, LIST_ITEM_HEIGHT } from '!/constants';
+import { DEFAULT_PADDING, LIST_ITEM_HEIGHT } from '!/constants';
 import useDebounceValue from '!/hooks/use-debounce-value';
 import useTheme from '!/hooks/use-theme';
 import useTranslation from '!/hooks/use-translation';
@@ -22,8 +22,8 @@ interface Props extends Omit<FlatListProps<CurrencyInfo>, 'data'> {
 const CurrencyList = observer<Props>(({ isAnimated, ListHeaderComponent, ...rest }) => {
   const { colors } = useTheme();
   const { generalStore } = useStores();
-  const insets = useSafeAreaInsets();
   const { t } = useTranslation();
+  const headerHeight = useHeaderHeight();
 
   const currencyListMinusActive = useRef(currencyList.filter((e) => e.id !== generalStore.activeCurrencyId));
   const [list, setList] = useState<CurrencyInfo[]>(() => currencyListMinusActive.current);
@@ -98,7 +98,7 @@ const CurrencyList = observer<Props>(({ isAnimated, ListHeaderComponent, ...rest
       bounces={false}
       contentContainerStyle={[
         styles.contentContainer,
-        { paddingTop: insets.top + DEFAULT_APPBAR_HEIGHT + DEFAULT_PADDING },
+        { paddingTop: headerHeight + DEFAULT_PADDING },
         rest.contentContainerStyle,
       ]}
       data={list}

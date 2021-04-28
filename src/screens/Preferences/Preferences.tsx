@@ -1,14 +1,14 @@
 import React, { FC } from 'react';
-import { Platform, ScrollView } from 'react-native';
+import { ScrollView } from 'react-native';
 
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Badge, Caption, Divider, List } from 'react-native-paper';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useHeaderHeight } from '@react-navigation/stack';
 import Constants from 'expo-constants';
 import * as Updates from 'expo-updates';
 import { Observer } from 'mobx-react-lite';
 
-import { BADGE_SMALL_SIZE, DEFAULT_APPBAR_HEIGHT, DEFAULT_PADDING } from '!/constants';
+import { BADGE_SMALL_SIZE } from '!/constants';
 import useFocusEffect from '!/hooks/use-focus-effect';
 import usePress from '!/hooks/use-press';
 import useTheme from '!/hooks/use-theme';
@@ -27,8 +27,8 @@ interface Props {
 const Preferences: FC<Props> = ({ navigation }) => {
   const { colors } = useTheme();
   const { generalStore } = useStores();
-  const insets = useSafeAreaInsets();
   const { t } = useTranslation();
+  const headerHeight = useHeaderHeight();
 
   const handleCountriesWagesPress = usePress(() => {
     requestAnimationFrame(() => {
@@ -61,21 +61,10 @@ const Preferences: FC<Props> = ({ navigation }) => {
 
   return (
     <ScrollView
-      contentContainerStyle={[
-        styles.contentContainer,
-        {
-          paddingTop:
-            insets.top +
-            Platform.select({ default: DEFAULT_APPBAR_HEIGHT, ios: DEFAULT_PADDING }) +
-            DEFAULT_PADDING,
-        },
-      ]}
+      contentContainerStyle={[styles.contentContainer, { paddingTop: headerHeight }]}
       contentInsetAdjustmentBehavior='automatic'
       keyboardDismissMode='interactive'
       keyboardShouldPersistTaps='handled'
-      scrollIndicatorInsets={{
-        top: insets.top + Platform.select({ default: DEFAULT_APPBAR_HEIGHT, ios: DEFAULT_PADDING }),
-      }}
       style={{ backgroundColor: colors.background }}
     >
       <List.Item

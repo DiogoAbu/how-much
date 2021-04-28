@@ -2,13 +2,12 @@ import React, { Fragment, useCallback, useRef, useState } from 'react';
 import { ScrollView, TextInput as NativeTextInput, View } from 'react-native';
 
 import { Divider, IconButton, Text } from 'react-native-paper';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { useHeaderHeight } from '@react-navigation/stack';
 import { observer } from 'mobx-react-lite';
 
 import HeaderButton from '!/components/HeaderButton';
 import SlideIn from '!/components/SlideIn';
-import { DEFAULT_APPBAR_HEIGHT } from '!/constants';
 import useFocusEffect from '!/hooks/use-focus-effect';
 import usePress from '!/hooks/use-press';
 import useTheme from '!/hooks/use-theme';
@@ -23,10 +22,10 @@ import styles from './styles';
 const ProductForm = observer(() => {
   const navigation = useNavigation<MainNavigationProp<'ProductForm'>>();
   const { params } = useRoute<MainRouteProp<'ProductForm'>>();
-  const insets = useSafeAreaInsets();
   const { generalStore, productsStore } = useStores();
   const { colors } = useTheme();
   const { t } = useTranslation();
+  const headerHeight = useHeaderHeight();
 
   const scrollRef = useRef<ScrollView | null>(null);
   const descriptionRef = useRef<NativeTextInput | null>(null);
@@ -93,7 +92,7 @@ const ProductForm = observer(() => {
 
   return (
     <ScrollView
-      contentContainerStyle={[styles.contentContainer, { paddingTop: insets.top + DEFAULT_APPBAR_HEIGHT }]}
+      contentContainerStyle={[styles.contentContainer, { paddingTop: headerHeight }]}
       keyboardDismissMode='none'
       keyboardShouldPersistTaps='handled'
       ref={scrollRef}

@@ -2,11 +2,11 @@ import React, { FC, useMemo, useRef, useState } from 'react';
 import { Alert, ScrollView, TextInput as NativeTextInput, View } from 'react-native';
 
 import { Caption, Divider, List, TextInput } from 'react-native-paper';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { useHeaderHeight } from '@react-navigation/stack';
 
 import HeaderButton from '!/components/HeaderButton';
-import { DEFAULT_APPBAR_HEIGHT, DEFAULT_PADDING, LIST_ITEM_HEIGHT } from '!/constants';
+import { DEFAULT_PADDING, LIST_ITEM_HEIGHT } from '!/constants';
 import useFocusEffect from '!/hooks/use-focus-effect';
 import useInputNumber from '!/hooks/use-input-number';
 import usePress from '!/hooks/use-press';
@@ -49,7 +49,7 @@ const WageCalculator: FC = () => {
   const { generalStore, wagesStore } = useStores();
   const { colors } = useTheme();
   const { t } = useTranslation();
-  const insets = useSafeAreaInsets();
+  const headerHeight = useHeaderHeight();
 
   const scrollRef = useRef<ScrollView | null>(null);
   const dailyWorkingHoursRef = useRef<NativeTextInput | null>(null);
@@ -241,7 +241,7 @@ const WageCalculator: FC = () => {
       <ScrollView
         contentContainerStyle={[
           styles.contentContainer,
-          { padding: DEFAULT_PADDING, paddingTop: insets.top + DEFAULT_APPBAR_HEIGHT },
+          { padding: DEFAULT_PADDING, paddingTop: headerHeight },
         ]}
         keyboardDismissMode='interactive'
         keyboardShouldPersistTaps='handled'
