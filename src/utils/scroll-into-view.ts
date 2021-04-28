@@ -1,18 +1,17 @@
-import { findNodeHandle, ScrollView } from 'react-native';
+import { findNodeHandle, ScrollView, TextInput } from 'react-native';
 
 /**
  * Use SrollView method to scroll component into view
  */
 export default function scrollIntoView(
-  ref: React.RefObject<any> | any,
+  ref: TextInput,
   scrollRef: React.RefObject<ScrollView>,
   animated = true,
   offsetY = 0,
 ): void {
   if (scrollRef && scrollRef.current) {
     requestAnimationFrame(() => {
-      const measureLayout = ref.current?.measureLayout ?? ref.measureLayout;
-      measureLayout?.(
+      ref.measureLayout?.(
         findNodeHandle(scrollRef.current)!,
         (_: number, y: number) => {
           scrollRef.current!.scrollTo({
@@ -34,29 +33,29 @@ export default function scrollIntoView(
  * @param animated Whether the scroll action should be animated
  */
 export function focusNext(
-  ref: React.RefObject<any>,
+  ref: React.RefObject<TextInput>,
   scrollRef: React.RefObject<ScrollView>,
   animated?: boolean,
   offsetY?: number,
 ): () => void {
   return () => {
     if (ref?.current) {
-      scrollIntoView(ref, scrollRef, animated, offsetY);
+      scrollIntoView(ref.current, scrollRef, animated, offsetY);
       ref.current?.focus?.();
     }
   };
 }
 
 export function focusNextPrice(
-  ref: React.RefObject<any[]>,
+  ref: React.RefObject<(TextInput | null)[]>,
   index: number | null | undefined,
   scrollRef: React.RefObject<ScrollView>,
   animated?: boolean,
   offsetY?: number,
 ): () => void {
   return () => {
-    if (index && ref?.current?.[index]) {
-      scrollIntoView(ref?.current?.[index], scrollRef, animated, offsetY);
+    if (index && ref.current && ref.current[index]) {
+      scrollIntoView(ref.current[index]!, scrollRef, animated, offsetY);
       ref.current?.[index]?.focus?.();
     }
   };

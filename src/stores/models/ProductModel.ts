@@ -1,4 +1,4 @@
-import { v4 } from 'react-native-uuid';
+import uuid from 'react-native-uuid';
 import { makeAutoObservable } from 'mobx';
 import { date, format } from 'mobx-sync';
 
@@ -7,7 +7,7 @@ import { Unarray } from '!/types';
 import { PriceModel } from './PriceModel';
 
 export class ProductModel {
-  id = v4();
+  id = uuid.v4() as string;
 
   description = '';
 

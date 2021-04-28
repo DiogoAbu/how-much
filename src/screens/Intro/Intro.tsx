@@ -2,10 +2,9 @@ import React, { FC } from 'react';
 import { ScrollView, View } from 'react-native';
 
 import { Button, Chip, Paragraph, Title } from 'react-native-paper';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useHeaderHeight } from '@react-navigation/stack';
 import toMaterialStyle from 'material-color-hash';
 
-import { DEFAULT_PADDING } from '!/constants';
 import usePress from '!/hooks/use-press';
 import useStatusBar from '!/hooks/use-status-bar';
 import useTheme from '!/hooks/use-theme';
@@ -38,8 +37,8 @@ interface Props {
 
 const Intro: FC<Props> = ({ navigation }) => {
   const { dark } = useTheme();
-  const insets = useSafeAreaInsets();
   const { t } = useTranslation();
+  const headerHeight = useHeaderHeight();
 
   const handleGoToCurrencies = usePress(() => {
     requestAnimationFrame(() => {
@@ -51,7 +50,7 @@ const Intro: FC<Props> = ({ navigation }) => {
 
   return (
     <>
-      <View style={[styles.languageContainer, { paddingTop: insets.top + DEFAULT_PADDING }]}>
+      <View style={[styles.languageContainer, { paddingTop: headerHeight }]}>
         <LanguageItem />
       </View>
 

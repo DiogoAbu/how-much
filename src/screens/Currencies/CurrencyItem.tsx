@@ -19,12 +19,20 @@ import styles from './styles';
 interface Props {
   currencyInfo: CurrencyInfo;
   wage?: CountryWageModel;
-  setSelectedId?: (currencyInfoId: CurrencyInfo['id'] | null) => void;
+  setSelectedIds?: React.Dispatch<React.SetStateAction<CurrencyInfo['id'][]>>;
   isSelected?: boolean;
   isActive?: boolean;
+  allowMultiple?: boolean;
 }
 
-const CurrencyItem: FC<Props> = ({ currencyInfo, wage, setSelectedId, isSelected, isActive }) => {
+const CurrencyItem: FC<Props> = ({
+  currencyInfo,
+  wage,
+  setSelectedIds,
+  isSelected,
+  isActive,
+  allowMultiple,
+}) => {
   const { params } = useRoute<MainRouteProp<'Currencies'>>();
   const { colors } = useTheme();
   const { t } = useTranslation();
@@ -33,7 +41,20 @@ const CurrencyItem: FC<Props> = ({ currencyInfo, wage, setSelectedId, isSelected
 
   const handleOnPress = usePress(() => {
     requestAnimationFrame(() => {
-      setSelectedId?.(isSelected ? null : currencyInfo.id);
+      if (!allowMultiple) {
+        setSelectedIds?.(isSelected ? [] : [currencyInfo.id]);
+      } else {
+        setSelectedIds?.((prev) => {
+          const next = [...prev];
+          const index = next.indexOf(currencyInfo.id);
+          if (index >= 0) {
+            next.splice(index, 1);
+          } else {
+            next.push(currencyInfo.id);
+          }
+          return next;
+        });
+      }
     });
   });
 

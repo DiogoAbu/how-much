@@ -5,7 +5,7 @@ import { autorun, IAutorunOptions, IReactionPublic } from 'mobx';
 import useFocusEffect from './use-focus-effect';
 
 export default function useAutorunOnFocus(
-  view: (r: IReactionPublic) => any,
+  view: (r: IReactionPublic) => unknown,
   deps: DependencyList,
   opts?: IAutorunOptions,
 ): void {

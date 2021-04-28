@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
-import { Alert, ScrollView, TextInput as NativeTextInput } from 'react-native';
+import { Alert, ScrollView, TextInput as NativeTextInput, View } from 'react-native';
 
-import { Colors, IconButton, List, TextInput } from 'react-native-paper';
+import { Colors, IconButton, TextInput } from 'react-native-paper';
 import { observer } from 'mobx-react-lite';
 
 import { LIST_ITEM_HEIGHT } from '!/constants';
@@ -23,17 +23,29 @@ interface Props {
   nextIndex?: number;
   pricesRef: React.MutableRefObject<(NativeTextInput | null)[]>;
   scrollRef: React.MutableRefObject<ScrollView | null>;
+  onPressSearch: (priceId: string) => void;
 }
 
 const PriceInput = observer<Props, NativeTextInput>(
-  ({ price, nextIndex, pricesRef, scrollRef }, ref) => {
+  ({ price, nextIndex, pricesRef, scrollRef, onPressSearch }, ref) => {
     const { dark } = useTheme();
     const { productsStore } = useStores();
     const { t } = useTranslation();
 
     const currencyInfo = findCurrency(price.currencyId);
 
+    const handlePressSearch = usePress(() => {
+      onPressSearch(price.id);
+    });
+
     const handlePressDelete = usePress(() => {
+      if (price.value === 0) {
+        requestAnimationFrame(() => {
+          productsStore.deletePriceById(price.id);
+        });
+        return;
+      }
+
       Alert.alert(
         t('areYouSure'),
         t('doYouWantToDeleteThisPrice'),
@@ -62,62 +74,43 @@ const PriceInput = observer<Props, NativeTextInput>(
       [currencyInfo, price],
     );
 
-    const renderRight = useCallback(
-      () => (
-        <>
-          <TextInput
-            autoCompleteType='off'
-            autoCorrect={false}
-            blurOnSubmit={!nextIndex}
-            keyboardAppearance={dark ? 'dark' : 'light'}
-            keyboardType='decimal-pad'
-            label={t('price')}
-            maxLength={14}
-            mode='outlined'
-            onChangeText={handlePriceChange}
-            onSubmitEditing={
-              nextIndex ? focusNextPrice(pricesRef, nextIndex, scrollRef, true, LIST_ITEM_HEIGHT) : undefined
-            }
-            ref={ref}
-            render={(props) => <NativeTextInput {...props} style={[props.style, styles.input]} />}
-            returnKeyType={nextIndex ? 'next' : 'done'}
-            style={styles.inputContainer}
-            value={toCurrency(price.value, currencyInfo?.currency)}
-          />
-
-          <IconButton
-            color={Colors.red300}
-            icon='delete'
-            onPress={handlePressDelete}
-            style={styles.buttonDelete}
-          />
-        </>
-      ),
-      [
-        currencyInfo?.currency,
-        dark,
-        handlePressDelete,
-        handlePriceChange,
-        nextIndex,
-        price.value,
-        pricesRef,
-        ref,
-        scrollRef,
-        t,
-      ],
-    );
-
     if (!currencyInfo) {
       return null;
     }
 
     return (
-      <List.Item
-        description={t(`countryName.${stripCountryName(currencyInfo.countryName)}`)}
-        descriptionNumberOfLines={4}
-        right={renderRight}
-        title={currencyInfo.currency}
-      />
+      <View style={styles.priceInputContainer}>
+        <TextInput
+          autoCompleteType='off'
+          autoCorrect={false}
+          blurOnSubmit={!nextIndex}
+          keyboardAppearance={dark ? 'dark' : 'light'}
+          keyboardType='decimal-pad'
+          label={`${currencyInfo!.currency} • ${t(
+            `countryName.${stripCountryName(currencyInfo!.countryName)}`,
+          )}`}
+          maxLength={14}
+          mode='outlined'
+          onChangeText={handlePriceChange}
+          onSubmitEditing={
+            nextIndex ? focusNextPrice(pricesRef, nextIndex, scrollRef, true, LIST_ITEM_HEIGHT) : undefined
+          }
+          ref={ref}
+          render={(props) => <NativeTextInput {...props} style={[props.style, styles.input]} />}
+          returnKeyType={nextIndex ? 'next' : 'done'}
+          style={styles.inputContainer}
+          value={toCurrency(price.value, currencyInfo!.currency)}
+        />
+
+        <IconButton icon='magnify' onPress={handlePressSearch} style={styles.buttonDelete} />
+
+        <IconButton
+          color={Colors.red300}
+          icon='delete'
+          onPress={handlePressDelete}
+          style={styles.buttonDelete}
+        />
+      </View>
     );
   },
   { forwardRef: true },

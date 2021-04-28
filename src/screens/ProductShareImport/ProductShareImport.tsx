@@ -2,11 +2,11 @@ import React, { FC, useState } from 'react';
 import { FlatList, ListRenderItem } from 'react-native';
 
 import { Button, Caption, Divider, List, Text } from 'react-native-paper';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { useHeaderHeight } from '@react-navigation/stack';
 import { observer } from 'mobx-react-lite';
 
-import { DEFAULT_APPBAR_HEIGHT, DEFAULT_PADDING, LIST_ITEM_HEIGHT } from '!/constants';
+import { DEFAULT_PADDING, LIST_ITEM_HEIGHT } from '!/constants';
 import useFocusEffect from '!/hooks/use-focus-effect';
 import usePress from '!/hooks/use-press';
 import useTheme from '!/hooks/use-theme';
@@ -26,7 +26,7 @@ const ProductShareImport: FC = observer(() => {
   const { productsStore, generalStore } = useStores();
   const { colors } = useTheme();
   const { t } = useTranslation();
-  const insets = useSafeAreaInsets();
+  const headerHeight = useHeaderHeight();
 
   const {
     params: { productData },
@@ -93,7 +93,7 @@ const ProductShareImport: FC = observer(() => {
 
   return (
     <FlatList
-      contentContainerStyle={[styles.contentContainer, { paddingTop: insets.top + DEFAULT_APPBAR_HEIGHT }]}
+      contentContainerStyle={[styles.contentContainer, { paddingTop: headerHeight }]}
       data={productData.prices}
       getItemLayout={getItemLayout}
       ItemSeparatorComponent={Divider}
@@ -123,7 +123,7 @@ const ProductShareImport: FC = observer(() => {
 
 const keyExtractor = (item: Unarray<ProductShareData['prices']>) => `priceDetails${item.id}`;
 
-const getItemLayout = (_: any, index: number) => ({
+const getItemLayout = (_: ProductShareData['prices'] | null | undefined, index: number) => ({
   length: LIST_ITEM_HEIGHT,
   offset: LIST_ITEM_HEIGHT * index,
   index,

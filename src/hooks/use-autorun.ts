@@ -3,7 +3,7 @@ import { DependencyList, useEffect } from 'react';
 import { autorun, IAutorunOptions, IReactionPublic } from 'mobx';
 
 export default function useAutorun(
-  view: (r: IReactionPublic) => any,
+  view: (r: IReactionPublic) => unknown,
   deps: DependencyList,
   opts?: IAutorunOptions,
 ): void {

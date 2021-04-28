@@ -19,8 +19,17 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
   },
 
+  pricesSectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+  },
+  pricesButtonLabel: {
+    fontSize: 12,
+  },
+
   loadingChartContainer: {
-    height: 400,
+    height: 200,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -76,17 +85,18 @@ const styles = StyleSheet.create({
   },
 
   chartButtonsContainer: {
-    position: 'absolute',
-    top: 0,
-    right: DEFAULT_PADDING / 2,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    marginVertical: DEFAULT_PADDING,
   },
   chartButton: {
-    marginTop: DEFAULT_PADDING,
+    margin: DEFAULT_PADDING,
   },
 
   listCaption: {
+    flex: 1,
     padding: DEFAULT_PADDING,
-    paddingBottom: 0,
   },
 });
 

@@ -1,4 +1,4 @@
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { action, configure, makeObservable, observable, runInAction } from 'mobx';
 import { AsyncTrunk, ignore } from 'mobx-sync';
 
@@ -59,7 +59,7 @@ export class Stores {
     });
   };
 
-  protected hydrateStore = async (tuple: [string, any]): Promise<void> => {
+  protected hydrateStore = async (tuple: [string, unknown]): Promise<void> => {
     try {
       const trunk = new AsyncTrunk(tuple[1], {
         storage: AsyncStorage,

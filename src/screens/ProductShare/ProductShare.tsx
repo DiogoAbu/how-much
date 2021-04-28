@@ -2,12 +2,12 @@ import React, { FC } from 'react';
 import { FlatList, ListRenderItem, Share } from 'react-native';
 
 import { Button, Caption, Divider, List, Text } from 'react-native-paper';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { useHeaderHeight } from '@react-navigation/stack';
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
 
-import { DEFAULT_APPBAR_HEIGHT, DEFAULT_PADDING, LIST_ITEM_HEIGHT } from '!/constants';
+import { DEFAULT_PADDING, LIST_ITEM_HEIGHT } from '!/constants';
 import useFocusEffect from '!/hooks/use-focus-effect';
 import usePress from '!/hooks/use-press';
 import useTheme from '!/hooks/use-theme';
@@ -28,7 +28,7 @@ const ProductShare: FC = observer(() => {
   const { productsStore, generalStore, wagesStore } = useStores();
   const { colors } = useTheme();
   const { t } = useTranslation();
-  const insets = useSafeAreaInsets();
+  const headerHeight = useHeaderHeight();
 
   const { params } = route;
   const product = productsStore.findProductById(params.productId)!;
@@ -92,7 +92,7 @@ const ProductShare: FC = observer(() => {
 
   return (
     <FlatList
-      contentContainerStyle={[styles.contentContainer, { paddingTop: insets.top + DEFAULT_APPBAR_HEIGHT }]}
+      contentContainerStyle={[styles.contentContainer, { paddingTop: headerHeight }]}
       data={product.prices}
       getItemLayout={getItemLayout}
       ItemSeparatorComponent={Divider}
@@ -108,7 +108,7 @@ const ProductShare: FC = observer(() => {
 
 const keyExtractor = (item: PriceModel) => `priceDetails${item.id}`;
 
-const getItemLayout = (_: any, index: number) => ({
+const getItemLayout = (_: PriceModel[] | null | undefined, index: number) => ({
   length: LIST_ITEM_HEIGHT,
   offset: LIST_ITEM_HEIGHT * index,
   index,

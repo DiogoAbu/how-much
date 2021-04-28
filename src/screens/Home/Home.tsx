@@ -190,7 +190,7 @@ const Home = observer(() => {
       keyExtractor={keyExtractor}
       ListEmptyComponent={<EmptyCenteredView text={t('nothingHereYet')} />}
       ListHeaderComponent={ListOptions}
-      onScroll={onScroll as any}
+      onScroll={onScroll}
       renderItem={renderProduct}
       scrollEnabled={stores.hydrated}
       scrollIndicatorInsets={{ top: scrollIndicatorInsetTop }}
@@ -201,7 +201,7 @@ const Home = observer(() => {
 
 const keyExtractor = (item: ProductModel, index: number) => `product-${item?.id}-${index}`;
 
-const getItemLayout = (_: any, index: number) => ({
+const getItemLayout = (_: ProductModel[] | null | undefined, index: number) => ({
   length: LIST_ITEM_HEIGHT,
   offset: LIST_ITEM_HEIGHT * index,
   index,

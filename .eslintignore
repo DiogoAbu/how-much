@@ -25,3 +25,12 @@ templates/**
 
 generated/
 generated/**
+
+android/app/.cxx
+
+!.vscode/
+!.vscode/**
+!.eslintrc.js
+!.prettierrc.js
+!.commitlintrc.js
+!.releaserc.json

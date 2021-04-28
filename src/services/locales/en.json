@@ -290,6 +290,7 @@
       "desc": "Z-A"
     },
     "annualWage": "Annual wage",
+    "copy": "Copy",
     "dailyWage": "Daily wage",
     "date": {
       "asc": "Least recent",
@@ -312,6 +313,7 @@
       "desc": "Most expensive"
     },
     "return": "Return",
+    "save": "Save",
     "share": "Share",
     "sort": "Sort",
     "weeklyWage": "Weekly wage",
@@ -333,6 +335,7 @@
   "pricesWithCustomWages": "Prices with custom wages",
   "saveInGallery": "Save in gallery?",
   "sharingUnavailable": "Sharing unavailable on this device.",
+  "showingMinOutOfMax": "Showing {{min}} out of {{max}}",
   "somethingWentWrong": "Something went wrong!",
   "tapTheCalculatorToFindOutTheHourlyWage": "Use the calculator to find out the hourly wage",
   "theFollowingInformationWillBeAvailableToAnyoneThatImportsThisProductUsingTheAboveLink": "The following information will be available to anyone that imports this product using the above link.",
@@ -350,6 +353,7 @@
     "pickACurrency": "Pick a currency",
     "preferences": "Preferences",
     "preferredCurrency": "Preferred currency",
+    "selectPrice": "Select price",
     "shareProduct": "Share product",
     "wageCalculator": "Wage calculator",
     "welcome": "Welcome"

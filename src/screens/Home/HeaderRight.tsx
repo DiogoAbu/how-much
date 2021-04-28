@@ -72,11 +72,13 @@ const HeaderRight: FC<Props> = ({ navigation }) => {
           onPress={handlePreferencesPress}
         />
         <Observer>
-          {() =>
-            generalStore.updateAvailable ? (
-              <Badge size={BADGE_SMALL_SIZE} style={styles.actionBadge} visible />
-            ) : null
-          }
+          {() => (
+            <Badge
+              size={BADGE_SMALL_SIZE}
+              style={styles.actionBadge}
+              visible={generalStore.updateAvailable}
+            />
+          )}
         </Observer>
       </View>
     </>

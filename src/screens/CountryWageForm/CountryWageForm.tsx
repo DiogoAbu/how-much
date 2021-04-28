@@ -2,13 +2,13 @@ import React, { FC, useCallback, useMemo } from 'react';
 import { ScrollView } from 'react-native';
 
 import { Divider, HelperText, List, Text, TextInput } from 'react-native-paper';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { useHeaderHeight } from '@react-navigation/stack';
 import { observer } from 'mobx-react-lite';
 
 import EmptyCenteredView from '!/components/EmptyCenteredView';
 import HeaderButton from '!/components/HeaderButton';
-import { DEFAULT_APPBAR_HEIGHT, DEFAULT_PADDING } from '!/constants';
+import { DEFAULT_PADDING } from '!/constants';
 import useFocusEffect from '!/hooks/use-focus-effect';
 import usePress from '!/hooks/use-press';
 import useTheme from '!/hooks/use-theme';
@@ -27,8 +27,8 @@ const CountryWageForm: FC = observer(() => {
   const { params } = useRoute<MainRouteProp<'CountryWageForm'>>();
   const { generalStore, wagesStore } = useStores();
   const { colors, dark } = useTheme();
-  const insets = useSafeAreaInsets();
   const { t } = useTranslation();
+  const headerHeight = useHeaderHeight();
 
   const currency = useMemo(() => findCurrency(params.currencyId), [params.currencyId]);
 
@@ -74,7 +74,7 @@ const CountryWageForm: FC = observer(() => {
     <ScrollView
       contentContainerStyle={[
         styles.contentContainer,
-        { padding: DEFAULT_PADDING, paddingTop: insets.top + DEFAULT_APPBAR_HEIGHT + DEFAULT_PADDING },
+        { padding: DEFAULT_PADDING, paddingTop: headerHeight },
       ]}
       keyboardDismissMode='interactive'
       keyboardShouldPersistTaps='handled'

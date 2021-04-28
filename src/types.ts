@@ -20,7 +20,13 @@ export type MainStackParams = {
   ProductForm?: {
     isEditing: boolean;
   };
+  SearchPrice: {
+    priceId: string;
+  };
   ProductDetails: {
+    productId: ProductModel['id'];
+  };
+  PriceList: {
     productId: ProductModel['id'];
   };
   ProductShare: {

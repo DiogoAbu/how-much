@@ -1,7 +1,7 @@
 import React, { useCallback, useRef } from 'react';
 import { Alert, useWindowDimensions, View } from 'react-native';
 
-import { ActivityIndicator, Caption, Chip, Colors, FAB, Text } from 'react-native-paper';
+import { ActivityIndicator, Button, Caption, Chip, Colors, Text } from 'react-native-paper';
 import ViewShot, { CaptureOptions } from 'react-native-view-shot';
 import * as MediaLibrary from 'expo-media-library';
 import * as Sharing from 'expo-sharing';
@@ -147,6 +147,7 @@ const PricesChart = observer<Props>(({ product, shouldRender, setSnackBarText })
 
   const data: ChartData[] = sortArray(
     product.prices
+      .slice()
       .map((price) => {
         const currencyInfo = findCurrency(price.currencyId);
         const wage = wagesStore.findWage(price.currencyId);
@@ -207,9 +208,10 @@ const PricesChart = observer<Props>(({ product, shouldRender, setSnackBarText })
                   backgroundStyle={
                     {
                       fillOpacity: 0.6,
-                      fill: ({ datum, index }: any) =>
+                      // @ts-ignore
+                      fill: ({ datum, index }) =>
                         toMaterialStyle(String(datum.id) + String(index), dark ? 700 : 600).backgroundColor,
-                    } as any
+                    } as never
                   }
                   dy={-2}
                   textAnchor='start'
@@ -266,22 +268,13 @@ const PricesChart = observer<Props>(({ product, shouldRender, setSnackBarText })
       </ViewShot>
 
       <View style={styles.chartButtonsContainer}>
-        <FAB
-          color={colors.textOnPrimary}
-          icon='share-variant'
-          onPress={handleSharePress}
-          small
-          style={styles.chartButton}
-          theme={{ colors: { accent: colors.primary } }}
-        />
-        <FAB
-          color={colors.textOnPrimary}
-          icon='download'
-          onPress={handleDownloadPress}
-          small
-          style={styles.chartButton}
-          theme={{ colors: { accent: colors.primary } }}
-        />
+        <Button icon='share-variant' mode='contained' onPress={handleSharePress} style={styles.chartButton}>
+          {t('label.share')}
+        </Button>
+
+        <Button icon='download' mode='contained' onPress={handleDownloadPress} style={styles.chartButton}>
+          {t('label.save')}
+        </Button>
       </View>
     </View>
   );
