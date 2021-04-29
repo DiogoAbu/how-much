@@ -10,8 +10,12 @@ on:
       platforms:
         description: "Platforms to deploy as comma separated string. Default: android,ios"
         required: false
+      forceDeploy:
+        description: "Set to 'true' to skip deploy check and force a deploy"
+        required: false
+        default: ""
   repository_dispatch:
-    types: [deploy]
+    types: [deploy-to-stores]
 
 env:
   node-version: 12
@@ -26,9 +30,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: ${{ github.event.inputs.checkoutRef || github.event.client_payload.checkoutRef }}
-
-      - name: Increase watchers to fix Docker
-        run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 
       - name: Define platforms
         id: platforms
@@ -85,7 +86,9 @@ jobs:
 
       - name: Should deploy
         id: should-deploy
-        run: echo ::set-output name=continue::$(node ./scripts/should-deploy.js ${{ steps.get-version.outputs.version }})
+        run: echo ::set-output name=continue::$(if [[ "$SHOULD_DEPLOY" == "true" ]]; then echo true; else node ./scripts/should-deploy.js ${{ steps.get-version.outputs.version }}; fi)
+        env:
+          SHOULD_DEPLOY: ${{ github.event.client_payload.forceDeploy || github.event.inputs.forceDeploy || 'false' }}
 
       - name: Display should deploy
         run: echo ${{ steps.should-deploy.outputs.continue }}

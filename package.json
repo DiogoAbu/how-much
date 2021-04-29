@@ -1,5 +1,5 @@
 {
-  "version": "2.0.0-beta.1",
+  "version": "2.0.1",
   "main": "node_modules/expo/AppEntry.js",
   "private": true,
   "scripts": {
@@ -15,7 +15,7 @@
     "reactotron": "adb reverse tcp:9090 tcp:9090",
     "prune-branches": "git fetch -p && npx git-removed-branches --prune",
     "typecheck": "tsc --noEmit",
-    "test": "echo \"No test specified\" && exit 0",
+    "test": "jest",
     "eslint": "eslint . --ext .ts,.tsx,.js,.jsx --max-warnings 0 --config ./.eslintrc",
     "prettier": "prettier .releaserc.json \".vscode/**/*.json\" \"**/*.{json,eslintrc,prettierrc}\" --config ./.prettierrc --check",
     "lint": "yarn eslint && yarn prettier",
@@ -85,6 +85,9 @@
     "@commitlint/config-conventional": "^12.1.1",
     "@semantic-release/exec": "^5.0.0",
     "@semantic-release/git": "^9.0.0",
+    "@testing-library/jest-native": "^4.0.1",
+    "@testing-library/react-native": "^7.2.0",
+    "@types/jest": "^26.0.23",
     "@types/react": "~16.9.35",
     "@types/react-native": "~0.63.2",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
@@ -109,11 +112,29 @@
     "eslint-plugin-simple-import-sort": "7.0.0",
     "eslint-plugin-unused-imports": "1.1.1",
     "husky": "4.3.8",
+    "jest-expo": "^41.0.0",
     "lint-staged": "^10.5.4",
     "prettier": "2.2.1",
     "reactotron-react-native": "^5.0.0",
     "semantic-release": "^17.4.2",
     "semver": "^7.3.5",
     "typescript": "~4.2.4"
+  },
+  "jest": {
+    "preset": "./jest/jest-preset.js",
+    "setupFilesAfterEnv": [
+      "@testing-library/jest-native/extend-expect"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|@react-native-community|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base)"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
   }
 }
