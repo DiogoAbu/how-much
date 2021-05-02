@@ -1,60 +1,56 @@
-import React, { Fragment } from 'react';
-import {
-  Alert,
-  Animated,
-  ListRenderItem,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
-  Platform,
-} from 'react-native';
+import React, { FC, useCallback } from 'react';
+import { Alert, Platform } from 'react-native';
 
-import { Divider, Text } from 'react-native-paper';
-import { setSafeBounceHeight, useCollapsibleHeader } from 'react-navigation-collapsible';
+import { createMaterialCollapsibleTopTabNavigator } from 'react-native-collapsible-tab-view';
+import { overlay, Text } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
-import { StackHeaderProps } from '@react-navigation/stack';
-import { Observer, observer } from 'mobx-react-lite';
 
 import Header from '!/components/Header';
-import SlideIn from '!/components/SlideIn';
-import { LIST_ITEM_HEIGHT } from '!/constants';
+import { DEFAULT_APPBAR_HEIGHT } from '!/constants';
 import useAutorunOnFocus from '!/hooks/use-autorun-on-focus';
 import useFocusEffect from '!/hooks/use-focus-effect';
 import usePress from '!/hooks/use-press';
 import useTheme from '!/hooks/use-theme';
 import useTranslation from '!/hooks/use-translation';
 import { useStores } from '!/stores';
-import { ProductModel } from '!/stores/models/ProductModel';
 import { MainNavigationProp } from '!/types';
 
-import EmptyCenteredView from '../../components/EmptyCenteredView';
-
 import HeaderRight from './HeaderRight';
-import ListOptions from './ListOptions';
-import ProductItem from './ProductItem';
-import SkeletonItem, { amountToCoverHeight } from './SkeletonItem';
+import ProductList from './ProductList';
 import styles from './styles';
 
-const AMOUNT_ANIMATE = 10;
-const NEAR_BOTTOM_OFFSET = 20;
+const Tab = createMaterialCollapsibleTopTabNavigator();
 
-const Home = observer(() => {
+const Home: FC = () => {
   const navigation = useNavigation<MainNavigationProp<'Home'>>();
   const stores = useStores();
-  const { colors, dark, fonts } = useTheme();
+  const { colors, dark, fonts, mode } = useTheme();
   const { t } = useTranslation();
 
-  const { onScrollWithListener, containerPaddingTop, scrollIndicatorInsetTop } = useCollapsibleHeader({
-    navigationOptions: { header: (props: StackHeaderProps) => <Header {...props} /> },
-  });
-
-  const onScroll = onScrollWithListener(({ nativeEvent }: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const { contentOffset, contentSize, layoutMeasurement } = nativeEvent;
-
-    const targetOffset = contentSize.height - layoutMeasurement.height - NEAR_BOTTOM_OFFSET;
-    const isNearBottom = targetOffset > 0 && contentOffset.y >= targetOffset;
-
-    stores.generalStore.setFab({ fabVisible: !isNearBottom });
-  });
+  const renderHeader = useCallback(
+    () => (
+      <Header
+        headerLeft={() =>
+          Platform.OS === 'ios' ? (
+            <Text
+              ellipsizeMode='tail'
+              numberOfLines={1}
+              style={[
+                fonts.regular,
+                styles.headerLeftTitle,
+                { color: dark ? colors.text : colors.textOnPrimary },
+              ]}
+            >
+              {t('title.home', { name: t('howMuch') })}
+            </Text>
+          ) : undefined
+        }
+        headerRight={() => <HeaderRight navigation={navigation} />}
+        title={Platform.OS === 'ios' ? '' : t('title.home', { name: t('howMuch') })}
+      />
+    ),
+    [colors.text, colors.textOnPrimary, dark, fonts.regular, navigation, t],
+  );
 
   const handleFabPress = usePress(() => {
     if (!stores.generalStore.activeCurrencyId) {
@@ -99,28 +95,9 @@ const Home = observer(() => {
     }
   });
 
-  const renderProduct: ListRenderItem<ProductModel> = ({ item, index, separators }) => {
-    const Component = index < AMOUNT_ANIMATE ? SlideIn : Fragment;
-    return (
-      <Observer>
-        {() =>
-          !item?.description ? (
-            <SkeletonItem />
-          ) : (
-            <Component>
-              <ProductItem
-                activeCurrencyId={stores.generalStore.activeCurrencyId}
-                index={index}
-                item={item}
-                separators={separators}
-                wage={stores.wagesStore.findWage(stores.generalStore.activeCurrencyId)}
-              />
-            </Component>
-          )
-        }
-      </Observer>
-    );
-  };
+  useFocusEffect(() => {
+    stores.generalStore.setFab({ fabIcon: 'plus', handleFabPress });
+  }, [handleFabPress, stores.generalStore]);
 
   useAutorunOnFocus(
     () => {
@@ -139,72 +116,26 @@ const Home = observer(() => {
     { name: 'Home FAB visibility' },
   );
 
-  useFocusEffect(() => {
-    if (Platform.OS === 'android') {
-      setSafeBounceHeight(0);
-    }
-
-    stores.generalStore.setFab({ fabIcon: 'plus', handleFabPress });
-
-    navigation.setOptions({
-      title: Platform.OS === 'ios' ? '' : t('title.home', { name: t('howMuch') }),
-      headerLeft: () =>
-        Platform.OS === 'ios' ? (
-          <Text
-            ellipsizeMode='tail'
-            numberOfLines={1}
-            style={[
-              fonts.regular,
-              styles.headerLeftTitle,
-              { color: dark ? colors.text : colors.textOnPrimary },
-            ]}
-          >
-            {t('title.home', { name: t('howMuch') })}
-          </Text>
-        ) : undefined,
-      headerRight: () => <HeaderRight navigation={navigation} />,
-    });
-  }, [
-    colors.text,
-    colors.textOnPrimary,
-    dark,
-    fonts.medium,
-    fonts.regular,
-    handleFabPress,
-    navigation,
-    stores.generalStore,
-    t,
-  ]);
-
-  const placeholderAmount = amountToCoverHeight(containerPaddingTop);
-
   return (
-    <Animated.FlatList
-      contentContainerStyle={[styles.contentContainer, { paddingTop: containerPaddingTop }]}
-      data={stores.hydrated ? stores.productsStore.productsSorted : Array<ProductModel>(placeholderAmount)}
-      getItemLayout={getItemLayout}
-      initialNumToRender={placeholderAmount}
-      ItemSeparatorComponent={Divider}
-      keyboardDismissMode='interactive'
-      keyboardShouldPersistTaps='handled'
-      keyExtractor={keyExtractor}
-      ListEmptyComponent={<EmptyCenteredView text={t('nothingHereYet')} />}
-      ListHeaderComponent={ListOptions}
-      onScroll={onScroll}
-      renderItem={renderProduct}
-      scrollEnabled={stores.hydrated}
-      scrollIndicatorInsets={{ top: scrollIndicatorInsetTop }}
-      style={{ backgroundColor: colors.background }}
-    />
+    <Tab.Navigator
+      collapsibleOptions={{
+        headerHeight: DEFAULT_APPBAR_HEIGHT,
+        renderHeader,
+        disableSnap: true,
+      }}
+      lazy
+      tabBarOptions={{
+        indicatorStyle: { backgroundColor: dark ? colors.primary : colors.accent },
+        activeTintColor: dark ? colors.text : colors.textOnPrimary,
+        style: {
+          backgroundColor:
+            dark && mode === 'adaptive' ? (overlay(4, colors.surface) as string) : colors.primary,
+        },
+      }}
+    >
+      <Tab.Screen component={ProductList} name='ProductList' options={{ title: t('label.byYou') }} />
+    </Tab.Navigator>
   );
-});
-
-const keyExtractor = (item: ProductModel, index: number) => `product-${item?.id}-${index}`;
-
-const getItemLayout = (_: ProductModel[] | null | undefined, index: number) => ({
-  length: LIST_ITEM_HEIGHT,
-  offset: LIST_ITEM_HEIGHT * index,
-  index,
-});
+};
 
 export default Home;

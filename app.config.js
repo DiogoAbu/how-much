@@ -60,7 +60,7 @@ export default {
   androidStatusBar: {
     barStyle: 'light-content',
     backgroundColor: '#304FFF',
-    translucent: true,
+    translucent: false,
   },
   notification: {
     icon: './assets/notification.png',
