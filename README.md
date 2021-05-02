@@ -11,7 +11,7 @@
   <a href="https://github.com/DiogoAbu/how-much/releases/latest">
     <img alt="GitHub release (latest SemVer)" src="https://img.shields.io/github/v/release/DiogoAbu/how-much?sort=semver&style=flat-square&label=Release">
   </a>
-  <a href="https://github.com/DiogoAbu/how-much/actions/workflows/android.yml">
+  <a href="https://github.com/DiogoAbu/how-much/actions/workflows/publish-release.yml">
     <img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/DiogoAbu/how-much/Publish%20on%20Expo?label=Publish%20on%20Expo&style=flat-square">
   </a>
 </p>
