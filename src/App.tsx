@@ -1,13 +1,14 @@
 import '!/services/localize';
 
 import React, { FC, useEffect } from 'react';
-import { Appearance } from 'react-native';
+import { Appearance, Platform } from 'react-native';
 
 import { useTranslation } from 'react-i18next';
 import { Portal, Provider as PaperProvider } from 'react-native-paper';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { observer } from 'mobx-react-lite';
+
+import StatusBarBackgroundIos from '!/components/StatusBarBackgroundIos';
 
 import Fab from './components/Fab';
 import LinkingHandler from './components/LinkingHandler';
@@ -48,6 +49,8 @@ const AppWithStores: FC = observer(() => {
 
   return (
     <PaperProvider theme={themeStore.colorSchemeCurrent === 'dark' ? darkTheme : lightTheme}>
+      {Platform.OS === 'ios' ? <StatusBarBackgroundIos /> : null}
+
       <NavigationContainer
         ref={navigationRef}
         theme={themeStore.colorSchemeCurrent === 'dark' ? darkTheme : lightTheme}
@@ -68,11 +71,9 @@ const AppWithStores: FC = observer(() => {
 
 const App: FC = () => {
   return (
-    <SafeAreaProvider>
-      <StoresProvider value={new Stores()}>
-        <AppWithStores />
-      </StoresProvider>
-    </SafeAreaProvider>
+    <StoresProvider value={new Stores()}>
+      <AppWithStores />
+    </StoresProvider>
   );
 };
 

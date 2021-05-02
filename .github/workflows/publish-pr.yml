@@ -54,7 +54,7 @@ jobs:
         run: yarn typecheck
 
       - name: Start test
-        run: yarn test --forceExit --silent --onlyChanged
+        run: yarn test --silent --onlyChanged
 
       - name: Install Expo
         uses: expo/expo-github-action@v5
