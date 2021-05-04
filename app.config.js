@@ -38,6 +38,7 @@ try {
 export default {
   name: 'Quanto Custa',
   version,
+  description: `Find out how many hours you have to work to buy something. (${version})`,
   slug: 'how-much',
   scheme: 'how-much',
   owner: 'diogoabu',

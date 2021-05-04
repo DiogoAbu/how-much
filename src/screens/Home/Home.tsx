@@ -2,11 +2,11 @@ import React, { FC, useCallback } from 'react';
 import { Alert, Platform } from 'react-native';
 
 import { createMaterialCollapsibleTopTabNavigator } from 'react-native-collapsible-tab-view';
-import { overlay, Text } from 'react-native-paper';
+import { Text } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
+import { useHeaderHeight } from '@react-navigation/stack';
 
 import Header from '!/components/Header';
-import { DEFAULT_APPBAR_HEIGHT } from '!/constants';
 import useAutorunOnFocus from '!/hooks/use-autorun-on-focus';
 import useFocusEffect from '!/hooks/use-focus-effect';
 import usePress from '!/hooks/use-press';
@@ -14,6 +14,7 @@ import useTheme from '!/hooks/use-theme';
 import useTranslation from '!/hooks/use-translation';
 import { useStores } from '!/stores';
 import { MainNavigationProp } from '!/types';
+import getStatusBarColor from '!/utils/get-status-bar-color';
 
 import HeaderRight from './HeaderRight';
 import ProductList from './ProductList';
@@ -26,6 +27,7 @@ const Home: FC = () => {
   const stores = useStores();
   const { colors, dark, fonts, mode } = useTheme();
   const { t } = useTranslation();
+  const headerHeight = useHeaderHeight();
 
   const renderHeader = useCallback(
     () => (
@@ -118,19 +120,12 @@ const Home: FC = () => {
 
   return (
     <Tab.Navigator
-      collapsibleOptions={{
-        headerHeight: DEFAULT_APPBAR_HEIGHT,
-        renderHeader,
-        disableSnap: true,
-      }}
+      collapsibleOptions={{ headerHeight, renderHeader, disableSnap: true }}
       lazy
       tabBarOptions={{
         indicatorStyle: { backgroundColor: dark ? colors.primary : colors.accent },
         activeTintColor: dark ? colors.text : colors.textOnPrimary,
-        style: {
-          backgroundColor:
-            dark && mode === 'adaptive' ? (overlay(4, colors.surface) as string) : colors.primary,
-        },
+        style: { backgroundColor: getStatusBarColor({ dark, mode, colors }) },
       }}
     >
       <Tab.Screen component={ProductList} name='ProductList' options={{ title: t('label.byYou') }} />

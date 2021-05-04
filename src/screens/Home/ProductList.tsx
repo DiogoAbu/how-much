@@ -18,6 +18,7 @@ import ListOptions from './ListOptions';
 import ProductItem from './ProductItem';
 import SkeletonItem from './SkeletonItem';
 
+const AMOUNT_INITIAL_RENDER = 10;
 const AMOUNT_ANIMATE = 10;
 const NEAR_BOTTOM_OFFSET = 20;
 
@@ -66,9 +67,11 @@ const ProductList = observer(() => {
   return (
     <Animated.FlatList
       bounces={false}
-      data={stores.hydrated ? stores.productsStore.productsSorted : Array<ProductModel>(10)}
+      data={
+        stores.hydrated ? stores.productsStore.productsSorted : Array<ProductModel>(AMOUNT_INITIAL_RENDER)
+      }
       getItemLayout={getItemLayout}
-      initialNumToRender={10}
+      initialNumToRender={AMOUNT_INITIAL_RENDER}
       ItemSeparatorComponent={Divider}
       keyboardDismissMode='interactive'
       keyboardShouldPersistTaps='handled'
