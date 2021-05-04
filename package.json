@@ -13,13 +13,14 @@
     "eject": "expo eject",
     "doctor": "expo doctor",
     "reactotron": "adb reverse tcp:9090 tcp:9090",
-    "prune-branches": "git fetch -p && npx git-removed-branches --prune",
     "typecheck": "tsc --noEmit",
     "test": "jest",
     "eslint": "eslint . --ext .ts,.tsx,.js,.jsx --max-warnings 0 --config ./.eslintrc",
-    "prettier": "prettier .releaserc.json \".vscode/**/*.json\" \"**/*.{json,eslintrc,prettierrc}\" --config ./.prettierrc --check",
+    "prettier": "prettier \"**/{*,}.{json,eslintrc,prettierrc}\" --config ./.prettierrc --check",
     "lint": "yarn eslint && yarn prettier",
     "lint-fix": "yarn eslint --fix && yarn prettier --write",
+    "prune-branches": "git fetch --prune && npx git-removed-branches --prune",
+    "prune-tags": "git fetch --prune origin \"+refs/tags/*:refs/tags/*\"",
     "postinstall": "patch-package"
   },
   "husky": {
@@ -27,11 +28,11 @@
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
       "pre-commit": "npx yarn-lock-fix && lint-staged && yarn doctor && yarn typecheck && yarn jest --silent --onlyChanged",
       "post-commit": "git update-index --again",
-      "pre-push": "git fetch --prune origin \"+refs/tags/*:refs/tags/*\""
+      "pre-push": "yarn prune-tags"
     }
   },
   "lint-staged": {
-    "*.{j,t}s{,x}": "eslint --config ./.eslintrc --cache --fix",
+    "*.{j,t}s{,x}": "eslint --config ./.eslintrc --cache --fix --max-warnings 0",
     "*.json": "prettier --config ./.prettierrc --write"
   },
   "dependencies": {
