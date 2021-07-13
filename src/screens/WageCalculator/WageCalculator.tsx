@@ -245,6 +245,7 @@ const WageCalculator: FC = () => {
         ]}
         keyboardDismissMode='interactive'
         keyboardShouldPersistTaps='handled'
+        overScrollMode='never'
         ref={scrollRef}
         style={{ backgroundColor: colors.background }}
       >

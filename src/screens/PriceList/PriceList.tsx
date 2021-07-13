@@ -74,6 +74,7 @@ const PriceList: FC = () => {
       keyboardShouldPersistTaps='handled'
       keyExtractor={keyExtractor}
       maxToRenderPerBatch={2}
+      overScrollMode='never'
       removeClippedSubviews
       renderItem={renderPrice}
       style={{ backgroundColor: colors.background }}

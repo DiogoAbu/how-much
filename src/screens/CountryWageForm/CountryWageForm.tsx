@@ -78,6 +78,7 @@ const CountryWageForm: FC = observer(() => {
       ]}
       keyboardDismissMode='interactive'
       keyboardShouldPersistTaps='handled'
+      overScrollMode='never'
       style={{ backgroundColor: colors.background }}
     >
       <List.Item

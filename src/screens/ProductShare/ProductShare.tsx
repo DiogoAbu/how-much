@@ -100,6 +100,7 @@ const ProductShare: FC = observer(() => {
       keyboardShouldPersistTaps='handled'
       keyExtractor={keyExtractor}
       ListHeaderComponent={ListHeader}
+      overScrollMode='never'
       renderItem={renderPrice}
       style={{ backgroundColor: colors.background }}
     />

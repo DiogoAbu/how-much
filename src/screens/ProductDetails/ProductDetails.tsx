@@ -138,6 +138,7 @@ const ProductDetails = observer(() => {
             <Divider />
           </>
         }
+        overScrollMode='never'
         renderItem={renderPrice}
         style={{ backgroundColor: colors.background }}
       />

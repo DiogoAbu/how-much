@@ -52,7 +52,7 @@ const Intro: FC = () => {
         <LanguageItem />
       </View>
 
-      <ScrollView contentContainerStyle={styles.contentContainer}>
+      <ScrollView contentContainerStyle={styles.contentContainer} overScrollMode='never'>
         <Title style={styles.textCenter}>{t('title.welcome')}</Title>
 
         <Paragraph style={styles.textCenter}>

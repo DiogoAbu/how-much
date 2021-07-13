@@ -63,6 +63,7 @@ const Preferences: FC = () => {
       contentInsetAdjustmentBehavior='automatic'
       keyboardDismissMode='interactive'
       keyboardShouldPersistTaps='handled'
+      overScrollMode='never'
       style={{ backgroundColor: colors.background }}
     >
       <List.Item

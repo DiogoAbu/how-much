@@ -95,6 +95,7 @@ const ProductForm = observer(() => {
       contentContainerStyle={[styles.contentContainer, { paddingTop: headerHeight }]}
       keyboardDismissMode='none'
       keyboardShouldPersistTaps='handled'
+      overScrollMode='never'
       ref={scrollRef}
       style={{ backgroundColor: colors.background }}
     >

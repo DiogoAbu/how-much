@@ -115,6 +115,7 @@ const ProductShareImport: FC = observer(() => {
         </>
       }
       ListHeaderComponent={ListHeader}
+      overScrollMode='never'
       renderItem={renderPrice}
       style={{ backgroundColor: colors.background }}
     />
