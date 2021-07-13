@@ -78,6 +78,7 @@ const ProductList = observer(() => {
       keyExtractor={keyExtractor}
       ListEmptyComponent={<EmptyCenteredView text={t('nothingHereYet')} />}
       ListHeaderComponent={ListOptions}
+      overScrollMode='never'
       renderItem={renderProduct}
       style={{ backgroundColor: colors.background }}
       {...scrollPropsAndRef}
