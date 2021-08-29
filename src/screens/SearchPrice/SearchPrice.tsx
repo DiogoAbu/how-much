@@ -15,6 +15,8 @@ import findCurrency from '!/utils/find-currency';
 import stripCountryName from '!/utils/strip-country-name';
 import toNumber from '!/utils/to-number';
 
+import styles from './styles';
+
 const SearchPrice: FC = () => {
   const navigation = useNavigation<MainNavigationProp<'SearchPrice'>>();
   const { params } = useRoute<MainRouteProp<'SearchPrice'>>();
@@ -29,6 +31,10 @@ const SearchPrice: FC = () => {
   const { priceId } = params;
   const price = productsStore.productForm?.prices.find((e) => e.id === priceId);
   const currencyInfo = findCurrency(price?.currencyId);
+
+  const handleWebViewBack = usePress(() => {
+    webRef.current?.goBack();
+  });
 
   const handleCopySelectedText = usePress(() => {
     const selectedPrice = addCents(selectedText.trim());
@@ -53,12 +59,21 @@ const SearchPrice: FC = () => {
       title: t('title.selectPrice'),
       // eslint-disable-next-line react/no-unstable-nested-components
       headerRight: () => (
-        <HeaderButton icon='content-copy' mode='text' onPress={handleCopySelectedText}>
-          {t('label.copy')}
-        </HeaderButton>
+        <>
+          <HeaderButton
+            icon='chevron-left-circle'
+            labelStyle={styles.headerBackButtonLabel}
+            mode='text'
+            onPress={handleWebViewBack}
+          />
+
+          <HeaderButton icon='content-copy' mode='text' onPress={handleCopySelectedText}>
+            {t('label.copy')}
+          </HeaderButton>
+        </>
       ),
     });
-  }, [generalStore, handleCopySelectedText, navigation, t]);
+  }, [generalStore, handleCopySelectedText, handleWebViewBack, navigation, t]);
 
   if (!price || !currencyInfo) {
     return null;
